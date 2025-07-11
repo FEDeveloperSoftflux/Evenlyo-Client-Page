@@ -164,17 +164,17 @@ const Categories = () => {
   )
 
   return (
-    <section className="py-16 px-6 lg:px-16 bg-gray-50">
+    <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-16 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Section Title */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+        <div className="text-center mb-responsive">
+          <h2 className="text-responsive-h2 text-gray-900">
             Explore <span className="bg-gradient-to-r from-secondary via-primary-500 to-primary-600 bg-clip-text text-transparent">Categories</span>
           </h2>
         </div>
 
         {/* Category Icons */}
-        <div className="flex justify-center items-start space-x-12 lg:space-x-16 mb-16 overflow-x-auto pb-4">
+        <div className="flex justify-center items-start space-x-6 sm:space-x-8 md:space-x-12 lg:space-x-16 mb-responsive overflow-x-auto pb-4">
           {categories.map((category) => (
             <div
               key={category.id}
@@ -187,22 +187,22 @@ const Categories = () => {
               }`}
             >
               <div
-                className={`w-24 h-24 rounded-full flex items-center justify-center mb-4 border-4 transition-all duration-300 ${
+                className={`category-card-mobile sm:category-card-desktop border-4 transition-all duration-300 ${
                   selectedCategory === category.name
                     ? 'bg-gradient-to-r from-secondary via-primary-500 to-primary-600 border-white shadow-category'
                     : 'bg-white border-gray-200 hover:border-primary-300 shadow-card'
                 }`}
               >
                 <img 
-                  src={category.icon} 
+              src={category.icon}
                   alt={category.name}
-                  className={`w-8 h-8 transition-all duration-300 ${
+                  className={`w-6 h-6 sm:w-8 sm:h-8 transition-all duration-300 ${
                     selectedCategory === category.name ? 'filter brightness-0 invert' : ''
                   }`}
                 />
               </div>
               <span
-                className={`text-sm font-medium text-center max-w-28 leading-tight transition-all duration-300 ${
+                className={`text-xs sm:text-sm font-medium text-center max-w-20 sm:max-w-28 leading-tight transition-all duration-300 ${
                   selectedCategory === category.name ? 'text-primary-500 font-semibold' : 'text-gray-700'
                 }`}
               >
@@ -213,7 +213,7 @@ const Categories = () => {
         </div>
 
         {/* Subcategory Pills */}
-        <div className="flex justify-center items-center space-x-3 mb-12 flex-wrap gap-2">
+        <div className="flex justify-center items-center space-x-2 sm:space-x-3 mb-responsive flex-wrap gap-2">
           {getCurrentSubcategories().map((subcategory) => (
             <button
               key={subcategory}
@@ -260,21 +260,21 @@ const Categories = () => {
         </div>
 
         {/* Vendor Section Title */}
-        <div className="text-center mb-12">
-          <h3 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="text-center mb-responsive">
+          <h3 className="text-responsive-h3 text-gray-900 mb-2">
             All {selectedSubcategory} <span className="text-gray-400">({filteredVendors.length})</span>
           </h3>
-          <p className="text-gray-600">
+          <p className="text-responsive-body text-gray-600">
             Start to book DJ for your <span className="font-semibold text-primary-500">Event</span> Because everything is on place
           </p>
         </div>
 
         {/* Vendor Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-responsive">
           {filteredVendors.map((vendor, index) => (
-            <div key={vendor.id} className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border-0">
+            <div key={vendor.id} className="card-mobile vendor-card-desktop">
               {/* Vendor Image */}
-              <div className="relative h-48 bg-gradient-to-br from-gray-200 to-gray-300">
+              <div className="relative image-container-mobile sm:image-container-desktop bg-gradient-to-br from-gray-200 to-gray-300">
                 <img
                   src={`/assets/categorycard.svg`}
                   alt={vendor.name}
@@ -290,22 +290,22 @@ const Categories = () => {
               </div>
 
               {/* Vendor Details */}
-              <div className="p-5">
+              <div className="space-mobile-sm sm:p-5">
                 {/* Vendor Avatar and Name */}
-                <div className="flex items-center mb-3">
-                  <img 
-                    src="/assets/jaydeep-avatar.svg" 
-                    alt="Jaydeep" 
-                    className="w-8 h-8 rounded-full mr-3"
-                  />
+                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center">
+                    <img 
+                      src="/assets/jaydeep-avatar.svg" 
+                      alt="Jaydeep" 
+                      className="w-8 h-8 rounded-full mr-3"
+                    />
                     <span className="text-blue-600 text-sm font-medium">Jaydeep</span>
-                    <span className="ml-2 text-green-600 text-sm font-medium">• Available</span>
                   </div>
+                  <span className="text-green-600 text-sm font-medium">• Available</span>
                 </div>
                 
-                <h4 className="font-bold text-lg text-gray-900 mb-2">{vendor.name}</h4>
-                <p className="text-gray-600 text-sm mb-4">{vendor.description}</p>
+                <h4 className="font-bold text-base sm:text-lg text-gray-900 mb-2">{vendor.name}</h4>
+                <p className="text-gray-600 text-xs sm:text-sm mb-4">{vendor.description}</p>
                 
                 {/* Vendor Info */}
                 <div className="space-y-2 mb-4">
@@ -332,7 +332,7 @@ const Categories = () => {
                 </div>
 
                 {/* Book Now Button */}
-                <button className="w-full bg-gradient-to-r from-secondary via-primary-500 to-primary-600 text-white font-bold py-3 rounded-lg hover:from-primary-500 hover:via-primary-600 hover:to-primary-700 transition-all duration-300 shadow-md hover:shadow-lg">
+                <button className="btn-primary-mobile w-full touch-button">
                   Book Now
                 </button>
               </div>

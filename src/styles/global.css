@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
+@import "./design-system.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,7 +16,7 @@ html {
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
@@ -24,7 +25,9 @@ body {
 }
 
 /* Custom form styling */
-input, select, textarea {
+input,
+select,
+textarea {
   font-family: inherit;
 }
 
@@ -38,7 +41,7 @@ select {
 
 /* Focus styles */
 .focus\:ring-primary:focus {
-  --tw-ring-color: #E31B95;
+  --tw-ring-color: #e31b95;
   box-shadow: 0 0 0 2px var(--tw-ring-color);
 }
 
@@ -60,22 +63,26 @@ select {
 
 /* Custom utilities that extend Tailwind */
 .text-gradient {
-  background: linear-gradient(90deg, #FF295D 0%, #E31B95 50%, #C817AE 100%);
+  background: linear-gradient(90deg, #ff295d 0%, #e31b95 50%, #c817ae 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .bg-gradient-brand {
-  background: linear-gradient(90deg, #FF295D 0%, #E31B95 50%, #C817AE 100%);
+  background: linear-gradient(90deg, #ff295d 0%, #e31b95 50%, #c817ae 100%);
 }
 
 .bg-gradient-brand-hover {
-  background: linear-gradient(90deg, #E31B95 0%, #C817AE 50%, #A613A0 100%);
+  background: linear-gradient(90deg, #e31b95 0%, #c817ae 50%, #a613a0 100%);
 }
 
 .bg-hero-gradient {
-  background: linear-gradient(135deg, rgba(255, 126, 95, 0.8) 0%, rgba(254, 180, 123, 0.6) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 126, 95, 0.8) 0%,
+    rgba(254, 180, 123, 0.6) 100%
+  );
 }
 
 /* Remove any conflicting styles */
@@ -92,15 +99,15 @@ select {
 .border-gradient-brand {
   position: relative;
   border: 2px solid transparent;
-  background: linear-gradient(white, white) padding-box, 
-              linear-gradient(90deg, #FF295D 0%, #E31B95 50%, #C817AE 100%) border-box;
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(90deg, #ff295d 0%, #e31b95 50%, #c817ae 100%) border-box;
   border-radius: 12px;
 }
 
 /* Alternative gradient border approach */
 .border-gradient-brand-alt {
   position: relative;
-  background: linear-gradient(90deg, #FF295D 0%, #E31B95 50%, #C817AE 100%);
+  background: linear-gradient(90deg, #ff295d 0%, #e31b95 50%, #c817ae 100%);
   border-radius: 12px;
   padding: 2px;
 }
@@ -145,7 +152,8 @@ select {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -193,10 +201,114 @@ select {
 }
 
 .animate-gradient-text {
-  background: linear-gradient(-45deg, #FF295D, #E31B95, #C817AE, #FF295D);
+  background: linear-gradient(-45deg, #ff295d, #e31b95, #c817ae, #ff295d);
   background-size: 400% 400%;
   animation: gradientShift 3s ease infinite;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Shimmer Animation for Customer Showcase */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
+/* Stylish Hamburger Menu */
+.hamburger-menu {
+  @apply relative w-6 h-6 cursor-pointer;
+}
+
+.hamburger-line {
+  @apply absolute left-0 w-full h-0.5 bg-gray-600 transition-all duration-300 ease-in-out;
+}
+
+.hamburger-line:nth-child(1) {
+  top: 0;
+}
+
+.hamburger-line:nth-child(2) {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hamburger-line:nth-child(3) {
+  bottom: 0;
+}
+
+.hamburger-menu.open .hamburger-line:nth-child(1) {
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.hamburger-menu.open .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.open .hamburger-line:nth-child(3) {
+  bottom: 50%;
+  transform: translateY(50%) rotate(-45deg);
+}
+
+/* Mobile Menu Slide Animation */
+.mobile-menu-slide {
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu-slide.open {
+  transform: translateX(0);
+}
+
+/* Mobile Menu Item Animations */
+.mobile-menu-item {
+  @apply relative overflow-hidden;
+}
+
+.mobile-menu-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(227, 27, 149, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.mobile-menu-item:hover::before {
+  left: 100%;
+}
+
+/* Backdrop Blur Effect */
+.backdrop-blur-mobile {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Staggered Animation for Menu Items */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.mobile-menu-item:nth-child(1) { animation: slideInFromRight 0.3s ease-out 0.1s both; }
+.mobile-menu-item:nth-child(2) { animation: slideInFromRight 0.3s ease-out 0.2s both; }
+.mobile-menu-item:nth-child(3) { animation: slideInFromRight 0.3s ease-out 0.3s both; }
+.mobile-menu-item:nth-child(4) { animation: slideInFromRight 0.3s ease-out 0.4s both; }
+.mobile-menu-item:nth-child(5) { animation: slideInFromRight 0.3s ease-out 0.5s both; }

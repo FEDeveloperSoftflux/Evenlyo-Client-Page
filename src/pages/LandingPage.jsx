@@ -7,6 +7,7 @@ import Categories from "../components/Categories";
 import VendorList from "../components/VendorList";
 import MultiVendor from "../components/MultiVendor";
 import FrontendUserDashboard from "../components/FrontendUserDashboard";
+import HaveQuestions from "../components/HaveQuestions";
 import MapProviders from "../components/MapProviders";
 import Ratings from "../components/Ratings";
 import CustomerShowcase from "../components/CustomerShowcase";
@@ -24,6 +25,7 @@ function LandingPage() {
       <RentalTabs />
       <MultiVendor />
       <FrontendUserDashboard />
+      <HaveQuestions />
       <MapProviders />
       <Ratings />
       <CustomerShowcase />
