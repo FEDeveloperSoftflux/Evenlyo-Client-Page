@@ -63,7 +63,7 @@ const CustomerShowcase = () => {
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-2">
             Customer Showcase
           </h2>
           <p className="text-gray-600 text-lg">
@@ -90,7 +90,7 @@ const CustomerShowcase = () => {
                   className="relative flex-shrink-0"
                   style={{ width: `${100 / totalExtendedSlides}%` }}
                 >
-                  <div className="relative h-96 lg:h-[500px] overflow-hidden rounded-2xl">
+                  <div className=" relative h-96 lg:h-[500px] overflow-hidden rounded-2xl">
                     <img 
                       src={image} 
                       alt={`Customer showcase ${(index % totalSlides) + 1}`}
@@ -99,16 +99,10 @@ const CustomerShowcase = () => {
                     
                     {/* Enhanced gradient overlays */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-white/20"></div>
-                    
-                    {/* Animated shimmer effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shimmer"></div>
-                    
-                    {/* Bottom gradient */}
-                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white/70 to-transparent"></div>
-                    
+
                     {/* Side gradients */}
-                    <div className="absolute top-0 left-0 w-40 h-full bg-gradient-to-r from-white/50 to-transparent"></div>
-                    <div className="absolute top-0 right-0 w-40 h-full bg-gradient-to-l from-white/50 to-transparent"></div>
+                    <div className="absolute top-0 left-0 w-10 h-full bg-gradient-to-r from-white/50 to-transparent"></div>
+                    <div className="absolute top-0 right-0 w-s h-full bg-gradient-to-l from-white/50 to-transparent"></div>
                   </div>
                 </div>
               ))}
@@ -130,13 +124,13 @@ const CustomerShowcase = () => {
                   {/* Outer ring */}
                   <div className={`w-4 h-4 rounded-full border-2 transition-all duration-300 ${
                     isActive 
-                      ? 'border-primary-500 bg-primary-100' 
-                      : 'border-gray-300 hover:border-gray-400'
+                      ? 'border-black bg-black' 
+                      : 'border-black hover:border-black'
                   }`}>
                     {/* Inner dot */}
                     <div className={`absolute inset-0.5 rounded-full transition-all duration-300 ${
                       isActive 
-                        ? 'bg-primary-500 scale-100' 
+                        ? 'bg-black scale-100' 
                         : 'bg-gray-300 scale-0 group-hover:scale-75 group-hover:bg-gray-400'
                     }`} />
                     
@@ -151,7 +145,7 @@ const CustomerShowcase = () => {
                           stroke="currentColor"
                           strokeWidth="1"
                           className={`transition-all duration-700 ${
-                            isActive ? 'text-primary-500' : 'text-transparent'
+                            isActive ? 'text-black' : 'text-transparent'
                           }`}
                           strokeDasharray="37.7"
                           strokeDashoffset={37.7 * (1 - progress)}
@@ -169,17 +163,6 @@ const CustomerShowcase = () => {
             })}
           </div>
           
-          {/* Progress bar */}
-          <div className="mt-4 w-full max-w-md mx-auto">
-            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-primary-500 to-primary-600 transition-all duration-700 ease-out"
-                style={{
-                  width: `${((currentSlide % totalSlides) + 1) / totalSlides * 100}%`
-                }}
-              />
-            </div>
-          </div>
         </div>
       </div>
     </section>

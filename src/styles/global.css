@@ -312,3 +312,7 @@ select {
 .mobile-menu-item:nth-child(3) { animation: slideInFromRight 0.3s ease-out 0.3s both; }
 .mobile-menu-item:nth-child(4) { animation: slideInFromRight 0.3s ease-out 0.4s both; }
 .mobile-menu-item:nth-child(5) { animation: slideInFromRight 0.3s ease-out 0.5s both; }
+
+.btn-nowrap {
+  white-space: nowrap;
+}

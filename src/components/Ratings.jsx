@@ -5,8 +5,8 @@ const Ratings = () => {
     <section className="py-16 px-6 lg:px-16 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8">
+          <h2 className="text-[25px] lg:text-4xl font-bold text-gray-900 mb-2">
             Innovative{" "}
             <span
               className="relative inline-block"
@@ -21,7 +21,7 @@ const Ratings = () => {
               Rating System
             </span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-md text-gray-600 max-w-3xl mx-auto">
             Our rating system offers a comprehensive solution to enhance your
             website's SEO and elevate its credibility.
           </p>
@@ -29,7 +29,7 @@ const Ratings = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Multi Criteria Reviews */}
-          <div className="bg-gray-200 rounded-2xl p-8 shadow-lg">
+          <div className="bg-gray-200 rounded-2xl p-6 shadow-lg">
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-4">
                 <img
@@ -37,7 +37,7 @@ const Ratings = () => {
                   alt="multicriteria logo"
                 />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-2xl sm:text-xl font-bold text-gray-900">
                 Multi Criteria Reviews
               </h3>
             </div>
@@ -55,21 +55,22 @@ const Ratings = () => {
             </p>
 
             {/* Rating Display */}
-            <div className=" rounded-lg p-4">
+            <div className=" rounded-lg">
               <img
                 src="/assets/multicriteria.png"
                 alt="multicriteria reviews"
+                className="w-100"
               />
             </div>
           </div>
 
           {/* Google Reviews */}
-          <div className="bg-gray-200 rounded-2xl p-8 shadow-lg">
+          <div className="bg-gray-200 rounded-2xl p-6 shadow-lg">
             <div className="flex items-center mb-6">
               <div className="w-12 h-12  rounded-lg flex items-center justify-center mr-4">
                 <img src="/assets/google-reviews.svg" alt="googler logo" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-2xl sm:text-xl font-bold text-gray-900">
                 Google Reviews
               </h3>
             </div>
@@ -86,8 +87,8 @@ const Ratings = () => {
             </p>
 
             {/* Google Review Display */}
-            <div className=" rounded-lg p-6">
-              <img src="/assets/googlereview.png" alt="google review" />
+            <div className=" rounded-lg ">
+              <img src="/assets/googlereview.png" alt="google review" className="w-100" />
             </div>
           </div>
         </div>

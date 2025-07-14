@@ -1,4 +1,5 @@
 import React from 'react';
+import brandLogo from '../../public/assets/brand.svg';
 
 const Footer = () => {
   return (
@@ -8,40 +9,44 @@ const Footer = () => {
           
           {/* About Section */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold">Evenlyo</h2>
-            <ul className="space-y-2 text-base">
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">About AXT Transportation</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Careers</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Story Hub/Newsroom</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Investors</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Corporate Social Responsibility</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Global Locations</a></li>
+            <div className="flex items-center space-x-2">
+              <img src={brandLogo} alt="Evenlyo Logo" className="h-8 w-15" />
+            </div>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="text-gray-700 hover:text-gray-900 ml-5">About AXT Transportation</a></li>
+              <li><a href="#" className="text-gray-700 hover:text-gray-900 ml-5">Careers</a></li>
+              <li><a href="#" className="text-gray-700 hover:text-gray-900 ml-5">Story Hub/Newsroom</a></li>
+              <li><a href="#" className="text-gray-700 hover:text-gray-900 ml-5">Investors</a></li>
+              <li><a href="#" className="text-gray-700 hover:text-gray-900 ml-5">Corporate Social Responsibility</a></li>
+              <li><a href="#" className="text-gray-700 hover:text-gray-900 ml-5">Global Locations</a></li>
             </ul>
           </div>
 
-          {/* Discover Section */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Discover</h3>
-            <ul className="space-y-2 text-base">
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Industry</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Products</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Services</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Success Stories</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Resource Library</a></li>
-            </ul>
-          </div>
-
-          {/* Support Resources */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Support Resources</h3>
-            <ul className="space-y-2 text-base">
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Support and Downloads</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Contact Support</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Request a Repair</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Product Warranty Information</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Developer Portal</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-gray-900">Report a Potential Security Vulnerability or Concern</a></li>
-            </ul>
+          {/* Discover & Support Resources Side by Side on Mobile */}
+          <div className="flex flex-row gap-4 col-span-1 md:col-span-1 lg:col-span-2">
+            {/* Discover Section */}
+            <div className="space-y-4 w-1/2">
+              <h3 className="text-lg font-semibold">Discover</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Industry</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Products</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Services</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Success Stories</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Resource Library</a></li>
+              </ul>
+            </div>
+            {/* Support Resources */}
+            <div className="space-y-2 w-1/2">
+              <h3 className="text-lg font-semibold">Support Resources</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Support and Downloads</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Contact Support</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Request a Repair</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Product Warranty Information</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Developer Portal</a></li>
+                <li><a href="#" className="text-gray-700 hover:text-gray-900">Report a Potential Security Vulnerability or Concern</a></li>
+              </ul>
+            </div>
           </div>
 
           {/* Connect with our team */}
@@ -49,7 +54,7 @@ const Footer = () => {
             <h3 className="text-xl font-semibold">Connect with our team</h3>
             <p className="text-base text-gray-700">Stay up to date with AXT Transportation.</p>
             <p className="text-base text-gray-700">Sign up for our newsletter.</p>
-            <button className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded transition-colors">
+            <button className="btn-primary-mobile text-white px-6 py-2 rounded-xl transition-colors">
               Register Now
             </button>
             <p className="text-sm text-gray-600 mt-4">Manage Contact Preferences</p>
@@ -76,15 +81,21 @@ const Footer = () => {
               </a>
             </div>
           </div>
+
         </div>
+
+        
 
         {/* Legal and Social Links */}
         <div className="mt-8 pt-6 border-t border-gray-300">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <ul className="flex flex-wrap space-x-6 text-sm text-gray-600 mb-4 md:mb-0">
+          <div className="flex flex-col items-center text-center space-y-1">
+            <ul className="flex flex-wrap justify-center space-x-4 text-sm text-gray-600">
               <li><a href="#" className="hover:text-gray-900">Legal</a></li>
+              <li>|</li>
               <li><a href="#" className="hover:text-gray-900">Terms of Use</a></li>
+              <li>|</li>
               <li><a href="#" className="hover:text-gray-900">Privacy Policy</a></li>
+              <li>|</li>
               <li><a href="#" className="hover:text-gray-900">Supply Chain Transparency</a></li>
             </ul>
             <p className="text-sm text-gray-600">©2025 Zebra Technologies Corp. and/or its affiliates.</p>

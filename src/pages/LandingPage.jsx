@@ -20,8 +20,8 @@ function LandingPage() {
       <Header />
       <Hero />
       <Categories />
-      <AdvancedBookingSystem />
       <VendorList />
+      <AdvancedBookingSystem />
       <RentalTabs />
       <MultiVendor />
       <FrontendUserDashboard />

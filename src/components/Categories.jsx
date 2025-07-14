@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState('Entertainment & Attractions')
   const [selectedSubcategory, setSelectedSubcategory] = useState('DJ')
+  const [showAllVendors, setShowAllVendors] = useState(false)
 
   const categories = [
     {
@@ -163,6 +164,13 @@ const Categories = () => {
     vendor.category === selectedCategory && vendor.subcategory === selectedSubcategory
   )
 
+  // Determine how many vendors to show on mobile (below md: 448px)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 448;
+  let vendorsToShow = filteredVendors;
+  if (!showAllVendors && filteredVendors.length > 3) {
+    vendorsToShow = isMobile ? filteredVendors.slice(0, 3) : filteredVendors;
+  }
+
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-16 bg-gray-50">
       <div className="max-w-7xl mx-auto">
@@ -174,8 +182,11 @@ const Categories = () => {
         </div>
 
         {/* Category Icons */}
-        <div className="flex justify-center items-start space-x-6 sm:space-x-8 md:space-x-12 lg:space-x-16 mb-responsive overflow-x-auto pb-4">
-          {categories.map((category) => (
+        <div
+          className="grid grid-cols-3 gap-y-6 gap-x-2 justify-items-center mb-responsive md:flex md:justify-center md:items-start md:gap-y-0 md:gap-x-0 md:space-x-8 md:overflow-visible md:pb-0"
+        >
+          {/* First row: first 3 categories */}
+          {categories.slice(0, 3).map((category) => (
             <div
               key={category.id}
               onClick={() => {
@@ -210,6 +221,44 @@ const Categories = () => {
               </span>
             </div>
           ))}
+          {/* Second row: last 2 categories, centered on mobile */}
+          <div className="col-span-3 flex justify-center gap-x-4 md:col-span-1 md:flex-none md:justify-start md:gap-x-8">
+            {categories.slice(3).map((category) => (
+              <div
+                key={category.id}
+                onClick={() => {
+                  setSelectedCategory(category.name)
+                  setSelectedSubcategory(category.subcategories[0])
+                }}
+                className={`flex flex-col items-center cursor-pointer transition-all duration-300 min-w-max ${
+                  selectedCategory === category.name ? 'transform scale-105' : 'hover:scale-102'
+                }`}
+              >
+                <div
+                  className={`category-card-mobile sm:category-card-desktop border-4 transition-all duration-300 ${
+                    selectedCategory === category.name
+                      ? 'bg-gradient-to-r from-secondary via-primary-500 to-primary-600 border-white shadow-category'
+                      : 'bg-white border-gray-200 hover:border-primary-300 shadow-card'
+                  }`}
+                >
+                  <img 
+                src={category.icon}
+                    alt={category.name}
+                    className={`w-6 h-6 sm:w-8 sm:h-8 transition-all duration-300 ${
+                      selectedCategory === category.name ? 'filter brightness-0 invert' : ''
+                    }`}
+                  />
+                </div>
+                <span
+                  className={`text-xs sm:text-sm font-medium text-center max-w-20 sm:max-w-28 leading-tight transition-all duration-300 ${
+                    selectedCategory === category.name ? 'text-primary-500 font-semibold' : 'text-gray-700'
+                  }`}
+                >
+                  {category.name}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Subcategory Pills */}
@@ -236,24 +285,6 @@ const Categories = () => {
               <span>{subcategory}</span>
             </button>
           ))}
-          <button 
-            onClick={() => {
-              setSelectedCategory('Food & Drinks')
-              setSelectedSubcategory('Food Trucks')
-            }}
-            className="px-4 py-2.5 bg-white border border-gray-200 rounded-full text-primary-500 hover:bg-primary-50 text-sm font-medium transition-colors"
-          >
-            Food
-          </button>
-          <button 
-            onClick={() => {
-              setSelectedCategory('Decoration & Styling')
-              setSelectedSubcategory('Floral Design')
-            }}
-            className="px-4 py-2.5 bg-white border border-gray-200 rounded-full text-primary-500 hover:bg-primary-50 text-sm font-medium transition-colors"
-          >
-            Decoration
-          </button>
           <button className="px-4 py-2.5 bg-white border border-gray-200 rounded-full text-primary-500 hover:bg-primary-50 text-sm font-medium transition-colors">
             See All
           </button>
@@ -261,7 +292,7 @@ const Categories = () => {
 
         {/* Vendor Section Title */}
         <div className="text-center mb-responsive">
-          <h3 className="text-responsive-h3 text-gray-900 mb-2">
+          <h3 className="text-responsive-h2 text-gray-900 mb-2">
             All {selectedSubcategory} <span className="text-gray-400">({filteredVendors.length})</span>
           </h3>
           <p className="text-responsive-body text-gray-600">
@@ -270,8 +301,8 @@ const Categories = () => {
         </div>
 
         {/* Vendor Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-responsive">
-          {filteredVendors.map((vendor, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-responsive">
+          {vendorsToShow.map((vendor, index) => (
             <div key={vendor.id} className="card-mobile vendor-card-desktop">
               {/* Vendor Image */}
               <div className="relative image-container-mobile sm:image-container-desktop bg-gradient-to-br from-gray-200 to-gray-300">
@@ -295,13 +326,13 @@ const Categories = () => {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center">
                     <img 
-                      src="/assets/jaydeep-avatar.svg" 
+                      src="/assets/Profile.svg" 
                       alt="Jaydeep" 
                       className="w-8 h-8 rounded-full mr-3"
                     />
-                    <span className="text-blue-600 text-sm font-medium">Jaydeep</span>
+                    <span className="text-black-600 text-sm font-medium">Jaydeep</span>
                   </div>
-                  <span className="text-green-600 text-sm font-medium">• Available</span>
+                  <span className="text-green-600 text-sm font-medium bg-green-100 rounded-lg px-2">• Available</span>
                 </div>
                 
                 <h4 className="font-bold text-base sm:text-lg text-gray-900 mb-2">{vendor.name}</h4>
@@ -338,11 +369,21 @@ const Categories = () => {
               </div>
             </div>
           ))}
+          {/* Mobile View All Button after 3 cards */}
+          {!showAllVendors && filteredVendors.length > 3 && (
+            <button
+              className="block md:hidden col-span-1 px-8 py-3 border-2 border-primary-500 text-primary-500 rounded-full font-medium hover:bg-primary-50 transition-colors duration-300 mx-auto"
+              onClick={() => setShowAllVendors(true)}
+              style={{ gridColumn: '1/-1' }}
+            >
+              View All →
+            </button>
+          )}
         </div>
 
         
         {/* View All Button */}
-        <div className="text-center">
+        <div className="text-center hidden md:block">
           <button className="px-8 py-3 border-2 border-primary-500 text-primary-500 rounded-full font-medium hover:bg-primary-50 transition-colors duration-300">
             View All →
           </button>

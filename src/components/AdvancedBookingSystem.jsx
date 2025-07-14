@@ -2,16 +2,32 @@ import React from "react";
 
 const AdvancedBookingSystem = () => {
   return (
-    <section className="px-0 lg:px-0 bg-white border-t border-b border-gray-300 shadow-sm">
+    <section className="px-2 xs:px-4 sm:px-6 md:px-8 bg-white border-t border-b border-gray-300 shadow-sm">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 md:gap-10 items-center">
+          {/* Right Side - QR Code and Features (on mobile, image on top) */}
+          <div className="flex justify-center items-center h-full md:order-2 order-1 w-full md:pr-8">
+            <div className="flex flex-col justify-center items-center w-full h-full bg-white">
+              <img
+                src="/assets/QR CODE.png"
+                alt="QR Code"
+                className="w-80 h-40 xs:w-48 xs:h-48 sm:w-80 sm:h-56 md:w-80 md:h-80 lg:w-96 lg:h-96 object-contain"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.nextSibling &&
+                    (e.target.nextSibling.style.display = "flex");
+                }}
+              />
+            </div>
+          </div>
+
           {/* Left Side - Content */}
-          <div className="space-y-2 pl-0 pr-0 lg:pl-8 lg:pr-8 break-words">
+          <div className="space-y-2 md:pl-8 md:pr-8 break-words md:order-1 order-2 text-left flex flex-col md:items-start mb-4">
             {/* Key Features Label */}
-            <span className="inline-block px-3 py-1 mb-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium ">
-              KEY FEATURES
+            <span className="self-start inline-block px-3 py-1 mb-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+            KEY FEATURES
             </span>
-            <h2 className="text-3xl font-bold text-gray-900 leading-tight mb-2">
+            <h2 className="text-2xl xs:text-3xl font-bold text-gray-900 leading-tight mb-2">
               Advanced{" "}
               <span
                 className="relative inline-block"
@@ -26,20 +42,20 @@ const AdvancedBookingSystem = () => {
                 Booking System
               </span>
             </h2>
-            <p className="text-base text-gray-600 leading-normal mb-4">
+            <p className="text-sm xs:text-base text-gray-600 leading-normal mb-4">
               Listeo includes a{" "}
               <span className="font-bold text-gray-900">
                 built-in and free advanced booking system
               </span>{" "}
               that offers complete
-              <br /> control over online reservation methods and{" "}
+              <br className="hidden xs:block" /> control over online reservation methods and{" "}
               <span className="font-bold text-gray-900">
                 QR code verification system
               </span>
               .
             </p>
             <button
-              className="inline-flex items-center px-6 py-2 rounded-full font-medium text-base"
+              className="inline-flex items-center justify-center px-4 xs:px-4 py-2 rounded-lg font-medium text-base mt-2"
               style={{
                 background: "#FFEDF0",
                 color: "#F91942",
@@ -53,22 +69,6 @@ const AdvancedBookingSystem = () => {
               Watch Booking Guide Video
               <span className="ml-2 text-lg">&#8594;</span>
             </button>
-          </div>
-
-          {/* Right Side - QR Code and Features */}
-          <div className="flex justify-end items-center h-full pr-0 lg:pr-8">
-            <div className="flex flex-col justify-center items-end w-full h-full bg-white">
-              <img
-                src="/assets/QR CODE.png"
-                alt="QR Code"
-                className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-contain"
-                onError={(e) => {
-                  e.target.style.display = "none";
-                  e.target.nextSibling &&
-                    (e.target.nextSibling.style.display = "flex");
-                }}
-              />
-            </div>
           </div>
         </div>
       </div>

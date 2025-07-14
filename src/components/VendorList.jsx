@@ -5,7 +5,7 @@ const VendorList = () => {
     {
       id: 1,
       name: "Pulse Events & Entertainment",
-      logo: "/assets/jaydeep-avatar.svg",
+      logo: "/assets/Vendor1.png",
       services: "DJs, Sound & Lighting, Live Bands, MCs",
       location: "Los Angeles, CA",
       coverage: "Greater Los Angeles, Orange County",
@@ -18,7 +18,7 @@ const VendorList = () => {
     {
       id: 2,
       name: "Pulse Events & Entertainment",
-      logo: "/assets/jaydeep-avatar.svg",
+      logo: "/assets/Vendor2.png",
       services: "DJs, Sound & Lighting, Live Bands, MCs",
       location: "Los Angeles, CA",
       coverage: "Greater Los Angeles, Orange County",
@@ -31,7 +31,7 @@ const VendorList = () => {
     {
       id: 3,
       name: "Pulse Events & Entertainment",
-      logo: "/assets/jaydeep-avatar.svg",
+      logo: "/assets/Vendor3.png",
       services: "DJs, Sound & Lighting, Live Bands, MCs",
       location: "Los Angeles, CA",
       coverage: "Greater Los Angeles, Orange County",
@@ -76,7 +76,7 @@ const VendorList = () => {
                   <img
                     src={vendor.logo}
                     alt={vendor.name}
-                    className="w-20 h-20 rounded-lg object-cover"
+                    className="w-40 h-40 rounded-lg"
                   />
                 </div>
 
@@ -137,79 +137,46 @@ const VendorList = () => {
         </div>
 
         {/* Mobile & Tablet Card Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:hidden gap-4 md:gap-6">
           {vendors.map((vendor, index) => (
-            <div
-              key={vendor.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 relative overflow-hidden"
-            >
-              {/* Available Status Pill */}
-              <div className="absolute right-3 top-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wider z-10">
-                Available
-              </div>
-              
-              {/* Card Header */}
-              <div className="p-4 pb-3">
-                <div className="flex items-center space-x-3 mb-3">
-                  <img
-                    src={vendor.logo}
-                    alt={vendor.name}
-                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-bold text-gray-900 truncate">
-                      {vendor.name}
-                    </h3>
-                    <div className="flex items-center mt-1">
-                      {renderStars(vendor.rating)}
-                    </div>
+            <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+              {/* Vendor Image */}
+              <img src={vendor.logo} alt={vendor.name} className=" ml-5 mr-5 w-70 h-60 mt-2 mb-2 " />
+
+              <div className="p-4 flex-1 flex flex-col">
+                {/* Name & Discount */}
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="font-bold text-lg text-gray-900">{vendor.name}</h3>
+                  <span className="bg-green-100 text-green-600 text-xs font-semibold px-2 py-1 rounded-lg whitespace-nowrap">
+                    • 20% OFF
+                  </span>
+                </div>
+                {/* Coverage/Location */}
+                <div className="text-gray-500 text-sm mb-2">{vendor.coverage}</div>
+                {/* Location */}
+                <div className="text-xs mb-2"><span className="font-bold">Location:</span> {vendor.location}</div>
+                {/* Services */}
+                <div className="flex flex-wrap gap-2 mb-2">
+                <span className="font-bold text-xs">Services:</span>
+                  {vendor.services.split(',').map((service, i) => (
+                    <span key={i} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">{service.trim()}</span>
+                  ))}
+                  <span className="bg-pink-50 text-pink-600 text-xs px-2 py-1 rounded-full cursor-pointer">See All</span>
+                </div>
+                {/* Why Choose Us */}
+                <div className="text-xs text-gray-600 mb-2">
+                  <span className="font-medium text-gray-700">Why Chose Us :</span>
+                  {vendor.whyChoose}
+                  <span className="text-pink-500 ml-1 cursor-pointer hover:underline font-medium">View More</span>
+                </div>
+                {/* Rating & Reviews and CTA Button */}
+                <div className="flex items-center justify-between gap- mb-3">
+                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <span className="text-yellow-400">★★★★</span>
+                    <span className="font-semibold text-gray-800">4.8</span>
+                    <span>(127 reviews)</span>
                   </div>
-                </div>
-              </div>
-
-              {/* Card Body */}
-              <div className="px-4 pb-4">
-                <div className="space-y-2 text-sm text-gray-600 mb-4">
-                  <p className="truncate">
-                    <span className="font-medium">Services:</span>{" "}
-                    {vendor.services}
-                  </p>
-                  <p className="truncate">
-                    <span className="font-medium">Location:</span>{" "}
-                    {vendor.location}
-                  </p>
-                  <p className="text-gray-500 text-xs">{vendor.coverage}</p>
-                </div>
-
-                <div className="mb-4">
-                  <p className="text-sm text-gray-600 line-clamp-2">
-                    <span className="font-medium text-gray-700">
-                      Why Choose Us:
-                    </span>{" "}
-                    {vendor.whyChoose}
-                  </p>
-                  <button className="text-primary-500 text-sm font-medium hover:underline mt-1">
-                    View More
-                  </button>
-                </div>
-
-                {/* Contact Information */}
-                <div className="border-t border-gray-100 pt-3">
-                  <p className="font-medium text-gray-900 mb-2 text-sm">
-                    Contact Information
-                  </p>
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2 text-xs text-gray-600">
-                      <span>📞</span>
-                      <span className="font-medium">Call:</span>
-                      <span className="truncate">{vendor.phone}</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-xs text-gray-600">
-                      <span>📧</span>
-                      <span className="font-medium">Email:</span>
-                      <span className="truncate">{vendor.email}</span>
-                    </div>
-                  </div>
+                  <button className="btn-primary-mobile  text-white font-bold py-2 px-8 rounded-lg whitespace-nowrap">View Profile</button>
                 </div>
               </div>
             </div>

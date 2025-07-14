@@ -95,25 +95,29 @@ const RentalTabs = () => {
       <div className="max-w-7xl mx-auto">
         {/* Tab Navigation */}
         <div className="flex justify-center mb-8">
-          <div className="flex bg-transparent border-b border-gray-200 space-x-8">
+          <div
+            className="flex flex-row flex-nowrap overflow-x-auto scrollbar-hide bg-transparent border-b border-gray-200 w-full max-w-full px-1 sm:px-2 md:px-0 space-x-1 sm:space-x-3 md:space-x-8 md:justify-center md:overflow-x-visible md:w-auto md:max-w-none"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`relative flex items-center px-6 py-4 transition-all duration-300 text-sm font-medium border-b-2 ${
+                className={`relative flex items-center px-1.5 sm:px-3 md:px-6 py-1 sm:py-2 md:py-4 text-[11px] sm:text-xs md:text-base transition-all duration-300 font-medium border-b-2 min-w-[70px] sm:min-w-[90px] md:min-w-0 justify-center ${
                   activeTab === tab.id
                     ? 'text-primary-500 border-gradient-underline'
                     : 'text-gray-600 hover:text-gray-900 border-transparent hover:border-gray-300'
                 }`}
+                style={{ minHeight: '38px' }}
               >
                 <img
                   src={tab.icon}
                   alt={tab.name}
-                  className={`w-5 h-5 mr-2 ${
+                  className={`w-3 h-3 sm:w-5 sm:h-5 md:w-5 md:h-5 mr-1 sm:mr-2 ${
                     activeTab === tab.id ? 'filter brightness-0 saturate-200 hue-rotate-315' : ''
                   }`}
                 />
-                <span className="font-medium">{tab.name}</span>
+                <span className="font-medium leading-none">{tab.name}</span>
                 {activeTab === tab.id && (
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full"></div>
                 )}
@@ -124,14 +128,33 @@ const RentalTabs = () => {
 
         {/* Tab Content */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
+          <div className="flex flex-col lg:flex-row min-h-[600px]">
+            {/* Right Side - Image (now on top for mobile) */}
+            <div className="bg-white flex items-center justify-center p-2 order-1 lg:order-2 w-full lg:w-1/2">
+              <div className="w-full h-full max-w-lg">
+                <img
+                  src={tabs.find(tab => tab.id === activeTab)?.image}
+                  alt={tabs.find(tab => tab.id === activeTab)?.name}
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                    e.target.nextSibling.style.display = 'flex'
+                  }}
+                />
+                <div className="w-full h-full bg-gray-200 hidden items-center justify-center rounded-lg">
+                  <span className="text-gray-500 text-lg font-semibold">
+                    {tabs.find(tab => tab.id === activeTab)?.name} Preview
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {/* Left Side - Content */}
-            <div className="p-8 lg:p-12">
+            <div className="p-8 lg:p-12 order-2 lg:order-1 w-full lg:w-1/2">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">{content.title}</h2>
-              <p className="text-pink-500 font-medium mb-8">
+              <p className="inline-block text-red-500 font-medium mb-4 bg-red-100 rounded-lg text-sm py-2 px-2">
                 {content.subtitle}
               </p>
-
               <div className="space-y-6">
                 <p className="text-gray-700 leading-relaxed">
                   {content.description}
@@ -147,9 +170,9 @@ const RentalTabs = () => {
                   <div className="space-y-4">
                     {content.features.map((feature, index) => (
                       <div key={index} className="flex items-start space-x-3">
-                        <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
                         <span className="text-gray-700">
@@ -174,26 +197,6 @@ const RentalTabs = () => {
                     </button>
                   </div>
                 )}
-              </div>
-            </div>
-
-            {/* Right Side - Image */}
-            <div className="bg-gray-100 flex items-center justify-center p-8">
-              <div className="w-full h-full max-w-lg">
-                <img
-                  src={tabs.find(tab => tab.id === activeTab)?.image}
-                  alt={tabs.find(tab => tab.id === activeTab)?.name}
-                  className="w-full h-full object-contain"
-                  onError={(e) => {
-                    e.target.style.display = 'none'
-                    e.target.nextSibling.style.display = 'flex'
-                  }}
-                />
-                <div className="w-full h-full bg-gray-200 hidden items-center justify-center rounded-lg">
-                  <span className="text-gray-500 text-lg font-semibold">
-                    {tabs.find(tab => tab.id === activeTab)?.name} Preview
-                  </span>
-                </div>
               </div>
             </div>
           </div>

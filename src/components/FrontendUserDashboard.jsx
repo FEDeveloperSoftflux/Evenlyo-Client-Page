@@ -6,22 +6,31 @@ const FrontendUserDashboard = () => {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Left Side - Text and Buttons Aligned Top */}
-          <div className="flex flex-col justify-start space-y-8">
-            <div>
-              <p className="text-sm font-medium text-orange-500 mb-2 tracking-wide uppercase">
-                SUPERIOR UX
+          <div className="flex flex-col justify-start space-y-2">
+          <div>
+              <p className="text-sm rounded-lg font-medium text-yellow-800 mb-2 tracking-wide inline-block uppercase bg-yellow-100 px-3 py-1">
+              Superior UX
               </p>
-              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+              <h2 className="text-[25px] lg:text-5xl font-bold text-gray-900 leading-tight">
                 Front-End User Dashboard
               </h2>
-              <p className="text-gray-600 mt-4">
-                Seamless management of listing, bookings, messages, profile audits, payments, reviews - all in one place.
-              </p>
+              <p className="text-sm xs:text-base text-gray-600 leading-normal mb-4 mt-4">
+              Our user-friendly front-end dashboard allows{" "}
+              <span className="font-bold text-gray-900">
+              seamless management
+              </span>{" "}
+              of listings, bookings, packages, profile details, and private messages,
+              <span className="font-bold text-gray-900">
+              all in one place.
+              </span>
+                
+               
+            </p>
             </div>
             
             {/* Action Button */}
-            <div className="pt-6">
-              <button className="bg-pink-500 hover:bg-pink-600 text-white font-bold px-8 py-3 rounded-lg shadow-lg transition-all duration-300">
+            <div>
+              <button className="btn-primary-mobile  text-white font-bold px-3 py-3 rounded-xl shadow-lg transition-all duration-300">
                 Watch Video Tour ➜
               </button>
             </div>
@@ -29,54 +38,53 @@ const FrontendUserDashboard = () => {
 
           {/* Right Side - Simple Scroller with Placeholder */}
           <div className="relative">
-                  {/* Dashboard Screenshot */}
-                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
-                    <img src="../assets/dashboardoverview.png" alt="Dashboard Overview" className="w-full h-96 object-cover" />
-                  </div>
-
-            {/* Dashboard Overview Section */}
-            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-              <div className="flex items-center mb-4">
-                <img src="../assets/dashbaordicon.svg" alt="Dashboard Icon" className="w-6 h-6 mr-2" />
-                <h4 className="text-sm font-semibold text-gray-900">Dashboard Overview</h4>
-              </div>
-              <p className="text-xs text-gray-600 mb-4">
-                Real-time overview provides the most important information at first glance
-              </p>
-              <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
-                <div className="space-y-1">
-                  <p>• Bookings</p>
-                  <p>• Guest Messages</p>
-                  <p>• Wallet</p>
-                </div>
-                <div className="space-y-1">
-                  <p>• Coupons Created</p>
-                  <p>• Ads Manager</p>
-                  <p>• Statistics</p>
-                </div>
-                <div className="space-y-1">
-                  <p>• Store Settings</p>
-                  <p>• Reviews</p>
-                  <p>• Bookmarks</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Nifty Graphs Section */}
-            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-              <div className="flex items-center mb-4">
-                <img src="../assets/niftyicon.svg" alt="Nifty Icon" className="w-6 h-6 mr-2" />
-                <h4 className="text-sm font-semibold text-gray-900">Nifty Graphs and Data</h4>
-              </div>
-              <p className="text-xs text-gray-600 mb-2">
-                Statistics all about views, bookings, listings and lots to help your customers how well each rank amongst set
-              </p>
-              <p className="text-xs text-blue-600">
-                <span className="font-medium">Bookings</span> saved statistics
-              </p>
-            </div>
+            {/* Dashboard Screenshot + Overview Section (Combined) */}
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
-              <img src="../assets/niftsgraphsoverview.png" alt="Nifty Graphs Overview" className="w-full h-96 object-cover" />
+              <img src="../assets/dashboardoverview.png" alt="Dashboard Overview" className=" object-cover" />
+              {/* Dashboard Overview Section */}
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <img src="../assets/dashbaordicon.svg" alt="Dashboard Icon" className="w-6 h-6 mr-2" />
+                  <h4 className="text-sm font-semibold text-gray-900">Dashboard Overview</h4>
+                </div>
+                <p className="text-xs text-gray-600 mb-4">
+                The main dashboard page provides a comprehensive overview of key activities and performance metrics:
+                </p>
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Bookings</p></div>
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Guest Messages</p></div>
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Wallet</p></div>
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Store Settings</p></div>
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Bookmarks</p></div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Coupons Created</p></div>
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Ads Manager</p></div>
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Statistics</p></div>
+                    <div className="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 10.5L9 14.5L15 7.5" stroke="#F91942" strokeWidth="3.0" strokeLinecap="round" strokeLinejoin="round"/></svg><p className="m-0">Reviews</p></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Nifty Graphs Section + Overview (Combined) */}
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
+              <img src="../assets/niftsgraphsoverview.png" alt="Nifty Graphs Overview" className="object-cover" />
+              {/* Nifty Graphs Overview Section */}
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <img src="../assets/niftyicon.svg" alt="Nifty Icon" className="w-6 h-6 mr-2" />
+                  <h4 className="text-sm font-semibold text-gray-900">Nifty Graphs and Data</h4>
+                </div>
+                <p className="text-xs text-gray-600 mb-2">
+                Statistics 📈 page includes a bunch of nifty graphs and data to show your customers how many visits their listings get.
+                </p>
+                <p className="text-xs">
+                Calendar view, unique to our theme, provides you with the ability to digest a <span className='font-bold'>breakdown of all
+                bookings</span>  across the month.saved statistics
+                </p>
+              </div>
             </div>
 
             {/* Pagination dots */}

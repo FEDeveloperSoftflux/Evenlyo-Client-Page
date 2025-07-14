@@ -24,10 +24,10 @@ const HaveQuestions = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold px-8 py-3 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+          <button className="btn-primary-mobile  text-white font-semibold px-6 py-3 rounded-2xl hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl">
             View FAQ
           </button>
-          <button className="border-2 border-pink-500 text-pink-500 font-semibold px-8 py-3 rounded-lg hover:bg-pink-50 transition-all duration-300">
+          <button className="border-2 border-pink-500 text-pink-500 font-semibold px-6 py-3 rounded-2xl hover:bg-pink-50 transition-all duration-300">
             Contact Support
           </button>
         </div>
