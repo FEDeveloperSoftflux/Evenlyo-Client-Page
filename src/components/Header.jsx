@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 function Header() {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
   const featuresDropdownRef = useRef(null);
+  const location = useLocation();
 
   const languages = [
     { code: "en", name: "English" },
@@ -28,9 +31,15 @@ function Header() {
     };
   }, []);
 
-  return (
+return (
     <header className="bg-white border-b border-gray-100 py-3 px-4 sm:px-6 lg:px-16">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
+        {/* Mobile Menu Button */}
+        <button className="lg:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
         {/* Left Section - Logo and Rating */}
         <div className="flex items-center space-x-6">
           <div className="flex items-center">
@@ -55,10 +64,10 @@ function Header() {
         <nav className="hidden lg:flex items-center space-x-8">
           <a
             href="/"
-            className="relative text-gray-900 font-medium text-subtitle-6 hover:text-primary-500 transition-colors pb-1"
+            className={`relative ${location.pathname === '/' ? 'text-gray-900' : 'text-gray-600'} font-medium text-subtitle-6 hover:text-primary-500 transition-colors pb-1`}
           >
             Home
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full"></div>
+            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full ${location.pathname === '/' ? '' : 'scale-x-0 group-hover:scale-x-100'} transition-transform duration-300`}></div>
           </a>
           <div className="relative">
             <button
@@ -118,24 +127,24 @@ function Header() {
           </div>
           <a
             href="/support"
-            className="relative text-gray-600 font-medium text-subtitle-6 hover:text-primary-500 transition-colors pb-1 group"
+            className={`relative ${location.pathname === '/support' ? 'text-gray-900' : 'text-gray-600'} font-medium text-subtitle-6 hover:text-primary-500 transition-colors pb-1 group`}
           >
             Customer Support
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full ${location.pathname === '/support' ? '' : 'scale-x-0 group-hover:scale-x-100'} transition-transform duration-300`}></div>
           </a>
           <a
             href="/blog"
-            className="relative text-gray-600 font-medium text-subtitle-6 hover:text-primary-500 transition-colors pb-1 group"
+            className={`relative ${location.pathname === '/blog' ? 'text-gray-900' : 'text-gray-600'} font-medium text-subtitle-6 hover:text-primary-500 transition-colors pb-1 group`}
           >
             Blog
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full ${location.pathname === '/blog' ? '' : 'scale-x-0 group-hover:scale-x-100'} transition-transform duration-300`}></div>
           </a>
           <a
             href="/pricing"
-            className="relative text-gray-600 font-medium text-subtitle-6 hover:text-primary-500 transition-colors pb-1 group"
+            className={`relative ${location.pathname === '/pricing' ? 'text-gray-900' : 'text-gray-600'} font-medium text-subtitle-6 hover:text-primary-500 transition-colors pb-1 group`}
           >
             Pricing
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full ${location.pathname === '/pricing' ? '' : 'scale-x-0 group-hover:scale-x-100'} transition-transform duration-300`}></div>
           </a>
         </nav>
 
@@ -184,7 +193,7 @@ function Header() {
             )}
           </div>
           <button
-            className="bg-gradient-to-r from-secondary via-primary-500 to-primary-600 text-white font-medium px-4 py-3 rounded-lg hover:from-primary-500 hover:via-primary-600 hover:to-primary-700 transition-all duration-200 shadow-sm hover:shadow-md text-btn-2 flex items-center space-x-2"
+            className="hidden lg:flex bg-gradient-to-r from-secondary via-primary-500 to-primary-600 text-white font-medium px-4 py-3 rounded-lg hover:from-primary-500 hover:via-primary-600 hover:to-primary-700 transition-all duration-200 shadow-sm hover:shadow-md text-btn-2 items-center space-x-2"
             onClick={() => (window.location.href = "/login")}
           >
             {/* White user SVG */}
@@ -216,6 +225,59 @@ function Header() {
           </button>
         </div>
       </div>
+      {isMobileMenuOpen && (
+        <div className="mobile-menu bg-white shadow-lg transform transition-transform duration-300 lg:hidden">
+          <nav className="px-4 py-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">Menu</h2>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="space-y-4">
+              <a href="/" className={`${location.pathname === '/' ? 'text-primary-500' : 'text-gray-700'} block text-lg font-medium py-2 hover:text-primary-500 transition-colors`}>Home</a>
+              <a href="/support" className={`${location.pathname === '/support' ? 'text-primary-500' : 'text-gray-700'} block text-lg font-medium py-2 hover:text-primary-500 transition-colors`}>Customer Support</a>
+              <a href="/blog" className={`${location.pathname === '/blog' ? 'text-primary-500' : 'text-gray-700'} block text-lg font-medium py-2 hover:text-primary-500 transition-colors`}>Blog</a>
+              <a href="/pricing" className={`${location.pathname === '/pricing' ? 'text-primary-500' : 'text-gray-700'} block text-lg font-medium py-2 hover:text-primary-500 transition-colors`}>Pricing</a>
+              <button 
+                className="w-full mt-6 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 text-white font-medium px-4 py-3 rounded-lg hover:from-primary-500 hover:via-primary-600 hover:to-primary-700 transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center space-x-2" 
+                onClick={() => (window.location.href = '/login')}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="white"
+                >
+                  <circle
+                    cx="12"
+                    cy="8"
+                    r="4"
+                    stroke="white"
+                    strokeWidth="2"
+                    fill="white"
+                  />
+                  <path
+                    d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4"
+                    stroke="white"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span>Sign in / Register</span>
+              </button>
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
