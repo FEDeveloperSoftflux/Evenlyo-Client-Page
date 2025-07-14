@@ -9,7 +9,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
   const [formData, setFormData] = useState({
     accountType: '',
     email: '',
-    password: '',
+    cninc: '',
     firstName: '',
     lastName: '',
     phone: '',
@@ -120,54 +120,52 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
 
   const renderStep1 = () => (
     <div className="space-y-4 sm:space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 mt-4">Create Your Vendor Account</h2>
-        <p className="text-sm sm:text-base text-gray-800 mb-6 sm:mb-10">Welcome to <span className="font-bold">Evenlyo</span> Management. Please<br/> Select Your Account Type</p>
+  <div className="text-center">
+    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 mt-4">Create Your Vendor Account</h2>
+    <p className="text-sm sm:text-base text-gray-800 mb-6 sm:mb-10">Welcome to <span className="font-bold">Evenlyo</span> Management. Please<br/> Select Your Account Type</p>
+  </div>
+  
+  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center max-w-2xl mx-auto">
+    <button
+      type="button"
+      onClick={() => setFormData(prev => ({ ...prev, accountType: 'personal' }))}
+      className={`px-10 py-10 border-2 rounded-2xl text-center transition-all shadow-md bg-white w-full sm:w-64
+        ${formData.accountType === 'personal'
+          ? 'border-primary-600'
+          : 'border-gray-200 hover:border-gray-300'
+        }`}
+    >
+      <div className="w-14 h-14 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center mx-auto mb-3 shadow">
+        <img src="/assets/Person.svg" alt="Personal Account" className="w-7 h-7" style={{ filter: 'invert(18%) sepia(98%) saturate(7492%) hue-rotate(303deg) brightness(99%) contrast(105%)' }} />
       </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-        <button
-          type="button"
-          onClick={() => setFormData(prev => ({ ...prev, accountType: 'personal' }))}
-          className={`p-4 sm:p-6 border-2 rounded-xl text-center transition-all ${
-            formData.accountType === 'personal'
-              ? 'border-primary-600 bg-primary-50'
-              : 'border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 rounded-xl bg-whitelex items-center justify-center mx-auto mb-2 sm:mb-3">
-            <img src="/assets/Person.svg" alt="Personal Account" className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-          <h3 className="font-semibold text-gray-900 text-sm sm:text-base">Personal Account</h3>
-        </button>
-        
-        <button
-          type="button"
-          onClick={() => setFormData(prev => ({ ...prev, accountType: 'business' }))}
-          className={`p-4 sm:p-6 border-2 rounded-xl text-center transition-all ${
-            formData.accountType === 'business'
-              ? 'border-primary-600 bg-primary-50'
-              : 'border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 rounded-xl bg-white flex items-center justify-center mx-auto mb-2 sm:mb-3">
-            <img src="/assets/Mail.svg" alt="Personal Account" className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-          <h3 className="font-semibold text-gray-900 text-sm sm:text-base">Business Account</h3>
-        </button>
+      <h3 className="font-semibold text-gray-900 text-base">Personal Account</h3>
+    </button>
+    
+    <button
+      type="button"
+      onClick={() => setFormData(prev => ({ ...prev, accountType: 'business' }))}
+      className={`px-10 py-10 border-2 rounded-2xl text-center transition-all shadow-md bg-white w-full sm:w-64
+        ${formData.accountType === 'business'
+          ? 'border-primary-600'
+          : 'border-gray-200 hover:border-gray-300'
+        }`}
+    >
+      <div className="w-14 h-14 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center mx-auto mb-3 shadow">
+        <img src="/assets/Mail.svg" alt="Business Account" className="w-7 h-7" />
       </div>
-    </div>
+      <h3 className="font-semibold text-gray-900 text-base">Business Account</h3>
+    </button>
+  </div>
+</div>
   );
 
   const renderStep2 = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {formData.accountType === 'business' ? 'Business Information' : 'Personal Information'}
+          {formData.accountType === 'business' ? 'Business Information' : 'Your Personal Info'}
         </h2>
-        <p className="text-gray-600">
-          {formData.accountType === 'business' ? 'Please provide your business details' : 'Please provide your personal details'}
-        </p>
+
       </div>
       
       {formData.accountType === 'business' ? (
@@ -270,31 +268,70 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
           required
         />
       </div>
+      <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="0000****"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Enter Your City"
+              required
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Postal Code</label>
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Enter Your Postal Code"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Enter Your Address"
+              required
+            />
+          </div>
+        </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">CNIC/Passport Details</label>
         <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleInputChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
-          placeholder="Enter your phone number"
-          required
-        />
-      </div>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleInputChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
-          placeholder="Create a password"
-          required
-        />
+              type="digit"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Enter Your  CNIC / Passport Details"
+              required
+            />
       </div>
     </div>
   );
@@ -447,7 +484,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
               <button
                 type="button"
                 onClick={() => step > 1 ? setStep(step - 1) : onClose()}
-                className="px-4 sm:px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors order-2 sm:order-1"
+                className="px-4 sm:px-6 py-2 border rounded-xl transition-colors order-2 sm:order-1 btn-secondary-mobile"
               >
                 {step === 1 ? 'Cancel' : 'Back'}
               </button>
@@ -455,25 +492,12 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
               <button
                 type="submit"
                 disabled={step === 1 && !formData.accountType}
-                className="px-4 sm:px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
+                className="px-4 sm:px-6 py-2 btn-primary-mobile text-white font-bold rounded-xl transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
               >
                 {step === 4 ? 'Complete' : 'Next'}
               </button>
             </div>
           </form>
-
-          {/* Switch to Client Login */}
-          <div className="mt-4 sm:mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <button
-                onClick={onSwitchToClient}
-                className="text-primary-600 hover:text-primary-700 font-medium"
-              >
-                Sign in as Client
-              </button>
-            </p>
-          </div>
         </div>
       </div>
     </div>
