@@ -2,20 +2,22 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import AuthModal from '../auth/AuthModal'
 import ClientRegistrationForm from '../components/ClientRegistrationForm'
 import ForgotPasswordModal from '../auth/ForgotPasswordModal';
+import VerificationModal from '../auth/VerificationModal';
 
-const LoginPage = () => {
+const Register = () => {
   const [activeAccordion, setActiveAccordion] = useState(null)
-  const [showAuthModal, setShowAuthModal] = useState(false)
   const [showRegistrationModal, setShowRegistrationModal] = useState(false)
   const [formData, setFormData] = useState({
+    fullName: '',
+    lastName: '',
     email: '',
-    password: ''
+    phone: ''
   })
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -27,8 +29,7 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Open the auth modal instead of just logging
-    setShowAuthModal(true)
+    setShowVerificationModal(true);
   }
 
   const toggleAccordion = (index) => {
@@ -71,7 +72,7 @@ const LoginPage = () => {
       {/* Header */}
       <Header />
 
-      {/* Main Hero Section with Login Form */}
+      {/* Main Hero Section with Registration Form */}
       <section 
         className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center bg-gray-900"
         style={{
@@ -101,28 +102,55 @@ const LoginPage = () => {
               
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/register" className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold px-8 py-3 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105 flex items-center justify-center text-center">
-                  Register
-                </Link>
-                <button className="border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300">
-                  Join Free
+                <button 
+                  onClick={() => (true)}
+                  className="btn-primary-mobile text-white font-semibold px-8 py-3 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
+                >
+                  Back
                 </button>
               </div>
             </div>
 
-            {/* Right Side - Login Form (Half Outside) */}
+            {/* Right Side - Registration Form (Half Outside) */}
             <div className="lg:col-span-5 relative">
-              {/* Login Form Card - Extended beyond hero section */}
+              {/* Registration Form Card - Extended beyond hero section */}
               <div className="bg-white rounded-2xl shadow-2xl p-8 transform lg:translate-y-16 lg:mb-16">
                 <div className="text-center mb-8">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Login</h2>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Register</h2>
                   <p className="text-gray-600">
-                    Welcome to <span className="font-semibold">Evenlyo</span> Management. Please give us
-                    <br />user id and password
+                    Welcome to <span className="font-semibold">Evenlyo</span> Management. Please fill in your details below
                   </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
+                      placeholder="Enter Your Full Name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
+                      placeholder="Enter Your Last Name"
+                      required
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Email Address
@@ -132,12 +160,25 @@ const LoginPage = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
                       placeholder="Enter Your Email"
                       required
                     />
                   </div>
-
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
+                      placeholder="Enter Your Phone Number"
+                      required
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Password
@@ -145,29 +186,37 @@ const LoginPage = () => {
                     <input
                       type="password"
                       name="password"
-                      value={formData.password}
+                      value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
                       placeholder="Enter Your Password"
                       required
                     />
                   </div>
-
-                  <div className="flex items-center justify-end">
-                    <Link to="#" onClick={e => { e.preventDefault(); setShowForgotPasswordModal(true); }} className="text-sm text-pink-500 hover:text-pink-600 font-medium">
-                      Forgot Password?
-                    </Link>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Confirm Password
+                    </label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
+                      placeholder="Confirm Password"
+                      required
+                    />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold py-3 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
+                    className="w-full btn-primary-mobile text-white font-semibold py-3 rounded-2xl hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
                   >
-                    Login
+                    Register
                   </button>
                 </form>
 
-                {/* Social Login */}
+                {/* Social Registration */}
                 <div className="mt-8">
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
@@ -244,13 +293,6 @@ const LoginPage = () => {
       {/* Footer */}
       <Footer />
       
-      {/* Auth Modal */}
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)} 
-        initialType="client"
-      />
-      
       {/* Registration Modal */}
       {showRegistrationModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -266,8 +308,15 @@ const LoginPage = () => {
         onClose={() => setShowForgotPasswordModal(false)} 
         onContinue={() => { setShowForgotPasswordModal(false); setShowOtpModal(true); }}
       />
+
+      <VerificationModal
+        isOpen={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+        successTitle="Registration Complete!"
+        successMessage="Your account has been registered and verified."
+      />
     </div>
   )
 }
 
-export default LoginPage
+export default Register 
