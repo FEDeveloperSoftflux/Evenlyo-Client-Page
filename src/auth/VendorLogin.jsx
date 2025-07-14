@@ -84,15 +84,15 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
     const completedSteps = steps.filter(s => s.num < (step > 4 ? 4 : step));
 
     return (
-      <div className="flex items-center justify-between mb-6 sm:mb-8 overflow-x-auto">
+      <div className="flex items-center justify-between mb-6 sm:mb-18 overflow-x-auto">
         {steps.map((stepItem, index) => (
           <div key={stepItem.num} className="flex items-center flex-shrink-0">
             <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center font-semibold text-sm sm:text-base
-              ${step >= stepItem.num 
-                ? 'bg-primary-600 text-white border-primary-600' 
+              ${step > stepItem.num
+                ? 'bg-primary-600 text-white border-primary-600'
                 : step === stepItem.num
                 ? 'bg-white text-primary-600 border-primary-600'
-                : 'bg-white text-gray-400 border-gray-300'}
+                : 'bg-white text-black-400 border-black'}
             `}>
               {step > stepItem.num ? (
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,13 +103,13 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
               )}
             </div>
             <span className={`ml-1 sm:ml-2 text-xs sm:text-sm font-medium ${
-              step >= stepItem.num ? 'text-primary-600' : 'text-gray-400'
+              step > stepItem.num ? 'text-primary-600' : step === stepItem.num ? 'text-primary-600' : 'text-gray-400'
             } hidden sm:block`}>
               {stepItem.label}
             </span>
             {index < steps.length - 1 && (
               <div className={`w-8 sm:w-12 h-0.5 mx-2 sm:mx-4 ${
-                step > stepItem.num ? 'bg-primary-600' : 'bg-gray-300'
+                step > stepItem.num ? 'bg-primary-500' : 'bg-gray-300'
               }`} />
             )}
           </div>
@@ -121,8 +121,8 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
   const renderStep1 = () => (
     <div className="space-y-4 sm:space-y-6">
       <div className="text-center">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Create Your Vendor Account</h2>
-        <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8">Welcome to <span className="font-semibold">Evenlyo</span> Management. Please Select Your Account Type</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 mt-4">Create Your Vendor Account</h2>
+        <p className="text-sm sm:text-base text-gray-800 mb-6 sm:mb-10">Welcome to <span className="font-bold">Evenlyo</span> Management. Please<br/> Select Your Account Type</p>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -135,10 +135,8 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
               : 'border-gray-200 hover:border-gray-300'
           }`}
         >
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </svg>
+          <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 rounded-xl bg-whitelex items-center justify-center mx-auto mb-2 sm:mb-3">
+            <img src="/assets/Person.svg" alt="Personal Account" className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <h3 className="font-semibold text-gray-900 text-sm sm:text-base">Personal Account</h3>
         </button>
@@ -152,10 +150,8 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
               : 'border-gray-200 hover:border-gray-300'
           }`}
         >
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
-            </svg>
+          <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 rounded-xl bg-white flex items-center justify-center mx-auto mb-2 sm:mb-3">
+            <img src="/assets/Mail.svg" alt="Personal Account" className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <h3 className="font-semibold text-gray-900 text-sm sm:text-base">Business Account</h3>
         </button>
@@ -397,7 +393,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-2xl relative max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-2xl w-full max-w-4xl relative max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -485,3 +481,9 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
 };
 
 export default VendorLogin;
+
+
+
+
+
+
