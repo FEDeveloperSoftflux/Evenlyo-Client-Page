@@ -35,15 +35,16 @@ function Header() {
                 alt="Evenlyo Logo"
                 className="h-6 w-auto sm:h-8"
               />
-            </div>
+            </a>
             <div className="hidden md:flex items-center">
               <img
-                src="/assets/ratings.svg"
+                src="/assets/rating.svg"
                 alt="Ratings"
                 className="h-12 w-15 lg:h-16 lg:w-20"
               />
             </div>
           </div>
+        </div>
 
         {/* Center Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
