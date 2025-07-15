@@ -101,13 +101,11 @@ const LoginPage = () => {
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  onClick={() => setShowRegistrationModal(true)}
-                  className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold px-8 py-3 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
-                >
+                            {/* Action Buttons */}
+                            <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/register" className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold px-8 py-3 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105 flex items-center justify-center text-center">
                   Register
-                </button>
+                </Link>
                 <button className="border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300">
                   Join Free
                 </button>
