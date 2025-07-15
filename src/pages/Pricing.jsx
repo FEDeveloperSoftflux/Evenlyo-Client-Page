@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 function Pricing() {
-  const [activeTab, setActiveTab] = useState('client');
+  const [activeTab, setActiveTab] = useState('vendor');
 
   const pricingPlans = {
     vendor: [
@@ -13,8 +13,8 @@ function Pricing() {
         price: 20,
         period: '/ month',
         features: [
-          'Everything in Free +',
-          'Social Engagement Scores',
+          '7 Days Free',
+          'Company charge 2% for each event',
           '5 Exchange Listing Options',
           'CEX & DEX Liquidity Volume',
           'Code Base Reddit Link Summary',
@@ -40,7 +40,7 @@ function Pricing() {
       },
       {
         id: 'premium2',
-        name: 'Premium Tier',
+        name: 'Ultra Tier',
         price: 50,
         period: '/ month',
         features: [
@@ -51,38 +51,6 @@ function Pricing() {
           'AI Whitepaper Analysis',
           'Red Flag Risk Score + AI Concern Report',
           'Unlimited AI Prompt Searches/Month'
-        ],
-        buttonText: 'Get This Plan',
-      }
-    ],
-    client: [
-      {
-        id: 'standard',
-        name: 'Standard',
-        price: 20,
-        period: '/ month',
-        features: [
-          'Everything in Free +',
-          'Advanced Analytics',
-          'Priority Support',
-          'Custom Branding',
-          'API Access',
-          'Multi-location Support'
-        ],
-        buttonText: 'Get This Plan',
-      },
-      {
-        id: 'premium',
-        name: 'Premium',
-        price: 50,
-        period: '/ month',
-        features: [
-          'Everything in Free +',
-          'Advanced Analytics',
-          'Priority Support',
-          'Custom Branding',
-          'API Access',
-          'Multi-location Support'
         ],
         buttonText: 'Get This Plan',
       }
@@ -134,41 +102,7 @@ function Pricing() {
       <div className="py-responsive px-responsive">
         <div className="container-7xl">
           {/* Tab Navigation */}
-          <div className="flex justify-center sm:mb-10 lg:mb-20">
-            <div className="relative bg-white rounded-2xl p-1 shadow-sm border border-gray-200 flex min-w-0 w-full max-w-md sm:max-w-lg md:max-w-5xl">
-              {/* Sliding Indicator */}
-              <span
-                className={`absolute top-1 left-1 h-[calc(100%-0.5rem)] w-1/2 rounded-xl z-0 transition-all duration-300 ease-in-out ${
-                  activeTab === 'client'
-                    ? 'translate-x-0 bg-gradient-to-r from-secondary via-primary-500 to-primary-600'
-                    : 'translate-x-full bg-gradient-to-r from-secondary via-primary-500 to-primary-600'
-                }`}
-                style={{
-                  transitionProperty: 'transform, background-color',
-                }}
-              />
-              <button
-                onClick={() => setActiveTab('client')}
-                className={`relative z-10 flex-1 px-2 sm:px-4 md:px-8 py-2 rounded-xl font-medium transition-all duration-300 whitespace-nowrap ${
-                  activeTab === 'client'
-                    ? 'text-white'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Client Pricing Plan
-              </button>
-              <button
-                onClick={() => setActiveTab('vendor')}
-                className={`relative z-10 flex-1 px-2 sm:px-4 md:px-8 py-2 rounded-xl font-medium transition-all duration-300 whitespace-nowrap  ${
-                  activeTab === 'vendor'
-                    ? 'text-white'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Vendor Pricing Plan
-              </button>
-            </div>
-          </div>
+          {/* Removed client/vendor tab navigation, only show Vendor Pricing Plan */}
 
           {/* Pricing Header */}
           <div className="text-center mb-16">
@@ -182,9 +116,9 @@ function Pricing() {
 
           {/* Pricing Cards */}
           <div
-            className={`grid grid-cols-1 ${pricingPlans[activeTab].length === 2 ? 'md:grid-cols-2 max-w-2xl' : 'md:grid-cols-3 max-w-5xl'} gap-4 mb-16 justify-center items-stretch mx-auto`}
+            className={`grid grid-cols-1 md:grid-cols-3 max-w-5xl gap-4 mb-16 justify-center items-stretch mx-auto`}
           >
-            {pricingPlans[activeTab].map((plan) => (
+            {pricingPlans.vendor.map((plan) => (
               <div
                 key={plan.id}
                 className={`bg-white rounded-2xl p-12 shadow-sm border transition-all duration-300 hover:shadow-lg h-full flex flex-col ${
@@ -218,7 +152,7 @@ function Pricing() {
           </div>
 
           {/* Comparison Table */}
-          <div className={`bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mt-8 mx-auto ${pricingPlans[activeTab].length === 2 ? 'max-w-2xl' : 'max-w-5xl'}`}>
+          <div className={`bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mt-8 mx-auto max-w-5xl`}>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>

@@ -8,7 +8,7 @@ import VerificationModal from '../auth/VerificationModal';
 
 const Register = () => {
   const [activeAccordion, setActiveAccordion] = useState(null)
-  const [showRegistrationModal, setShowRegistrationModal] = useState(false)
+  {/*const [showRegistrationModal, setShowRegistrationModal] = useState(false)*/}
   const [formData, setFormData] = useState({
     fullName: '',
     lastName: '',
@@ -103,7 +103,7 @@ const Register = () => {
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
-                  onClick={() => (true)}
+                  onClick={() => window.location.href = '/login'}
                   className="btn-primary-mobile text-white font-semibold px-8 py-3 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
                 >
                   Back
@@ -293,14 +293,14 @@ const Register = () => {
       {/* Footer */}
       <Footer />
       
-      {/* Registration Modal */}
+      {/* Registration Modal 
       {showRegistrationModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <ClientRegistrationForm onClose={() => setShowRegistrationModal(false)} />
           </div>
         </div>
-      )}
+      )}*/}
 
       {/* Forgot Password Modal */}
       <ForgotPasswordModal 

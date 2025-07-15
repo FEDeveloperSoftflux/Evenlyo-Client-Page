@@ -82,6 +82,7 @@ const VerificationModal = ({ isOpen, onClose, onSuccess, successTitle = 'Verifie
           <VerificationSuccess
             title={successTitle}
             message={successMessage}
+            onClose={onClose}
           />
         )}
       </div>

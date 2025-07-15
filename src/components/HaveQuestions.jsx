@@ -1,6 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const HaveQuestions = () => {
+  const navigate = useNavigate();
+  
+  const handleViewFAQ = () => {
+    navigate("/support");
+  };
+  const handleContactSupport = () => {
+    navigate("/support", { state: { contact: true } });
+  };
+
   return (
     <section id="faq" className="py-16 px-6 lg:px-16 bg-white">
       <div className="max-w-7xl mx-auto text-center">
@@ -24,10 +34,16 @@ const HaveQuestions = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button className="btn-primary-mobile  text-white font-semibold px-6 py-3 rounded-2xl hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+          <button
+            className="btn-primary-mobile  text-white font-semibold px-6 py-3 rounded-2xl hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            onClick={handleViewFAQ}
+          >
             View FAQ
           </button>
-          <button className="border-2 border-pink-500 text-pink-500 font-semibold px-6 py-3 rounded-2xl hover:bg-pink-50 transition-all duration-300">
+          <button
+            className="border-2 border-pink-500 text-pink-500 font-semibold px-6 py-3 rounded-2xl hover:bg-pink-50 transition-all duration-300"
+            onClick={handleContactSupport}
+          >
             Contact Support
           </button>
         </div>
