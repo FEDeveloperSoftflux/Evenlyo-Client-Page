@@ -6,6 +6,7 @@ function ResponsiveHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState('advance-booking');
+  const [isMobileFeaturesOpen, setIsMobileFeaturesOpen] = useState(false);
 
   const languages = [
     { code: "en", name: "English" },
@@ -68,7 +69,7 @@ function ResponsiveHeader() {
           </div>
 
           {/* Center Navigation - Desktop Only */}
-          <nav className="nav-desktop flex items-center space-x-6 relative">
+          <nav className="nav-desktop flex items-center space-x-6 relative hidden md:flex">
             {navigationItems.map((item) =>
               item.name === "Features" ? (
                 <div
@@ -100,7 +101,6 @@ function ResponsiveHeader() {
                           <a
                             href="/#advance-booking"
                             className={`block px-4 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'advance-booking' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
-                           
                             onClick={() => { setSelectedFeature('advance-booking'); setIsFeaturesOpen(false); }}
                           >
                             Advance Booking System
@@ -282,23 +282,91 @@ function ResponsiveHeader() {
 
               {/* Mobile Navigation */}
               <nav className="flex-1 py-6">
-                {navigationItems.map((item, index) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className={`mobile-menu-item block px-6 py-4 text-lg font-medium transition-all duration-300 ${
-                      item.active 
-                        ? "text-primary-500 bg-gradient-to-r from-primary-50 to-transparent border-r-4 border-primary-500 font-semibold" 
-                        : "text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:border-r-4 hover:border-primary-200"
-                    }`}
-                    onClick={toggleMobileMenu}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <span className="text-primary-500 opacity-60">•</span>
-                      <span>{item.name}</span>
+                {navigationItems.map((item, index) =>
+                  item.name === "Features" ? (
+                    <div key={item.name}>
+                      <button
+                        className={`mobile-menu-item block w-full text-left px-6 py-4 text-lg font-medium transition-all duration-300 flex items-center justify-between ${
+                          item.active
+                            ? "text-primary-500 bg-gradient-to-r from-primary-50 to-transparent border-r-4 border-primary-500 font-semibold"
+                            : "text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:border-r-4 hover:border-primary-200"
+                        }`}
+                        onClick={() => setIsMobileFeaturesOpen((open) => !open)}
+                        aria-expanded={isMobileFeaturesOpen}
+                        aria-controls="mobile-features-submenu"
+                      >
+                        <span className="flex items-center space-x-3">
+                          <span className="text-primary-500 opacity-60">•</span>
+                          <span>{item.name}</span>
+                        </span>
+                        <svg
+                          className={`w-5 h-5 ml-2 transition-transform ${isMobileFeaturesOpen ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {isMobileFeaturesOpen && (
+                        <ul id="mobile-features-submenu" className="pl-10 pr-4 py-2 space-y-1">
+                          <li>
+                            <a
+                              href="/#advance-booking"
+                              className="block py-2 text-base text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                              onClick={toggleMobileMenu}
+                            >
+                              Advance Booking System
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="/#vendor-feature"
+                              className="block py-2 text-base text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                              onClick={toggleMobileMenu}
+                            >
+                              Vendor feature
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="/#reviews"
+                              className="block py-2 text-base text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                              onClick={toggleMobileMenu}
+                            >
+                              Reviews
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="/#faq"
+                              className="block py-2 text-base text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                              onClick={toggleMobileMenu}
+                            >
+                              FAQ
+                            </a>
+                          </li>
+                        </ul>
+                      )}
                     </div>
-                  </a>
-                ))}
+                  ) : (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      className={`mobile-menu-item block px-6 py-4 text-lg font-medium transition-all duration-300 ${
+                        item.active 
+                          ? "text-primary-500 bg-gradient-to-r from-primary-50 to-transparent border-r-4 border-primary-500 font-semibold" 
+                          : "text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:border-r-4 hover:border-primary-200"
+                      }`}
+                      onClick={toggleMobileMenu}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-primary-500 opacity-60">•</span>
+                        <span>{item.name}</span>
+                      </div>
+                    </a>
+                  )
+                )}
               </nav>
 
               {/* Mobile Menu Footer */}
