@@ -50,7 +50,7 @@ function Hero() {
             onClick={handleJoinFree}
             className="btn-primary-mobile touch-button w-full sm:w-auto text-responsive-body font-bold"
           >
-            Sign In
+            Join Free
           </button>
           <button 
             onClick={handleBecomeVendor}

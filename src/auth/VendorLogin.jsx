@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Upload from '../../public/assets/Upload.svg'
+import VerificationModal from './VerificationModal';
+import OtpStep from './OtpStep';
+import VerificationSuccess from './VerificationSuccess';
 
 const VendorLogin = ({ onClose, onSwitchToClient }) => {
   const [step, setStep] = useState(1);
   const [verificationType, setVerificationType] = useState('phone');
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const otpInputs = useRef([]);
   const [otpSent, setOtpSent] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
@@ -25,6 +29,20 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [verificationComplete, setVerificationComplete] = useState(false);
+
+  // When showSuccessModal becomes true, auto-close after 2 seconds
+  React.useEffect(() => {
+    if (showSuccessModal) {
+      const timer = setTimeout(() => {
+        setShowSuccessModal(false);
+        setVerificationComplete(true);
+        onClose();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessModal]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,14 +69,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
     console.log(`OTP sent to ${verificationType === 'phone' ? formData.phone : formData.email}`);
   };
 
-  const verifyOTP = () => {
-    if (otp === '1234') {
-      setShowOtpModal(false);
-      setStep(getTotalSteps() + 1); // Go to success step
-    } else {
-      alert('Invalid OTP. Please try again.');
-    }
-  };
+
 
   const getTotalSteps = () => {
     return formData.accountType === 'personal' ? 5 : 7;
@@ -100,6 +111,10 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
     if (step === 4) indicatorStep = 3; // Subcategory is still part of Category's (not completed yet)
     if (step > 4) indicatorStep = step - 1; // Shift steps after subcategory (Category's now shows as completed)
 
+    // If verification is complete, mark the last step as done
+    const verificationStepNum = steps[steps.length - 1].num;
+    const isVerificationDone = verificationComplete;
+
     return (
       <>
         {/* Mobile/Tablet: Only show step numbers */}
@@ -108,13 +123,15 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
             {steps.map((stepItem, index) => (
               <React.Fragment key={stepItem.num}>
                 <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-semibold text-sm
-                  ${indicatorStep > stepItem.num
-                    ? 'bg-primary-600 text-white border-primary-600'
-                    : indicatorStep === stepItem.num
-                    ? 'bg-white text-primary-600 border-primary-600'
-                    : 'bg-white text-gray-400 border-gray-300'}
+                  ${
+                    (indicatorStep > stepItem.num || (isVerificationDone && stepItem.num === verificationStepNum))
+                      ? 'bg-primary-600 text-white border-primary-600 animate-pulse'
+                      : indicatorStep === stepItem.num
+                      ? 'bg-white text-primary-600 border-primary-600'
+                      : 'bg-white text-gray-400 border-gray-300'
+                  }
                 `}>
-                  {indicatorStep > stepItem.num ? (
+                  {(indicatorStep > stepItem.num || (isVerificationDone && stepItem.num === verificationStepNum)) ? (
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -124,7 +141,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
                 </div>
                 {index < steps.length - 1 && (
                   <div className={`w-4 h-0.5
-                    ${indicatorStep > stepItem.num ? 'bg-primary-500' : 'bg-gray-300'}
+                    ${(indicatorStep > stepItem.num || (isVerificationDone && stepItem.num === verificationStepNum)) ? 'bg-primary-500' : 'bg-gray-300'}
                   `} />
                 )}
               </React.Fragment>
@@ -139,13 +156,15 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
               <React.Fragment key={stepItem.num}>
                 <div className="flex flex-col items-center flex-shrink-0 relative">
                   <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 flex items-center justify-center font-semibold text-xs sm:text-sm
-                    ${indicatorStep > stepItem.num
-                      ? 'bg-primary-600 text-white border-primary-600'
-                      : indicatorStep === stepItem.num
-                      ? 'bg-white text-primary-600 border-primary-600'
-                      : 'bg-white text-black-400 border-black'}
+                    ${
+                      (indicatorStep > stepItem.num || (isVerificationDone && stepItem.num === verificationStepNum))
+                        ? 'bg-primary-600 text-white border-primary-600 animate-pulse'
+                        : indicatorStep === stepItem.num
+                        ? 'bg-white text-primary-600 border-primary-600'
+                        : 'bg-white text-black-400 border-black'
+                    }
                   `}>
-                    {indicatorStep > stepItem.num ? (
+                    {(indicatorStep > stepItem.num || (isVerificationDone && stepItem.num === verificationStepNum)) ? (
                       <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
@@ -155,7 +174,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
                   </div>
                   <div className="absolute top-full mt-2 flex flex-col items-center">
                     <span className={`text-xs sm:text-xs font-medium text-center whitespace-nowrap ${
-                      indicatorStep > stepItem.num ? 'text-primary-600' : indicatorStep === stepItem.num ? 'text-primary-600' : 'text-gray-400'
+                      (indicatorStep > stepItem.num || (isVerificationDone && stepItem.num === verificationStepNum)) ? 'text-primary-600' : indicatorStep === stepItem.num ? 'text-primary-600' : 'text-gray-400'
                     }`}>
                       {stepItem.label}
                     </span>
@@ -163,7 +182,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
                 </div>
                 {index < steps.length - 1 && (
                   <div className={`flex-1 h-0.5 mx-1 sm:mx-2
-                    ${indicatorStep > stepItem.num ? 'bg-primary-500' : 'bg-gray-300'}
+                    ${(indicatorStep > stepItem.num || (isVerificationDone && stepItem.num === verificationStepNum)) ? 'bg-primary-500' : 'bg-gray-300'}
                   `} />
                 )}
               </React.Fragment>
@@ -640,162 +659,169 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
 
   // Verification step (Step 5 for personal, Step 7 for business)
   const renderVerificationStep = () => (
-    <div className="space-y-6">
-    </div>
-  );
-
-  // OTP Modal Component
-  const renderOTPModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md p-6">
-        <div className="text-center mb-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-2">Enter Verification Code</h3>
-          <p className="text-gray-600">
-            We sent a verification code to your {verificationType === 'phone' ? 'phone' : 'email'}
-          </p>
-        </div>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Verification Code
-            </label>
-            <input
-              type="text"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
-              placeholder="Enter 4-digit code"
-              maxLength={4}
+    <>
+      {(!showSuccessModal && !verificationComplete) && (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-center mb-8">Verification</h2>
+          <div className="relative flex mb-6 bg-gray-100 rounded-full p-1 h-12">
+            {/* Sliding pill background */}
+            <span
+              className="absolute top-1 left-1 h-10 w-1/2 rounded-full btn-primary-mobile shadow transition-all duration-300"
+              style={{
+                transform: verificationType === 'phone' ? 'translateX(0%)' : 'translateX(100%)',
+              }}
             />
+            <button
+              className={`flex-1 z-10 py-2 rounded-full font-semibold transition-all duration-200 focus:outline-none ${
+                verificationType === 'phone' ? 'text-white' : 'text-gray-400'
+              }`}
+              onClick={() => setVerificationType('phone')}
+            >
+              Phone Number
+            </button>
+            <button
+              className={`flex-1 z-10 py-2 rounded-full font-semibold transition-all duration-200 focus:outline-none ${
+                verificationType === 'email' ? 'text-white' : 'text-gray-400'
+              }`}
+              onClick={() => setVerificationType('email')}
+            >
+              Email Address
+            </button>
           </div>
-          
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => setShowOtpModal(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={verifyOTP}
-              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700"
-            >
-              Verify
-            </button>
-          </div>
-          
-          {!otpSent ? (
-            <button
-              type="button"
-              onClick={sendOTP}
-              className="w-full text-primary-600 hover:text-primary-700 text-sm"
-            >
-              Send OTP
-            </button>
+          {verificationType === 'phone' ? (
+            <div className="mb-6">
+              <label className="block text-base font-medium text-gray-800 mb-2">Phone Number</label>
+              <input
+                type="tel"
+                className="w-full px-4 py-2 border border-gray-200 rounded-2xl bg-gray-100 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition-all duration-300 "
+                placeholder="Enter Your Phone Number"
+                value={formData.phone}
+                onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+              />
+            </div>
           ) : (
-            <p className="text-center text-sm text-green-600">
-              OTP sent successfully!
-            </p>
+            <div className="mb-6">
+              <label className="block text-base font-medium text-gray-800 mb-2">Email Address</label>
+              <input
+                type="email"
+                className="w-full px-4 py-2 border border-gray-200 rounded-2xl bg-gray-100 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition-all duration-300"
+                placeholder="Enter Your Email Address"
+                value={formData.email}
+                onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              />
+            </div>
           )}
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 
-  // Success Modal Component
-  const renderSuccessModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md p-6 text-center">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-2">Account Created Successfully!</h3>
-        <p className="text-gray-600 mb-6">
-          Your vendor account has been created. You can now start listing your services.
-        </p>
-        <button
-          onClick={onClose}
-          className="w-full px-4 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700"
-        >
-          Get Started
-        </button>
-      </div>
-    </div>
-  );
+  // OTP Handlers for focus management
+  const handleOtpChange = (e, idx) => {
+    const val = e.target.value.replace(/[^0-9]/g, '');
+    if (!val) return;
+    const newOtp = [...otp];
+    newOtp[idx] = val[0];
+    setOtp(newOtp);
+    if (idx < 5 && val) {
+      otpInputs.current[idx + 1].focus();
+    }
+  };
 
+  const handleOtpKeyDown = (e, idx) => {
+    if (e.key === 'Backspace' && !otp[idx] && idx > 0) {
+      otpInputs.current[idx - 1].focus();
+    }
+  };
   return (
     <>
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl w-full max-w-4xl relative max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-
-          {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto p-6 sm:p-8">
-            {/* Step Indicator */}
-            {renderStepIndicator()}
-
-            {/* Form Content */}
-            {step === 1 && renderStep1()}
-            {step === 2 && renderStep2()}
-            {step === 3 && renderStep3()}
-            {step === 4 && renderStep4()}
-            {step === 5 && formData.accountType === 'business' && renderStep5Business()}
-            {step === 5 && formData.accountType === 'personal' && renderVerificationStep()}
-            {step === 6 && formData.accountType === 'business' && renderStep6Business()}
-            {step === 7 && formData.accountType === 'business' && renderVerificationStep()}
-            
-            <form onSubmit={handleSubmit}>
-              {/* Navigation Buttons */}
-              <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8">
-                {step === 5 && formData.accountType === 'business' ? (
-                  <button
-                    type="button"
-                    onClick={() => setStep(step + 1)}
-                    className="px-4 sm:px-6 py-2 border rounded-xl transition-colors order-2 sm:order-1 btn-secondary-mobile"
-                  >
-                    Skip
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => step > 1 ? setStep(step - 1) : onClose()}
-                    className="px-4 sm:px-6 py-2 border rounded-xl transition-colors order-2 sm:order-1 btn-secondary-mobile"
-                  >
-                    {step === 1 ? 'Cancel' : 'Back'}
-                  </button>
-                )}
-                
-                <button
-                  type="submit"
-                  disabled={step === 1 && !formData.accountType}
-                  className="px-4 sm:px-6 py-2 btn-primary-mobile text-white font-bold rounded-xl transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
-                >
-                  {step === getTotalSteps() ? 'Verify' : 'Next'}
-                </button>
+        <div className="bg-white rounded-2xl w-full max-w-4xl relative max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col items-center justify-center">
+          {/* If success modal, show only success, else show normal content */}
+          {showSuccessModal ? (
+            <>
+              <VerificationSuccess
+                title="Successfully Verified!"
+                message=""
+              />
+            </>
+          ) : (
+            <>
+              {/* Close Button */}
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto p-6 sm:p-8 w-full">
+                {/* Step Indicator */}
+                {renderStepIndicator()}
+                {/* Form Content */}
+                {step === 1 && renderStep1()}
+                {step === 2 && renderStep2()}
+                {step === 3 && renderStep3()}
+                {step === 4 && renderStep4()}
+                {step === 5 && formData.accountType === 'business' && renderStep5Business()}
+                {step === 5 && formData.accountType === 'personal' && renderVerificationStep()}
+                {step === 6 && formData.accountType === 'business' && renderStep6Business()}
+                {step === 7 && formData.accountType === 'business' && renderVerificationStep()}
+                <form onSubmit={handleSubmit}>
+                  {/* Navigation Buttons */}
+                  <div className="flex flex-row justify-end gap-3 mt-6 sm:mt-8">
+                    <button
+                      type="button"
+                      onClick={() => step > 1 ? setStep(step - 1) : onClose()}
+                      className="px-4 sm:px-6 py-2 border rounded-xl transition-colors btn-secondary-mobile"
+                    >
+                      {step === 1 ? 'Cancel' : 'Back'}
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={step === 1 && !formData.accountType}
+                      className="px-4 sm:px-6 py-2 btn-primary-mobile text-white font-bold rounded-xl transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {step === getTotalSteps() ? 'Verify' : 'Next'}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
+            </>
+          )}
         </div>
       </div>
 
       {/* OTP Modal */}
-      {showOtpModal && renderOTPModal()}
-
-      {/* Success Modal */}
-      {step === getTotalSteps() + 1 && renderSuccessModal()}
+      {showOtpModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-md">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md relative">
+            <button
+              onClick={() => setShowOtpModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <OtpStep
+              otp={otp}
+              setOtp={setOtp}
+              timer={30}
+              inputs={otpInputs}
+              handleOtpChange={handleOtpChange}
+              handleOtpKeyDown={handleOtpKeyDown}
+              onVerify={() => {
+                setShowOtpModal(false);
+                setShowSuccessModal(true);
+              }}
+              onResend={() => setOtp(['', '', '', '', '', ''])}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };
