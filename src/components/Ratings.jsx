@@ -2,7 +2,7 @@ import React from "react";
 
 const Ratings = () => {
   return (
-    <section className="py-16 px-6 lg:px-16 bg-gray-50">
+    <section id="reviews" className="py-16 px-6 lg:px-16 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

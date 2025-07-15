@@ -2,7 +2,7 @@ import React from "react";
 
 const AdvancedBookingSystem = () => {
   return (
-    <section className="px-2 xs:px-4 sm:px-6 md:px-8 bg-white border-t border-b border-gray-300 shadow-sm">
+    <section id="advance-booking" className="px-2 xs:px-4 sm:px-6 md:px-8 bg-white border-t border-b border-gray-300 shadow-sm">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 md:gap-10 items-center">
           {/* Right Side - QR Code and Features (on mobile, image on top) */}

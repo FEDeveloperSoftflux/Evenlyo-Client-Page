@@ -2,7 +2,7 @@ import React from "react";
 
 const HaveQuestions = () => {
   return (
-    <section className="py-16 px-6 lg:px-16 bg-white">
+    <section id="faq" className="py-16 px-6 lg:px-16 bg-white">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-4xl lg:text-4xl font-bold text-gray-900 mb-4">
           Have

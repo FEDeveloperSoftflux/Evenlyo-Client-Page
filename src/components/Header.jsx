@@ -4,6 +4,8 @@ function ResponsiveHeader() {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
+  const [selectedFeature, setSelectedFeature] = useState('advance-booking');
 
   const languages = [
     { code: "en", name: "English" },
@@ -21,6 +23,27 @@ function ResponsiveHeader() {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  React.useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        featuresRef.current &&
+        !featuresRef.current.contains(event.target)
+      ) {
+        setIsFeaturesOpen(false);
+      }
+    }
+    if (isFeaturesOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isFeaturesOpen]);
+
+  const featuresRef = React.useRef(null);
 
   return (
     <>
@@ -45,25 +68,94 @@ function ResponsiveHeader() {
           </div>
 
           {/* Center Navigation - Desktop Only */}
-          <nav className="nav-desktop">
-            {navigationItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className={`relative font-medium text-subtitle-6 transition-colors pb-1 group ${
-                  item.active 
-                    ? "text-gray-900 hover:text-primary-500" 
-                    : "text-gray-600 hover:text-primary-500"
-                }`}
-              >
-                {item.name}
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full transition-transform duration-300 ${
-                  item.active 
-                    ? "scale-x-100" 
-                    : "scale-x-0 group-hover:scale-x-100"
-                }`}></div>
-              </a>
-            ))}
+          <nav className="nav-desktop flex items-center space-x-6 relative">
+            {navigationItems.map((item) =>
+              item.name === "Features" ? (
+                <div
+                  key={item.name}
+                  className="relative"
+                  ref={featuresRef}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setIsFeaturesOpen((open) => !open)}
+                    className={`relative font-medium text-subtitle-6 transition-colors pb-1 group-hover:text-primary-500 ${
+                      item.active
+                        ? "text-gray-900 hover:text-primary-500"
+                        : "text-gray-600 hover:text-primary-500"
+                    }`}
+                  >
+                    {item.name}
+                    <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full transition-transform duration-300 ${
+                      item.active
+                        ? "scale-x-100"
+                        : "scale-x-0 group-hover:scale-x-100"
+                    }`}></div>
+                  </button>
+                  {/* Dropdown */}
+                  {isFeaturesOpen && (
+                    <div className="absolute left-0 mt-3 w-60 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 animate-fade-in">
+                      <ul className="py-2 px-1">
+                        <li>
+                          <a
+                            href="/#advance-booking"
+                            className={`block px-4 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'advance-booking' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                           
+                            onClick={() => { setSelectedFeature('advance-booking'); setIsFeaturesOpen(false); }}
+                          >
+                            Advance Booking System
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href="/#vendor-feature"
+                            className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'vendor-feature' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                            onClick={() => { setSelectedFeature('vendor-feature'); setIsFeaturesOpen(false); }}
+                          >
+                            Vendor feature
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href="/#reviews"
+                            className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'reviews' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                            onClick={() => { setSelectedFeature('reviews'); setIsFeaturesOpen(false); }}
+                          >
+                            Reviews
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href="/#faq"
+                            className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'faq' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                            onClick={() => { setSelectedFeature('faq'); setIsFeaturesOpen(false); }}
+                          >
+                            FAQ
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className={`relative font-medium text-subtitle-6 transition-colors pb-1 group ${
+                    item.active
+                      ? "text-gray-900 hover:text-primary-500"
+                      : "text-gray-600 hover:text-primary-500"
+                  }`}
+                >
+                  {item.name}
+                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full transition-transform duration-300 ${
+                    item.active
+                      ? "scale-x-100"
+                      : "scale-x-0 group-hover:scale-x-100"
+                  }`}></div>
+                </a>
+              )
+            )}
           </nav>
 
           {/* Right Section - Language, Auth, and Mobile Menu */}
