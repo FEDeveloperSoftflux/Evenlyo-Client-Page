@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -7,8 +8,10 @@ import Blog from "./pages/Blog";
 import Pricing from "./pages/Pricing";
 import Register from "./pages/Register";
 import ProfileSetting from "./pages/ProfileSetting";
+import CustomerSupportModal from "./components/CustomerSupportModal";
 
 function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <Router>
       <div className="App">
@@ -21,7 +24,24 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/settings" element={<ProfileSetting />} />
+          <Route path="/bookings" element={<Bookings />} />
         </Routes>
+        {/* Floating Customer Support Button */}
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110 z-40"
+        >
+          <img
+            src="/assets/customer-icon.svg"
+            alt="Customer Support"
+            className="w-8 h-8 filter brightness-0 invert"
+          />
+        </button>
+        {/* Customer Support Modal */}
+        <CustomerSupportModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </div>
     </Router>
   );

@@ -43,7 +43,6 @@ function ResponsiveHeader() {
   const navigationItems = [
     { name: "Home", href: "/", active: true },
     { name: "Features", href: "/features" },
-    { name: "Customer Support", href: "/support" },
     { name: "Blog", href: "/blog" },
     { name: "Pricing", href: "/pricing" },
   ];
