@@ -6,6 +6,7 @@ import Support from "./pages/Support";
 import Blog from "./pages/Blog";
 import Pricing from "./pages/Pricing";
 import Register from "./pages/Register";
+import ProfileSetting from "./pages/ProfileSetting";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/support" element={<Support />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/settings" element={<ProfileSetting />} />
         </Routes>
       </div>
     </Router>

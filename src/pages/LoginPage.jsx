@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import AuthModal from "../auth/AuthModal";
 import ClientRegistrationForm from "../components/ClientRegistrationForm";
 import ForgotPasswordModal from "../auth/ForgotPasswordModal";
 
 const LoginPage = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -27,8 +25,9 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Open the auth modal instead of just logging
-    setShowAuthModal(true);
+    // Simulate login: set localStorage and redirect
+    localStorage.setItem('isLoggedIn', 'true');
+    window.location.href = '/';
   };
 
   const toggleAccordion = (index) => {
@@ -103,12 +102,9 @@ const LoginPage = () => {
               {/* Action Buttons */}
                             {/* Action Buttons */}
                             <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/register" className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold px-8 py-3 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105 flex items-center justify-center text-center">
+                <Link to="/register" className="btn-primary-mobile text-white font-semibold px-8 py-3 rounded-2xl hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105 flex items-center justify-center text-center">
                   Register
                 </Link>
-                <button className="border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300">
-                  Join Free
-                </button>
               </div>
             </div>
 
@@ -167,7 +163,7 @@ const LoginPage = () => {
 
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold py-3 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
+                    className="w-full btn-primary-mobile text-white font-semibold py-3 rounded-2xl hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
                   >
                     Login
                   </button>
@@ -280,13 +276,6 @@ const LoginPage = () => {
 
       {/* Footer */}
       <Footer />
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        initialType="client"
-      />
 
       {/* Registration Modal */}
       {showRegistrationModal && (

@@ -8,14 +8,14 @@ function Pricing() {
   const pricingPlans = {
     vendor: [
       {
-        id: 'standard',
-        name: 'Standard Tier',
+        id: 'basix',
+        name: 'Basic Free',
         price: 20,
         period: '/ month',
         features: [
           '7 Days Free',
           'Company charge 2% for each event',
-          '5 Exchange Listing Options',
+          'Pay-per-booking',
           'CEX & DEX Liquidity Volume',
           'Code Base Reddit Link Summary',
           '30 AI Prompt Searches/Month'
@@ -23,14 +23,14 @@ function Pricing() {
         buttonText: 'Get This Plan',
       },
       {
-        id: 'premium1',
-        name: 'Premium Tier',
+        id: 'standard',
+        name: 'Standard (Plus)',
         price: 50,
         period: '/ month',
         features: [
           'Everything in Pro +',
           'Team Analysis',
-          'Bot Detection',
+          'No commission + top visibility in listings',
           'Developer Activity',
           'AI Whitepaper Analysis',
           'Red Flag Risk Score + AI Concern Report',
@@ -39,14 +39,14 @@ function Pricing() {
         buttonText: 'Get This Plan',
       },
       {
-        id: 'premium2',
-        name: 'Ultra Tier',
-        price: 50,
+        id: 'pro',
+        name: 'Pro',
+        price: 89,
         period: '/ month',
         features: [
           'Everything in Pro +',
           'Team Analysis',
-          'Bot Detection',
+          'Featured listing + reduced commission',
           'Developer Activity',
           'AI Whitepaper Analysis',
           'Red Flag Risk Score + AI Concern Report',
@@ -102,7 +102,6 @@ function Pricing() {
       <div className="py-responsive px-responsive">
         <div className="container-7xl">
           {/* Tab Navigation */}
-          {/* Removed client/vendor tab navigation, only show Vendor Pricing Plan */}
 
           {/* Pricing Header */}
           <div className="text-center mb-16">
@@ -129,7 +128,7 @@ function Pricing() {
                   <div className="text-left mb-8">
                     <h3 className="text-xl font-bold text-gray-900 mb-4">{plan.name}</h3>
                     <div className="flex items-baseline justify-start">
-                      <span className="text-5xl font-bold text-gray-900">${plan.price}</span>
+                      <span className="text-xl font-bold text-gray-900 mr-1">£</span><span className="text-5xl font-bold text-gray-900">{plan.price}</span>
                       <span className="text-gray-600 ml-2">{plan.period}</span>
                     </div>
                   </div>

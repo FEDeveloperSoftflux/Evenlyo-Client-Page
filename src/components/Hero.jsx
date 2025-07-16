@@ -66,24 +66,21 @@ function Hero() {
             {/* Type of Events */}
             <div className="w-full md:col-span-1">
               <label className="block text-white text-sm font-semibold mb-2">
-                Type of Events
+                Search
               </label>
               <div className="relative">
                 <img
-                  src="/assets/events.svg"
-                  alt="Events"
+                  src="/assets/Search2.svg"
+                  alt="Location"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 z-10"
                 />
-                <select
-                  value={selectedEvent}
-                  onChange={(e) => setSelectedEvent(e.target.value)}
-                  className="select-mobile pl-10 pr-10 py-3 bg-white/80 backdrop-blur-sm shadow-sm w-full"
-                >
-                  <option value="">Select Events </option>
-                  <option value="dj">DJ Services</option>
-                  <option value="food-truck">Food Trucks</option>
-                  <option value="venue">Venues</option>
-                </select>
+                <input
+                  type="text"
+                  placeholder="Search "
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="input-mobile pl-10 pr-4 py-3 bg-white/80 backdrop-blur-sm shadow-sm w-full"
+                />
               </div>
             </div>
 
@@ -152,11 +149,11 @@ function Hero() {
 
             {/* Search Button */}
             <div className="w-full md:col-span-2 5xl:col-span-1">
-              <button className="btn-primary-mobile w-full flex flex-col items-center justify-center py-2 ">
+              <button className="btn-primary-mobile w-full flex items-center justify-center py-2 ">
                 <img
                   src="/assets/search.svg"
                   alt="Search"
-                  className="h-8 w-6 mb-1 hidden lg:block"
+                  className="h-8 w-6 mb-0 mr-2"
                 />
                 <span className="font-bold text-lg">Book Now</span>
               </button>

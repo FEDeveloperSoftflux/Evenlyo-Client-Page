@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 function ResponsiveHeader() {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
@@ -7,6 +7,33 @@ function ResponsiveHeader() {
   const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState('advance-booking');
   const [isMobileFeaturesOpen, setIsMobileFeaturesOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+    window.addEventListener('storage', () => {
+      setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+    });
+  }, []);
+
+  // Click-away listener for profile dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileDropdownOpen(false);
+      }
+    }
+    if (profileDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [profileDropdownOpen]);
 
   const languages = [
     { code: "en", name: "English" },
@@ -204,28 +231,96 @@ function ResponsiveHeader() {
               )}
             </div>
 
-            {/* Sign In Button - Desktop Only */}
-            <button
-              className="hidden md:flex btn-primary-mobile text-sm lg:text-base py-2 px-3 lg:py-3 lg:px-4 items-center space-x-2"
-              onClick={() => (window.location.href = "/login")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 lg:h-5 lg:w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="white"
+            {isLoggedIn ? (
+              <div className="relative flex items-center" ref={profileRef}>
+                <button
+                  onClick={() => setProfileDropdownOpen((open) => !open)}
+                  className="focus:outline-none"
+                  aria-haspopup="true"
+                  aria-expanded={profileDropdownOpen}
+                >
+                  <img
+                    src="/assets/Profile.svg"
+                    alt="Profile"
+                    className="h-10 w-10 rounded-full border-2 border-pink-400 object-cover shadow-md transition-transform hover:scale-105"
+                  />
+                </button>
+                {/* Profile Dropdown */}
+{profileDropdownOpen && (
+  <div className="absolute right-0 top-full mt-2 w-70 md:w-80 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-100 z-50 p-3 sm:p-6 flex flex-col items-center animate-fade-in max-w-[calc(100vw-1rem)] mx-1 sm:mx-0" style={{minWidth: '240px'}}>
+    {/* Profile Card */}
+    <img
+      src="/assets/Profile.svg"
+      alt="Profile"
+      className="h-12 w-12 sm:h-20 sm:w-20 rounded-full border-2 border-red-600 object-cover shadow mb-2 sm:mb-3"
+    />
+    <div className="text-center mb-1">
+      <div className="text-lg sm:text-2xl font-bold text-gray-900">Amelie L.</div>
+      <div className="text-gray-500 text-xs sm:text-base font-medium">Social Media Manager</div>
+    </div>
+    {/* Menu */}
+    <div className="w-full mt-3 sm:mt-6 flex flex-col gap-1.5 sm:gap-2">
+      <a href="/profile" className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:btn-primary-mobile transition-all text-sm sm:text-lg hover:bg-gray-50">
+        {/* Dashboard Icon */}
+        <img src="/assets/Smile.svg" alt="Smile Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
+        <span className="truncate ">Profile Dashboard</span>
+      </a>
+      <a href="/bookings" className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:bg-gray-50 transition-all text-sm sm:text-lg">
+        {/* Calendar Icon */}
+        <img src="/assets/Booking.svg" alt="Booking Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
+        <span className="truncate">All bookings</span>
+      </a>
+      <button
+        onClick={() => {
+          localStorage.removeItem('isLoggedIn');
+          window.location.href = '/';
+        }}
+        className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:bg-gray-50 transition-all text-sm sm:text-lg w-full text-left"
+      >
+        {/* Logout Icon */}
+        <img src="/assets/Logout.svg" alt="Logout Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
+        <span className="truncate">Log Out</span>
+      </button>
+      <a href="/settings" className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:bg-gray-50 transition-all text-sm sm:text-lg">
+        {/* Settings Icon */}
+        <img src="/assets/Setting.svg" alt="Settings Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
+        <span className="truncate">Setting</span>
+      </a>
+    </div>
+  </div>
+)}
+
+{/* Optional: Add backdrop for mobile to close dropdown when clicking outside */}
+{profileDropdownOpen && (
+  <div 
+    className="fixed inset-0 z-40 sm:hidden" 
+    onClick={() => setProfileDropdownOpen(false)}
+  />
+)}
+              </div>
+            ) : (
+              <button
+                className="hidden md:flex btn-primary-mobile text-sm lg:text-base py-2 px-3 lg:py-3 lg:px-4 items-center space-x-2"
+                onClick={() => (window.location.href = '/login')}
               >
-                <circle cx="12" cy="8" r="4" strokeWidth="2" fill="white" />
-                <path
-                  d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span>Sign in / Register</span>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 lg:h-5 lg:w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="white"
+                >
+                  <circle cx="12" cy="8" r="4" strokeWidth="2" fill="white" />
+                  <path
+                    d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span>Sign in / Register</span>
+              </button>
+            )}
 
             {/* Mobile Menu Button */}
             <button
@@ -370,7 +465,7 @@ function ResponsiveHeader() {
               </nav>
 
               {/* Mobile Menu Footer */}
-              <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="p-6 ">
                 {/* Language Selector */}
                 <div className="flex items-center space-x-3 px-4 py-3 border border-gray-300 rounded-xl mb-6 bg-white hover:border-primary-300 transition-colors">
                   <img src="/assets/globe.svg" alt="Language" className="h-5 w-5 opacity-70" />
@@ -387,31 +482,33 @@ function ResponsiveHeader() {
                   </select>
                 </div>
                 
-                {/* Mobile Sign In Button */}
-                <button
-                  className="btn-primary-mobile w-full flex items-center justify-center space-x-3 py-4 text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                  onClick={() => {
-                    window.location.href = "/login"
-                    toggleMobileMenu();
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="white"
+                {/* Mobile Sign In Button - Only show if not logged in */}
+                {!isLoggedIn && (
+                  <button
+                    className="btn-primary-mobile w-full rounded-2xl flex items-center justify-center space-x-3 py-3 text-md font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    onClick={() => {
+                      window.location.href = "/login"
+                      toggleMobileMenu();
+                    }}
                   >
-                    <circle cx="12" cy="8" r="4" strokeWidth="2" fill="white" />
-                    <path
-                      d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>Sign in / Register</span>
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="white"
+                    >
+                      <circle cx="12" cy="8" r="4" strokeWidth="2" fill="white" />
+                      <path
+                        d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    <span>Sign in / Register</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>

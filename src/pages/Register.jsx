@@ -104,7 +104,7 @@ const Register = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
                   onClick={() => window.location.href = '/login'}
-                  className="btn-primary-mobile text-white font-semibold px-8 py-3 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
+                  className="btn-primary-mobile text-white font-semibold px-8 py-3 rounded-2xl hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg transform hover:scale-105"
                 >
                   Back
                 </button>
