@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import VendorLogin from "../auth/VendorLogin";
 
 function Hero() {
+  const navigate = useNavigate();
   const [selectedEvent, setSelectedEvent] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
@@ -9,7 +11,7 @@ function Hero() {
   const [vendorModalOpen, setVendorModalOpen] = useState(false);
 
   const handleJoinFree = () => {
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   const handleBecomeVendor = () => {
@@ -18,6 +20,10 @@ function Hero() {
 
   const closeVendorModal = () => {
     setVendorModalOpen(false);
+  };
+
+  const handleBookNow = () => {
+    navigate("/bookingpage");
   };
   return (
     <section
@@ -149,7 +155,10 @@ function Hero() {
 
             {/* Search Button */}
             <div className="w-full md:col-span-2 5xl:col-span-1">
-              <button className="btn-primary-mobile w-full flex items-center justify-center py-2 ">
+              <button 
+                onClick={handleBookNow}
+                className="btn-primary-mobile w-full flex items-center justify-center py-2 "
+              >
                 <img
                   src="/assets/search.svg"
                   alt="Search"
