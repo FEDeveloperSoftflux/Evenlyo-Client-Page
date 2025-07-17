@@ -1,11 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Header from '../components/Header'
 import Footer from "../components/Footer";
+import ComplaintModal from '../components/ComplaintModal';
+import CancelModal from '../components/CancelModal';
+import DownloadInvoiceModal from '../components/DownloadInvoiceModal';
 
 function Bookings() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All status');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isComplaintOpen, setIsComplaintOpen] = useState(false);
+  const [isCancelOpen, setIsCancelOpen] = useState(false);
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const dropdownRef = useRef(null);
 
   // Handle click outside to close dropdown
@@ -144,7 +151,7 @@ function Bookings() {
     
     if (status === 'Accepted' || status === 'Received'  || status === 'Paid' || status === 'On the way') {
       buttons.push(
-        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors">
+        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
           Complain
         </button>
       );
@@ -160,12 +167,12 @@ function Bookings() {
     
     if (status === 'Complete') {
       buttons.push(
-        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors">
+        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
           Complain
         </button>
       );
       buttons.push(
-        <button key="track" className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 transition-colors">
+        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors">
           Track
         </button>
       );
@@ -173,7 +180,7 @@ function Bookings() {
     
     if (status === 'Pending') {
       buttons.push(
-        <button key="cancel" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors">
+        <button key="cancel" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsCancelOpen(true)}>
           Cancel
         </button>
       );
@@ -306,10 +313,8 @@ function Bookings() {
                       
                       <div className="flex flex-wrap gap-2 pt-2 justify-end mr-2">
                         {getActionButtons(booking.status)}
-                        <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                          </svg>
+                        <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors" onClick={() => { setSelectedBooking(booking); setIsDownloadOpen(true); }}>
+                          <img src="/assets/Downlaod.svg" alt="Download" className="w-4 h-5" />
                         </button>
                       </div>
                     </div>
@@ -395,10 +400,8 @@ function Bookings() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <div className="flex justify-end items-center space-x-2 mr-4">
                             {getActionButtons(booking.status)}
-                            <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                              </svg>
+                            <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors" onClick={() => { setSelectedBooking(booking); setIsDownloadOpen(true); }}>
+                              <img src="/assets/Downlaod.svg" alt="Download" className="w-5 h-5" />
                             </button>
                           </div>
                         </td>
@@ -430,6 +433,15 @@ function Bookings() {
       </div>
       
       <Footer/>
+      <ComplaintModal open={isComplaintOpen} onClose={() => setIsComplaintOpen(false)} />
+      <CancelModal open={isCancelOpen} onClose={() => setIsCancelOpen(false)} />
+      <DownloadInvoiceModal
+        open={isDownloadOpen}
+        onClose={() => setIsDownloadOpen(false)}
+        bookingId={selectedBooking?.trackingId}
+        items={selectedBooking ? selectedBooking.items || [] : []}
+        summary={selectedBooking ? selectedBooking.summary || {} : {}}
+      />
     </div>
   )
 }

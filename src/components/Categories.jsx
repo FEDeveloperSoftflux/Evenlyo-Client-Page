@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
-const Categories = () => {
-  const [selectedCategory, setSelectedCategory] = useState('Entertainment & Attractions')
+const Categories = ({ selectedCategory, setSelectedCategory }) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState('DJ')
   const [showAllVendors, setShowAllVendors] = useState(false)
 
