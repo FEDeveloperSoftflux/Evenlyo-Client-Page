@@ -4,7 +4,7 @@ const CancelModal = ({ open, onClose, onConfirm }) => {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl p-8 w-full max-w-lg relative">
+      <div className="bg-white rounded-3xl p-8 w-full max-w-lg relative max-h-[90vh] overflow-y-auto mx-2">
         <button
           className="absolute top-4 right-4 bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white rounded-xl w-8 h-8 flex items-center justify-center shadow-lg"
           onClick={onClose}

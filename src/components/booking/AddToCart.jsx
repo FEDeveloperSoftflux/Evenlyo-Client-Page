@@ -99,7 +99,7 @@ const AddToCart = () => {
         <span className="text-xl font-bold text-gray-900">${item.price}</span>
         <div className="flex items-center space-x-2">
           {activeTab === 'requests' && (
-            <button className="px-4 py-2 bg-gradient-brand text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all">
+            <button className="px-4 py-2 btn-primary-mobile text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all">
               Book Now
             </button>
           )}
@@ -132,9 +132,9 @@ const AddToCart = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-8 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`px-8 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                 activeTab === tab.id
-                  ? 'bg-gradient-brand text-white shadow-lg'
+                  ? 'btn-primary-mobile text-white shadow-lg'
                   : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
               }`}
             >
@@ -229,7 +229,7 @@ const AddToCart = () => {
                   </div>
                 </>
               )}
-              <button className="w-full py-3 bg-gradient-brand text-white rounded-full font-medium hover:shadow-lg transition-all">
+              <button className="w-full py-3 btn-primary-mobile text-white rounded-2xl font-medium hover:shadow-lg transition-all">
                 Proceed to Checkout
               </button>
             </div>

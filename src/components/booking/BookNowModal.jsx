@@ -34,7 +34,14 @@ const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white/95 backdrop-blur-md rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-white/20">
+      <div
+        className="bg-white/95 backdrop-blur-md rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-white/20 mx-2"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        <style>{`
+          .hide-scrollbar::-webkit-scrollbar { display: none; }
+        `}</style>
+
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
           <h2 className="text-xl font-bold text-gray-900">
@@ -42,7 +49,7 @@ const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
           </h2>
           <button
             onClick={onClose}
-            className="w-10 h-10 bg-gradient-brand text-white rounded-full flex items-center justify-center hover:shadow-lg transition-all"
+            className="w-10 h-10 bg-gradient-brand text-white rounded-xl flex items-center justify-center hover:shadow-lg transition-all"
           >
             <svg
               className="w-5 h-5"

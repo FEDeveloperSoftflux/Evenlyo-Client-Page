@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import ComplaintModal from '../components/ComplaintModal';
 import CancelModal from '../components/CancelModal';
 import DownloadInvoiceModal from '../components/DownloadInvoiceModal';
+import TrackOrderModal from '../components/TrackOrderModal';
 
 function Bookings() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,7 +13,9 @@ function Bookings() {
   const [isComplaintOpen, setIsComplaintOpen] = useState(false);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
+  const [isTrackOpen, setIsTrackOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [selectedTrackOrder, setSelectedTrackOrder] = useState(null);
   const dropdownRef = useRef(null);
 
   // Handle click outside to close dropdown
@@ -146,7 +149,7 @@ function Bookings() {
     return colorMap[status] || 'bg-gray-100 text-gray-700';
   };
 
-  const getActionButtons = (status) => {
+  const getActionButtons = (status, booking) => {
     const buttons = [];
     
     if (status === 'Accepted' || status === 'Received'  || status === 'Paid' || status === 'On the way') {
@@ -159,7 +162,74 @@ function Bookings() {
     
     if (status === 'Accepted'|| status === 'Received'  || status === 'Paid' || status === 'On the way') {
       buttons.push(
-        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors">
+        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => {
+          setSelectedTrackOrder({
+            trackingId: booking.trackingId,
+            orderId: booking.orderId || 'ORD-003',
+            clientName: booking.clientName || 'Global Supply Co',
+            phone: booking.phone || '+1-234-567-8903',
+            statusLabel: booking.status || 'On the way',
+            totalPrice: booking.totalPrice || '$2100.00',
+            timeline: [
+              {
+                title: 'Request Sent',
+                description: 'Client sent order request',
+                completed: true,
+                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4l3 3" strokeWidth="2" /></svg>,
+                label: 'Clint',
+                labelColor: 'bg-pink-100 text-pink-600',
+                date: '2025-01-07/07:45'
+              },
+              {
+                title: 'Order Accepted',
+                description: 'Vendor accepted the order',
+                completed: true,
+                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M9 12l2 2 4-4" strokeWidth="2" /></svg>,
+                label: 'Vendor',
+                labelColor: 'bg-yellow-100 text-yellow-600',
+                date: '2025-01-07/09:00'
+              },
+              {
+                title: 'Picked Up',
+                description: 'Order picked up from location',
+                completed: true,
+                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" strokeWidth="2" /></svg>,
+                label: 'Driver',
+                labelColor: 'bg-green-100 text-green-600',
+                date: '2025-01-06/11:15'
+              },
+              {
+                title: 'Delivered',
+                description: 'Order delivered to destination',
+                completed: false,
+                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="7" rx="2" strokeWidth="2" /><path d="M16 11V7a4 4 0 00-8 0v4" strokeWidth="2" /></svg>,
+                label: 'Pending',
+                labelColor: 'bg-gray-100 text-gray-400',
+                date: null
+              },
+              {
+                title: 'Received',
+                description: 'Client confirmed receipt',
+                completed: false,
+                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+                label: 'Pending',
+                labelColor: 'bg-gray-100 text-gray-400',
+                date: null
+              },
+              {
+                title: 'Completed',
+                description: `Total Price: ${booking.totalPrice || '$2100.00'}`,
+                completed: false,
+                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+                label: 'Pending',
+                labelColor: 'bg-gray-100 text-gray-400',
+                date: null
+              }
+            ],
+            progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
+          });
+          setIsTrackOpen(true);
+        }}>
           Track
         </button>
       );
@@ -312,7 +382,7 @@ function Bookings() {
                       </div>
                       
                       <div className="flex flex-wrap gap-2 pt-2 justify-end mr-2">
-                        {getActionButtons(booking.status)}
+                        {getActionButtons(booking.status, booking)}
                         <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors" onClick={() => { setSelectedBooking(booking); setIsDownloadOpen(true); }}>
                           <img src="/assets/Downlaod.svg" alt="Download" className="w-4 h-5" />
                         </button>
@@ -399,7 +469,7 @@ function Bookings() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <div className="flex justify-end items-center space-x-2 mr-4">
-                            {getActionButtons(booking.status)}
+                            {getActionButtons(booking.status, booking)}
                             <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors" onClick={() => { setSelectedBooking(booking); setIsDownloadOpen(true); }}>
                               <img src="/assets/Downlaod.svg" alt="Download" className="w-5 h-5" />
                             </button>
@@ -442,6 +512,7 @@ function Bookings() {
         items={selectedBooking ? selectedBooking.items || [] : []}
         summary={selectedBooking ? selectedBooking.summary || {} : {}}
       />
+      <TrackOrderModal open={isTrackOpen} onClose={() => setIsTrackOpen(false)} order={selectedTrackOrder} />
     </div>
   )
 }

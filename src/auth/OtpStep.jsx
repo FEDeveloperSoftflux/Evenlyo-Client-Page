@@ -1,7 +1,7 @@
 import React from 'react';
 
 const OtpStep = ({ otp, setOtp, timer, inputs, handleOtpChange, handleOtpKeyDown, onVerify, onResend }) => (
-  <div className="flex flex-col items-center">
+  <div className="flex flex-col items-center max-h-[90vh] overflow-y-auto mx-2">
     <h2 className="text-2xl font-bold text-center mb-8">Enter OTP Code</h2>
     <div className="flex space-x-4 mb-6">
       {[0, 1, 2, 3, 4, 5].map((i) => (

@@ -48,7 +48,7 @@ const Footer = () => {
             <h3 className="text-xl font-semibold">Connect with our team</h3>
             <p className="text-base text-gray-700">Stay up to date with AXT Transportation.</p>
             <p className="text-base text-gray-700">Sign up for our newsletter.</p>
-            <button className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded transition-colors">
+            <button className="btn-primary-mobile text-white px-6 py-2 rounded-2xl transition-colors">
               Register Now
             </button>
             <p className="text-sm text-gray-600 mt-4">

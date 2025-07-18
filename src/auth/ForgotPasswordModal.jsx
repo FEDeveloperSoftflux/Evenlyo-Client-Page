@@ -68,7 +68,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-md">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-xl relative">
+      <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-xl relative max-h-[90vh] overflow-y-auto mx-2">
         {/* Step 1: Verification */}
         {step === 1 && (
           <VerificationStep

@@ -25,7 +25,7 @@ const RequestSuccessModal = ({ isOpen, onClose, onTrackBooking }) => {
           <div className="flex-1"></div>
           <button
             onClick={onClose}
-            className="w-10 h-10 bg-gradient-brand text-white rounded-full flex items-center justify-center hover:shadow-lg transition-all"
+            className="w-10 h-10 bg-gradient-brand text-white rounded-xl flex items-center justify-center hover:shadow-lg transition-all"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
