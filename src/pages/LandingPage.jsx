@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import AdvancedBookingSystem from "../components/AdvancedBookingSystem";
@@ -15,12 +15,14 @@ import SuccessStories from "../components/SuccessStories";
 import Footer from "../components/Footer";
 
 function LandingPage() {
+  const [selectedCategory, setSelectedCategory] = useState("Entertainment & Attractions");
+
   return (
     <div className="min-h-screen">
       <Header />
       <Hero />
-      <Categories />
-      <VendorList />
+      <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+      <VendorList selectedCategory={selectedCategory} />
       <AdvancedBookingSystem />
       <RentalTabs />
       <MultiVendor />
