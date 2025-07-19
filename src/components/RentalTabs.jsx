@@ -89,6 +89,7 @@ const RentalTabs = () => {
   }
 
   const content = getTabContent()
+  const isImageLeft = activeTab === 'services' || activeTab === 'classifieds';
 
   return (
     <section className="py-16 px-6 lg:px-16 bg-gray-50">
@@ -105,7 +106,7 @@ const RentalTabs = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`relative flex items-center px-1.5 sm:px-3 md:px-6 py-1 sm:py-2 md:py-4 text-[11px] sm:text-xs md:text-base transition-all duration-300 font-medium border-b-2 min-w-[70px] sm:min-w-[90px] md:min-w-0 justify-center ${
                   activeTab === tab.id
-                    ? 'text-primary-500 border-gradient-underline'
+                    ? 'text-red-500 border-gradient-underline'
                     : 'text-gray-600 hover:text-gray-900 border-transparent hover:border-gray-300'
                 }`}
                 style={{ minHeight: '38px' }}
@@ -113,9 +114,7 @@ const RentalTabs = () => {
                 <img
                   src={tab.icon}
                   alt={tab.name}
-                  className={`w-3 h-3 sm:w-5 sm:h-5 md:w-5 md:h-5 mr-1 sm:mr-2 ${
-                    activeTab === tab.id ? 'filter brightness-0 saturate-200 hue-rotate-315' : ''
-                  }`}
+                  className={`w-3 h-3 sm:w-5 sm:h-5 md:w-5 md:h-5 mr-1 sm:mr-2`}
                 />
                 <span className="font-medium leading-none">{tab.name}</span>
                 {activeTab === tab.id && (
@@ -129,8 +128,8 @@ const RentalTabs = () => {
         {/* Tab Content */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           <div className="flex flex-col lg:flex-row min-h-[600px]">
-            {/* Right Side - Image (now on top for mobile) */}
-            <div className="bg-white flex items-center justify-center p-2 order-1 lg:order-2 w-full lg:w-1/2">
+            {/* Image and Content - alternate on desktop, image always on top on mobile */}
+            <div className={`bg-white flex items-center justify-center p-2 w-full lg:w-1/2 ${isImageLeft ? 'order-1 lg:order-1' : 'order-1 lg:order-2'}`}>
               <div className="w-full h-full max-w-lg">
                 <img
                   src={tabs.find(tab => tab.id === activeTab)?.image}
@@ -148,9 +147,8 @@ const RentalTabs = () => {
                 </div>
               </div>
             </div>
-
-            {/* Left Side - Content */}
-            <div className="p-8 lg:p-12 order-2 lg:order-1 w-full lg:w-1/2">
+            <div className={`p-8 lg:p-12 w-full lg:w-1/2 ${isImageLeft ? 'order-2 lg:order-2' : 'order-2 lg:order-1'}`}>
+              {/* Content */}
               <h2 className="text-3xl font-bold text-gray-900 mb-4">{content.title}</h2>
               <p className="inline-block text-red-500 font-medium mb-4 bg-red-100 rounded-lg text-sm py-2 px-2">
                 {content.subtitle}

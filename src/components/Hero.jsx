@@ -23,7 +23,10 @@ function Hero() {
   };
 
   const handleBookNow = () => {
-    navigate("/bookingpage");
+    const categoriesSection = document.getElementById('categories');
+    if (categoriesSection) {
+      categoriesSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
   return (
     <section
@@ -164,7 +167,7 @@ function Hero() {
                   alt="Search"
                   className="h-8 w-6 mb-0 mr-2"
                 />
-                <span className="font-bold text-lg">Book Now</span>
+                <span className="font-bold text-lg">Search Now</span>
               </button>
             </div>
           </div>

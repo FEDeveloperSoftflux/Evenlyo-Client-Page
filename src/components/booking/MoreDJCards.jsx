@@ -211,7 +211,7 @@ const MoreDJCards = () => {
                 </div>
 
                 {/* Book Now Button */}
-                <button className="w-full btn-primary-mobile rounded-xl text-white font-medium py-3 px-4  transition-colors duration-200">
+                <button className="w-full btn-primary-mobile rounded-2xl text-white font-medium py-3 px-4  transition-colors duration-200">
                   Book Now
                 </button>
               </div>
@@ -221,7 +221,7 @@ const MoreDJCards = () => {
 
         {/* View All Button */}
         <div className="text-center">
-          <button className="inline-flex items-center px-6 py-3 bg-white border-2 border-pink-500 text-pink-500 font-medium rounded-lg hover:bg-pink-50 transition-colors duration-200">
+          <button className="inline-flex items-center px-6 py-2 bg-white border-2 border-pink-500 text-pink-500 font-medium rounded-2xl hover:bg-pink-50 transition-colors duration-200">
             View All
             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

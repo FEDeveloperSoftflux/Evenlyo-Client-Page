@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BookNowModal from './BookNowModal';
 import OrderSummaryModal from './OrderSummaryModal';
 import RequestSuccessModal from './RequestSuccessModal';
+import TrackOrderModal from '../TrackOrderModal';
 
 const BookingCalendar = () => {
   const navigate = useNavigate();
@@ -11,39 +12,127 @@ const BookingCalendar = () => {
   const [isBookNowModalOpen, setIsBookNowModalOpen] = useState(false);
   const [isOrderSummaryModalOpen, setIsOrderSummaryModalOpen] = useState(false);
   const [isRequestSuccessModalOpen, setIsRequestSuccessModalOpen] = useState(false);
+  const [isTrackOrderModalOpen, setIsTrackOrderModalOpen] = useState(false);
+  const [trackOrderData, setTrackOrderData] = useState(null);
+  const [selectedDates, setSelectedDates] = useState([]);
   
   const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const dayShortNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   
-  // March 2025 calendar data
-  const calendarData = [
-    // Week 1
-    [27, 28, 29, 30, 1, 2, 3],
-    // Week 2
-    [4, 5, 6, 7, 8, 9, 10],
-    // Week 3
-    [11, 12, 13, 14, 15, 16, 17],
-    // Week 4
-    [18, 19, 20, 21, 22, 23, 24],
-    // Week 5
-    [25, 26, 27, 28, 29, 30, 31],
-    // Week 6
-    [1, 2, 3, 4, 5, 6, 7]
+  // Helper to get days in month
+  const getDaysInMonth = (year, month) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  // Helper to get the weekday index (0=Monday, 6=Sunday)
+  const getWeekdayIndex = (date) => {
+    // JS: 0=Sunday, 1=Monday, ..., 6=Saturday
+    // We want: 0=Monday, ..., 6=Sunday
+    let jsDay = date.getDay();
+    return jsDay === 0 ? 6 : jsDay - 1;
+  };
+  
+  // Generate calendar grid for current month
+  const generateCalendarData = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const daysInMonth = getDaysInMonth(year, month);
+    const firstDayOfMonth = new Date(year, month, 1);
+    const startDay = getWeekdayIndex(firstDayOfMonth); // 0=Monday
+
+    // Previous month
+    const prevMonth = month === 0 ? 11 : month - 1;
+    const prevMonthYear = month === 0 ? year - 1 : year;
+    const daysInPrevMonth = getDaysInMonth(prevMonthYear, prevMonth);
+
+    let calendar = [];
+    let week = [];
+
+    // Fill first week
+    for (let i = 0; i < 7; i++) {
+      if (i < startDay) {
+        // Days from previous month
+        week.push({
+          day: daysInPrevMonth - (startDay - 1) + i,
+          currentMonth: false
+        });
+      } else {
+        week.push({
+          day: i - startDay + 1,
+          currentMonth: true
+        });
+      }
+    }
+    calendar.push(week);
+
+    // Fill remaining weeks
+    let dayCounter = 8 - startDay;
+    while (dayCounter <= daysInMonth) {
+      week = [];
+      for (let i = 0; i < 7; i++) {
+        if (dayCounter > daysInMonth) {
+          // Next month
+          week.push({
+            day: dayCounter - daysInMonth,
+            currentMonth: false
+          });
+        } else {
+          week.push({
+            day: dayCounter,
+            currentMonth: true
+          });
+        }
+        dayCounter++;
+      }
+      calendar.push(week);
+    }
+    return calendar;
+  };
+
+  // Available dates (gray background) - for demo, keep as 1-31
+  const availableDates = Array.from({ length: 31 }, (_, i) => i + 1);
+  
+  const isAvailable = (day, currentMonthFlag) => {
+    return currentMonthFlag && availableDates.includes(day);
+  };
+
+  // Demo: Booked dates for all months (YYYY-MM-DD format)
+  const bookedDates = [
+    '2025-03-05',
+    '2025-03-12',
+    '2025-04-10',
+    '2025-05-18',
+    '2025-06-01',
+    '2025-06-15',
   ];
-  
-  // Available dates (gray background)
-  const availableDates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
-  
-  const isCurrentMonth = (day, weekIndex) => {
-    if (weekIndex === 0 && day < 15) return day >= 1; // First week
-    if (weekIndex === 5 && day < 15) return false; // Last week
-    return weekIndex > 0 && weekIndex < 5;
+
+  const isBooked = (day, currentMonthFlag) => {
+    if (!currentMonthFlag) return false;
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth() + 1; // JS months are 0-based
+    // Pad month and day to 2 digits
+    const monthStr = month.toString().padStart(2, '0');
+    const dayStr = day.toString().padStart(2, '0');
+    const dateStr = `${year}-${monthStr}-${dayStr}`;
+    return bookedDates.includes(dateStr);
   };
-  
-  const isAvailable = (day, weekIndex) => {
-    if (!isCurrentMonth(day, weekIndex)) return false;
-    return availableDates.includes(day);
+
+  const handleDateSelect = (day) => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const dateObj = new Date(year, month, day);
+    // Check if already selected (by date, month, year)
+    const isAlreadySelected = selectedDates.some(
+      d => d.getDate() === dateObj.getDate() && d.getMonth() === dateObj.getMonth() && d.getFullYear() === dateObj.getFullYear()
+    );
+    if (isAlreadySelected) {
+      setSelectedDates(selectedDates.filter(
+        d => !(d.getDate() === dateObj.getDate() && d.getMonth() === dateObj.getMonth() && d.getFullYear() === dateObj.getFullYear())
+      ));
+    } else {
+      setSelectedDates([...selectedDates, dateObj]);
+    }
   };
-  
   
   const prevMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
@@ -68,7 +157,73 @@ const BookingCalendar = () => {
   
   const handleTrackBooking = () => {
     setIsRequestSuccessModalOpen(false);
-    setIsOrderSummaryModalOpen(true);
+    // Provide full mock order timeline for demonstration
+    setTrackOrderData({
+      trackingId: 'BK-20250709-3733',
+      orderId: 'ORD-003',
+      clientName: 'John Doe',
+      phone: '+1-234-567-8903',
+      statusLabel: 'Pending',
+      totalPrice: '$500.00',
+      timeline: [
+        {
+          title: 'Request Sent',
+          description: 'Client sent order request',
+          completed: true,
+          icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4l3 3" strokeWidth="2" /></svg>,
+          label: 'Client',
+          labelColor: 'bg-pink-100 text-pink-600',
+          date: '2025-07-09/10:00'
+        },
+        {
+          title: 'Order Accepted',
+          description: 'Vendor accepted the order',
+          completed: true,
+          icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M9 12l2 2 4-4" strokeWidth="2" /></svg>,
+          label: 'Vendor',
+          labelColor: 'bg-yellow-100 text-yellow-600',
+          date: '2025-07-09/11:00'
+        },
+        {
+          title: 'Picked Up',
+          description: 'Order picked up from location',
+          completed: false,
+          icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" strokeWidth="2" /></svg>,
+          label: 'Driver',
+          labelColor: 'bg-green-100 text-green-600',
+          date: null
+        },
+        {
+          title: 'Delivered',
+          description: 'Order delivered to destination',
+          completed: false,
+          icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="7" rx="2" strokeWidth="2" /><path d="M16 11V7a4 4 0 00-8 0v4" strokeWidth="2" /></svg>,
+          label: 'Pending',
+          labelColor: 'bg-gray-100 text-gray-400',
+          date: null
+        },
+        {
+          title: 'Received',
+          description: 'Client confirmed receipt',
+          completed: false,
+          icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+          label: 'Pending',
+          labelColor: 'bg-gray-100 text-gray-400',
+          date: null
+        },
+        {
+          title: 'Completed',
+          description: 'Total Price: $500.00',
+          completed: false,
+          icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+          label: 'Pending',
+          labelColor: 'bg-gray-100 text-gray-400',
+          date: null
+        }
+      ],
+      progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
+    });
+    setIsTrackOrderModalOpen(true);
   };
   
   const handleDownloadPDF = () => {
@@ -91,11 +246,9 @@ const BookingCalendar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            
             <h3 className="text-xl font-semibold text-gray-900">
-              March 2025
+              {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
             </h3>
-            
             <button
               onClick={nextMonth}
               className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -105,35 +258,47 @@ const BookingCalendar = () => {
               </svg>
             </button>
           </div>
-          
           {/* Day Headers */}
           <div className="grid grid-cols-7 gap-1 mb-2">
-            {dayNames.map((day) => (
+            {dayNames.map((day, i) => (
               <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">
-                {day}
+                <span className="md:hidden">{dayShortNames[i]}</span>
+                <span className="hidden md:inline">{day}</span>
               </div>
             ))}
           </div>
-          
           {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-1">
-            {calendarData.map((week, weekIndex) => 
-              week.map((day, dayIndex) => {
-                const isCurrentMonthDay = isCurrentMonth(day, weekIndex);
-                const isAvailableDay = isAvailable(day, weekIndex);
-                
+            {generateCalendarData().map((week, weekIndex) =>
+              week.map((cell, dayIndex) => {
+                const isCurrentMonthDay = cell.currentMonth;
+                const isAvailableDay = isAvailable(cell.day, cell.currentMonth);
+                const isBookedDay = isBooked(cell.day, cell.currentMonth);
+                const isSelected =
+                  isCurrentMonthDay &&
+                  selectedDates.some(
+                    d => d.getDate() === cell.day && d.getMonth() === currentMonth.getMonth() && d.getFullYear() === currentMonth.getFullYear()
+                  );
                 return (
                   <div
                     key={`${weekIndex}-${dayIndex}`}
-                    className={`h-12 w-12 flex items-center justify-center text-sm font-medium rounded-lg transition-all duration-200 ${
-                      isCurrentMonthDay
-                        ? isAvailableDay
-                          ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer'
-                          : 'text-gray-700 hover:bg-gray-50 cursor-pointer'
-                        : 'text-gray-300'
-                    }`}
+                    className={`w-10 h-10 md:h-12 md:w-14 flex items-center justify-center text-sm font-medium rounded-lg transition-all duration-200
+                      ${isCurrentMonthDay
+                        ? isBookedDay
+                          ? 'bg-gray-300 text-gray-400 cursor-not-allowed relative'
+                          : isAvailableDay
+                            ? `${isSelected ? 'bg-gradient-brand text-white ' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer'}`
+                            : 'text-gray-700 hover:bg-gray-50 cursor-pointer'
+                        : 'text-gray-300'}
+                    `}
+                    onClick={() => isAvailableDay && !isBookedDay && handleDateSelect(cell.day)}
+                    style={{ userSelect: 'none' }}
                   >
-                    {day}
+                    {cell.day}
+                    {isBookedDay && (
+                      <span className="absolute top-1 right-1" title="Booked">
+                      </span>
+                    )}
                   </div>
                 );
               })
@@ -220,13 +385,13 @@ const BookingCalendar = () => {
           <div className="flex space-x-4">
             <button 
               onClick={handleAddToCart}
-              className="px-6 py-3 border-2 border-primary text-primary rounded-lg font-medium hover:bg-primary/10 transition-colors"
+              className="px-6 py-3 border-2 border-primary text-primary rounded-2xl font-medium hover:bg-primary/10 transition-colors"
             >
               Add To Cart
             </button>
             <button 
               onClick={handleBookNow}
-              className="px-6 py-3 bg-gradient-brand text-white rounded-lg font-medium hover:shadow-lg transition-all"
+              className="px-6 py-3 bg-gradient-brand text-white rounded-2xl font-medium hover:shadow-lg transition-all"
             >
               Book Now
             </button>
@@ -239,6 +404,7 @@ const BookingCalendar = () => {
         isOpen={isBookNowModalOpen} 
         onClose={() => setIsBookNowModalOpen(false)}
         onSuccess={handleBookingSuccess}
+        selectedDates={selectedDates}
       />
       
       <OrderSummaryModal 
@@ -251,6 +417,12 @@ const BookingCalendar = () => {
         isOpen={isRequestSuccessModalOpen} 
         onClose={() => setIsRequestSuccessModalOpen(false)}
         onTrackBooking={handleTrackBooking}
+      />
+      <TrackOrderModal
+        open={isTrackOrderModalOpen}
+        onClose={() => setIsTrackOrderModalOpen(false)}
+        order={trackOrderData}
+        onDownload={() => {}}
       />
     </div>
   );

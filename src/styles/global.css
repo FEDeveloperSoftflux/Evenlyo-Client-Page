@@ -70,11 +70,11 @@ select {
 }
 
 .bg-gradient-brand {
-  background: linear-gradient(90deg, #ff295d 0%, #e31b95 50%, #c817ae 100%);
+  background: linear-gradient(180deg, #FF295D 0%, #E31B95 50%, #C817AE 100%);
 }
 
 .bg-gradient-brand-hover {
-  background: linear-gradient(90deg, #e31b95 0%, #c817ae 50%, #a613a0 100%);
+  background: linear-gradient(180deg, #e31b95 0%, #c817ae 50%, #a613a0 100%);
 }
 
 .bg-hero-gradient {

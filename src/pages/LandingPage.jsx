@@ -21,7 +21,9 @@ function LandingPage() {
     <div className="min-h-screen">
       <Header />
       <Hero />
-      <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+      <div id="categories">
+        <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+      </div>
       <VendorList selectedCategory={selectedCategory} />
       <AdvancedBookingSystem />
       <RentalTabs />

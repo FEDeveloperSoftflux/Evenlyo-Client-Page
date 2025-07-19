@@ -228,6 +228,29 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
 
   const [selectedCategories, setSelectedCategories] = useState([categories[0].name]);
 
+  // Add this mapping function near the top of the component (after categories definition is a good spot)
+  const subcategoryIcons = {
+    'DJ': '/assets/subcategory1.svg',
+    'Live Band': '/assets/subcategory2.svg',
+    'Photo Booth': '/assets/subcategory3.svg',
+    'Catering': '/assets/food.svg',
+    'Food Trucks': '/assets/food.svg',
+    'Bartenders': '/assets/food.svg',
+    'Floral Design': '/assets/Table.svg',
+    'Event Styling': '/assets/LED.svg',
+    'Decorations': '/assets/Chandelier.svg',
+    'Venues': '/assets/partytent.svg',
+    'Party Tents': '/assets/partytent.svg',
+    'Outdoor Spaces': '/assets/partytent.svg',
+    'Event Staff': '/assets/staff.svg',
+    'Security': '/assets/staff.svg',
+    'Coordination': '/assets/staff.svg',
+    // Add more as needed, or use unique SVGs for each
+  };
+  const getSubcategoryIcon = (subcategory) => {
+    return subcategoryIcons[subcategory] || '/assets/subcategory1.svg'; // fallback to a default SVG
+  };
+
   const renderStep1 = () => (
     <div className="space-y-4 sm:space-y-6">
       <div className="text-center">
@@ -475,7 +498,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
               <div
                 className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 flex items-center justify-center mb-2 transition-all duration-300 ${
                   selectedCategories.includes(category.name)
-                    ? 'bg-gradient-to-r from-secondary via-primary-500 to-primary-600 border-white shadow-category'
+                    ? 'bg-gradient-to-b from-secondary via-primary-500 to-primary-600 border-white shadow-category'
                     : 'bg-white border-gray-200 hover:border-primary-300 shadow-card'
                 }`}
               >
@@ -516,7 +539,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
                 <div
                   className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 flex items-center justify-center mb-2 transition-all duration-300 ${
                     selectedCategories.includes(category.name)
-                      ? 'bg-gradient-to-r from-secondary via-primary-500 to-primary-600 border-white shadow-category'
+                      ? 'bg-gradient-to-b from-secondary via-primary-500 to-primary-600 border-white shadow-category'
                       : 'bg-white border-gray-200 hover:border-primary-300 shadow-card'
                   }`}
                 >
@@ -566,19 +589,15 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
                     onClick={() => handleSubCategoryToggle(subcategory)}
                     className={`px-4 py-2 rounded-2xl text-md font-medium transition-all duration-300 flex items-center space-x-4 ${
                       selectedSubCategories.includes(subcategory)
-                        ? 'bg-gradient-to-r from-secondary via-primary-500 to-primary-600 text-white shadow-md'
+                        ? 'bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md'
                         : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-300 hover:text-primary-500'
                     }`}
                   >
-                    {subcategory === 'DJ' && (
-                      <img src="/assets/subcategory1.svg" alt="DJ" className="w-10 h-10 bg-white rounded-lg " />
-                    )}
-                    {subcategory === 'Live Band' && (
-                      <img src="/assets/subcategory2.svg" alt="Live Band" className="w-10 h-10 bg-white rounded-lg" />
-                    )}
-                    {subcategory === 'Photo Booth' && (
-                      <img src="/assets/subcategory3.svg" alt="Photo Booth" className="w-10 h-10 bg-white rounded-lg" />
-                    )}
+                    <img
+                      src={getSubcategoryIcon(subcategory)}
+                      alt={subcategory}
+                      className="w-10 h-10 bg-white rounded-lg"
+                    />
                     <span>{subcategory}</span>
                   </button>
                 ))}
@@ -797,7 +816,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
       {/* OTP Modal */}
       {showOtpModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-md">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md relative">
+          <div className="bg-white rounded-3xl shadow-2xl p-4 md:p-6 lg:p-8  max-w-md relative">
             <button
               onClick={() => setShowOtpModal(false)}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10"

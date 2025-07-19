@@ -284,7 +284,7 @@ const VendorList = ({ selectedCategory }) => {
                         </span>{" "}
                         {vendor.whyChoose}
                         <span className="text-primary-500 ml-1 cursor-pointer hover:underline font-medium">
-                          View More
+                          View Profile
                         </span>
                       </p>
                     </div>

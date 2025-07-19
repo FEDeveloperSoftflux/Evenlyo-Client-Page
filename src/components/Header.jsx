@@ -79,11 +79,13 @@ function ResponsiveHeader() {
           {/* Left Section - Logo and Rating */}
           <div className="flex items-center space-x-3 md:space-x-6">
             <div className="flex items-center">
-              <img
-                src="/assets/brand.svg"
-                alt="Evenlyo Logo"
-                className="h-6 w-auto sm:h-8"
-              />
+              <a href="/">
+                <img
+                  src="/assets/brand.svg"
+                  alt="Evenlyo Logo"
+                  className="h-6 w-auto sm:h-8"
+                />
+              </a>
             </div>
             <div className="hidden md:flex items-center">
               <img
@@ -230,6 +232,17 @@ function ResponsiveHeader() {
               )}
             </div>
 
+            {/* Cart Button - Only show if logged in */}
+            {isLoggedIn && (
+              <button
+                className="relative flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full shadow-none hover:shadow-md transition-all border-none focus:outline-none"
+                onClick={() => window.location.href = '/add-to-cart'}
+                aria-label="Cart"
+              >
+                <img src="/assets/Cart.svg" alt="Cart" className="w-4 h-6" />
+              </button>
+            )}
+
             {isLoggedIn ? (
               <div className="relative flex items-center" ref={profileRef}>
                 <button
@@ -259,15 +272,16 @@ function ResponsiveHeader() {
     </div>
     {/* Menu */}
     <div className="w-full mt-3 sm:mt-6 flex flex-col gap-1.5 sm:gap-2">
-      <a href="/profile" className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:btn-primary-mobile transition-all text-sm sm:text-lg hover:bg-gray-50">
-        {/* Dashboard Icon */}
-        <img src="/assets/Smile.svg" alt="Smile Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
-        <span className="truncate ">Profile Dashboard</span>
-      </a>
       <a href="/bookings" className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:bg-gray-50 transition-all text-sm sm:text-lg">
         {/* Calendar Icon */}
         <img src="/assets/Booking.svg" alt="Booking Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
         <span className="truncate">All bookings</span>
+      </a>
+
+      <a href="/settings" className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:bg-gray-50 transition-all text-sm sm:text-lg">
+        {/* Settings Icon */}
+        <img src="/assets/Setting.svg" alt="Settings Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
+        <span className="truncate">Setting</span>
       </a>
       <button
         onClick={() => {
@@ -280,11 +294,6 @@ function ResponsiveHeader() {
         <img src="/assets/Logout.svg" alt="Logout Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
         <span className="truncate">Log Out</span>
       </button>
-      <a href="/settings" className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:bg-gray-50 transition-all text-sm sm:text-lg">
-        {/* Settings Icon */}
-        <img src="/assets/Setting.svg" alt="Settings Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
-        <span className="truncate">Setting</span>
-      </a>
     </div>
   </div>
 )}
@@ -460,6 +469,16 @@ function ResponsiveHeader() {
                       </div>
                     </a>
                   )
+                )}
+                {/* Cart Button - Only show if logged in (Mobile) */}
+                {isLoggedIn && (
+                  <button
+                    className="mobile-menu-item block w-full text-left px-6 py-4 text-lg font-medium transition-all duration-300 text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:border-r-4 hover:border-primary-200 flex items-center"
+                    onClick={() => { window.location.href = '/add-to-cart'; toggleMobileMenu(); }}
+                  >
+                    <img src="/assets/Cart.svg" alt="Cart" className="w-5 h-5 mr-3" />
+                    <span>Cart</span>
+                  </button>
                 )}
               </nav>
 

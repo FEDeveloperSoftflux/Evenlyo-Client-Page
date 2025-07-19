@@ -4,10 +4,10 @@ const Footer = () => {
   return (
     <footer className="bg-white text-black">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm md:text-base">
           {/* About Section */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold">Evenlyo</h2>
+            <img src="/assets/brand.svg" alt="Evenlyo Brand" className="h-7 w-auto" />
             <ul className="space-y-2 text-base">
               <li><a href="#" className="text-gray-700 hover:text-gray-900">About AXT Transportation</a></li>
               <li><a href="#" className="text-gray-700 hover:text-gray-900">Careers</a></li>
@@ -18,10 +18,39 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Discover Section */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Discover</h3>
-            <ul className="space-y-2 text-base">
+          {/* Mobile: Discover & Support Resources side by side */}
+          <div className="block md:hidden col-span-1">
+            <div className="grid grid-cols-2 gap-6">
+              {/* Discover Section */}
+              <div className="space-y-4">
+                <h3 className="text-base md:text-xl font-semibold">Discover</h3>
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Industry</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Products</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Services</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Success Stories</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Resource Library</a></li>
+                </ul>
+              </div>
+              {/* Support Resources */}
+              <div className="space-y-4">
+                <h3 className="text-base md:text-xl font-semibold">Support Resources</h3>
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Support and Downloads</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Contact Support</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Request a Repair</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Product Warranty Information</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Developer Portal</a></li>
+                  <li><a href="#" className="text-gray-700 hover:text-gray-900">Report a Potential Security Vulnerability or Concern</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop: Discover Section */}
+          <div className="hidden md:block space-y-4">
+            <h3 className="text-base md:text-xl font-semibold">Discover</h3>
+            <ul className="space-y-2">
               <li><a href="#" className="text-gray-700 hover:text-gray-900">Industry</a></li>
               <li><a href="#" className="text-gray-700 hover:text-gray-900">Products</a></li>
               <li><a href="#" className="text-gray-700 hover:text-gray-900">Services</a></li>
@@ -30,10 +59,10 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support Resources */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Support Resources</h3>
-            <ul className="space-y-2 text-base">
+          {/* Desktop: Support Resources */}
+          <div className="hidden md:block space-y-4">
+            <h3 className="text-base md:text-xl font-semibold">Support Resources</h3>
+            <ul className="space-y-2">
               <li><a href="#" className="text-gray-700 hover:text-gray-900">Support and Downloads</a></li>
               <li><a href="#" className="text-gray-700 hover:text-gray-900">Contact Support</a></li>
               <li><a href="#" className="text-gray-700 hover:text-gray-900">Request a Repair</a></li>
@@ -45,13 +74,13 @@ const Footer = () => {
 
           {/* Connect with our team */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Connect with our team</h3>
-            <p className="text-base text-gray-700">Stay up to date with AXT Transportation.</p>
-            <p className="text-base text-gray-700">Sign up for our newsletter.</p>
+            <h3 className="text-base md:text-xl font-semibold">Connect with our team</h3>
+            <p className="text-sm md:text-base  font-semibold">Stay up to date with AXT Transportation.</p>
+            <p className="text-sm md:text-base text-gray-700">Sign up for our newsletter.</p>
             <button className="btn-primary-mobile text-white px-6 py-2 rounded-2xl transition-colors">
               Register Now
             </button>
-            <p className="text-sm text-gray-600 mt-4">
+            <p className="text-xs md:text-sm text-gray-600 mt-4">
               Manage Contact Preferences
             </p>
             <div className="flex space-x-3 mt-4">
@@ -100,14 +129,20 @@ const Footer = () => {
 
         {/* Legal and Social Links */}
         <div className="mt-8 pt-6 border-t border-gray-300">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <ul className="flex flex-wrap space-x-6 text-sm text-gray-600 mb-4 md:mb-0">
-              <li><a href="#" className="hover:text-gray-900">Legal</a></li>
-              <li><a href="#" className="hover:text-gray-900">Terms of Use</a></li>
-              <li><a href="#" className="hover:text-gray-900">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-gray-900">Supply Chain Transparency</a></li>
-            </ul>
-            <p className="text-sm text-gray-600">
+          <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col items-center md:flex-row md:space-x-6 md:items-center">
+              <div className="flex flex-row space-x-2 md:space-x-6 text-[14px] md:text-xs text-gray-600 ">
+                <a href="#" className="hover:text-gray-900">Legal</a>
+                <span className="hidden md:inline">|</span>
+                <a href="#" className="hover:text-gray-900">Terms of Use</a>
+                <span className="hidden md:inline">|</span>
+                <a href="#" className="hover:text-gray-900">Privacy Policy</a>
+              </div>
+              <div className="mt-1 md:mt-0 text-center text-[14px] md:text-xs text-gray-600 ">
+                <a href="#" className="hover:text-gray-900">Supply Chain Transparency</a>
+              </div>
+            </div>
+            <p className="text-[10px] md:text-xs text-gray-600 mt-2 md:mt-0 text-center md:text-left">
               ©2025 Zebra Technologies Corp. and/or its affiliates.
             </p>
           </div>

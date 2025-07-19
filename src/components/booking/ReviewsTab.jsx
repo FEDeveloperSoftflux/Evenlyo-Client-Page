@@ -8,7 +8,7 @@ const ReviewsTab = () => {
       text: "DJ RayBeatz absolutely lit up our mehndi night. The playlist was perfectly tailored, and everyone was on the dance floor. Highly recommended!",
       rating: 5,
       timeAgo: "1 Month Ago",
-      avatar: "/assets/Vendor1.png"
+      avatar: "/assets/jaydeep.png"
     },
     {
       id: 2,
@@ -16,7 +16,7 @@ const ReviewsTab = () => {
       text: "He arrived early, setup professionally, and the vibe was amazing. Would give 5 stars if volume could've been a bit higher outdoors.",
       rating: 5,
       timeAgo: "1 Month Ago",
-      avatar: "/assets/Vendor2.png"
+      avatar: "/assets/jaydeep.png"
     },
     {
       id: 3,
@@ -24,7 +24,7 @@ const ReviewsTab = () => {
       text: "He knew exactly when to switch the mood. The energy never dropped. Even our parents were dancing by the end!",
       rating: 5,
       timeAgo: "1 Month Ago",
-      avatar: "/assets/Vendor3.png"
+      avatar: "/assets/jaydeep.png"
     },
     {
       id: 4,
@@ -32,7 +32,7 @@ const ReviewsTab = () => {
       text: "This DJ was on another level. Lights, sound, interaction — everything was top-tier. Definitely booking again!",
       rating: 5,
       timeAgo: "1 Month Ago",
-      avatar: "/assets/customershowcase1.png"
+      avatar: "/assets/jaydeep.png"
     },
     {
       id: 5,
@@ -40,7 +40,7 @@ const ReviewsTab = () => {
       text: "The sound was crystal clear. He even took guest song requests and mixed them in live. 10/10 experience.",
       rating: 5,
       timeAgo: "1 Month Ago",
-      avatar: "/assets/customershowcase2.png"
+      avatar: "/assets/jaydeep.png"
     }
   ];
 
@@ -98,7 +98,7 @@ const ReviewsTab = () => {
       <div className="text-center mt-8">
         <button
           onClick={() => setShowAllReviews(!showAllReviews)}
-          className="inline-flex items-center px-6 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors font-medium"
+          className="inline-flex items-center px-6 py-3 bg-gradient-brand text-white rounded-2xl hover:bg-pink-600 transition-colors font-medium"
         >
           {showAllReviews ? 'Show Less Reviews' : 'Show All Reviews'}
           <svg

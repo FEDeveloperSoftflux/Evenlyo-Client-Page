@@ -394,7 +394,9 @@ const VendorProfile = () => {
                     : "text-gray-700 hover:text-pink-600"
                 }`}
               >
-                <span className="w-2 h-2 bg-current rounded-full"></span>
+                <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                  <img src={activeTab === 'about' ? '/assets/AboutActive.svg' : '/assets/About.svg'} alt="About Icon" className="w-6 h-6 inline-block align-middle" />
+                </div>
                 <span>About</span>
               </button>
               <button
@@ -405,7 +407,9 @@ const VendorProfile = () => {
                     : "text-gray-700 hover:text-pink-600"
                 }`}
               >
-                <Star className="w-4 h-4" />
+                <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                  <img src={activeTab === 'reviews' ? '/assets/StarActive.svg' : '/assets/Star.svg'} alt="Star Icon" className="w-6 h-6 inline-block align-middle" />
+                </div>
                 <span>Reviews</span>
               </button>
               <button
@@ -416,7 +420,9 @@ const VendorProfile = () => {
                     : "text-gray-700 hover:text-pink-600"
                 }`}
               >
-                <span>📅</span>
+                <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                  <img src={activeTab === 'book' ? '/assets/MusicActive.svg' : '/assets/Music.svg'} alt="Music Icon" className="w-6 h-6 inline-block align-middle" />
+                </div>
                 <span>Book Item</span>
               </button>
             </div>
@@ -515,7 +521,12 @@ const VendorProfile = () => {
                         <span>★</span>
                         <span className="ml-2">$300</span>
                       </div>
-                      <button className="mt-auto btn-primary-mobile w-full text-white font-bold py-2 px-4 rounded-lg">Book Now</button>
+                      <button
+                        className="mt-auto btn-primary-mobile w-full text-white font-bold py-2 px-4 rounded-lg"
+                        onClick={() => navigate('/bookingpage')}
+                      >
+                        Book Now
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -558,7 +569,12 @@ const VendorProfile = () => {
                         <span>★</span>
                         <span className="ml-2">$300</span>
                       </div>
-                      <button className="mt-auto btn-primary-mobile w-full text-white font-bold py-2 px-4 rounded-lg">Book Now</button>
+                      <button
+                        className="mt-auto btn-primary-mobile w-full text-white font-bold py-2 px-4 rounded-lg"
+                        onClick={() => navigate('/bookingpage')}
+                      >
+                        Book Now
+                      </button>
                     </div>
                   </div>
                 ))}

@@ -19,29 +19,26 @@ const RequestSuccessModal = ({ isOpen, onClose, onTrackBooking }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-lg w-full">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <div className="flex-1"></div>
+      <div className="bg-white rounded-3xl max-w-lg w-full">
+        {/* Content */}
+        <div className="p-8 text-left space-y-6 relative">
+          {/* Close Button (moved here) */}
           <button
             onClick={onClose}
-            className="w-10 h-10 bg-gradient-brand text-white rounded-xl flex items-center justify-center hover:shadow-lg transition-all"
+            className="absolute top-0 right-0 mt-6 mr-4 w-10 h-10 bg-gradient-brand text-white rounded-xl flex items-center justify-center hover:shadow-lg transition-all"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </div>
 
-        {/* Content */}
-        <div className="p-6 text-center space-y-6">
           {/* Success Message */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
               Request Sent Successfully!
             </h2>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              our request has been sent to<br />
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Your request has been sent to<br />
               vendor <span className="font-semibold">#VENDOR-2024-001</span>. Please wait for their<br />
               confirmation.
             </p>
@@ -49,7 +46,7 @@ const RequestSuccessModal = ({ isOpen, onClose, onTrackBooking }) => {
 
           {/* Add Location Section */}
           <div className="text-left">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Add Location *</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Add Location </h3>
             <div className="bg-gray-50 rounded-lg p-4 flex items-center justify-between">
               <span className="text-gray-700 font-medium">BK-20250709-3733</span>
               <button
@@ -67,13 +64,13 @@ const RequestSuccessModal = ({ isOpen, onClose, onTrackBooking }) => {
           <div className="flex space-x-4">
             <button
               onClick={handleBackToListing}
-              className="flex-1 py-3 border-2 border-primary text-primary rounded-lg font-medium hover:bg-primary/10 transition-colors"
+              className="flex-1 py-2 border-2 border-primary text-primary rounded-lg font-medium hover:bg-primary/10 transition-colors"
             >
               Back to Listing
             </button>
             <button
               onClick={handleTrackBooking}
-              className="flex-1 py-3 bg-gradient-brand text-white rounded-lg font-medium hover:shadow-lg transition-all"
+              className="flex-1 py-2 bg-gradient-brand text-white rounded-lg font-medium hover:shadow-lg transition-all"
             >
               Track Booking
             </button>

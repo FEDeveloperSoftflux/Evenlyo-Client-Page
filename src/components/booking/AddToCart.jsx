@@ -10,7 +10,7 @@ const AddToCart = () => {
       title: "DJ Ray Vibes",
       vendor: "Jaydeep",
       price: 300,
-      image: "/assets/jaydeep.png",
+      image: "/assets/DJProfile.png",
       inStock: true
     },
     {
@@ -18,7 +18,7 @@ const AddToCart = () => {
       title: "DJ Ray Vibes",
       vendor: "Jaydeep",
       price: 300,
-      image: "/assets/jaydeep.png",
+      image: "/assets/DJProfile.png",
       inStock: true
     }
   ]);
@@ -29,7 +29,7 @@ const AddToCart = () => {
       title: "DJ Ray Vibes",
       vendor: "Jaydeep",
       price: 300,
-      image: "/assets/jaydeep.png",
+      image: "/assets/DJProfile.png",
       inStock: true
     },
     {
@@ -37,7 +37,7 @@ const AddToCart = () => {
       title: "DJ Ray Vibes",
       vendor: "Jaydeep",
       price: 300,
-      image: "/assets/jaydeep.png",
+      image: "/assets/DJProfile.png",
       inStock: true
     }
   ]);
@@ -68,12 +68,9 @@ const AddToCart = () => {
     <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100 mb-4">
       <div className="flex items-center space-x-4">
         {/* Radio Button */}
-        <div className="w-4 h-4 rounded-full border-2 border-pink-500 bg-gradient-brand flex items-center justify-center">
-          <div className="w-2 h-2 bg-white rounded-full"></div>
-        </div>
         
         {/* Item Image */}
-        <div className="w-16 h-16 rounded-lg overflow-hidden">
+        <div className="w-20 h-20 rounded-lg overflow-hidden">
           <img 
             src={item.image} 
             alt={item.title}
@@ -88,8 +85,19 @@ const AddToCart = () => {
         <div>
           <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
           <div className="flex items-center space-x-2 mt-1">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className="text-sm text-gray-600">{item.vendor}</span>
+            <div className="flex flex-col items-start">
+              <div className="flex items-center mb-1">
+                <span className="text-gray-400 text-sm font-normal mr-1 mb-1">In stock</span>
+                <svg className="w-3 h-3 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="10" fill="#ec4899"/>
+                  <path d="M7.5 10.5l2 2 3-3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </svg>
+              </div>
+              <div className="flex items-center space-x-2">
+                <img src="/assets/jaydeep.png" alt="Jaydeep" className="w-6 h-6 rounded-full object-cover" />
+                <span className="text-base text-gray-900 font-medium">Jaydeep</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

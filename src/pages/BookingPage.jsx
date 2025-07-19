@@ -49,7 +49,7 @@ const BookingPage = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`flex items-center space-x-2 px-6 py-3 rounded-2xl text-sm font-medium transition-all duration-200 ${
                     activeTab === tab.id
                       ? 'bg-gradient-brand text-white shadow-lg'
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'

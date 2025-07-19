@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
-  const [selectedDate, setSelectedDate] = useState("Friday, July 11, 2025");
+const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates }) => {
+  // Format date to readable string
+  const formatDate = (dateObj) => {
+    if (!dateObj) return '';
+    return dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  const [selectedDatesState, setSelectedDatesState] = useState(selectedDates || []);
   const [isMultipleDay, setIsMultipleDay] = useState(false);
   const [startTime, setStartTime] = useState("09:00 AM");
   const [endTime, setEndTime] = useState("05:00 PM");
@@ -9,6 +15,14 @@ const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
   const [instructions, setInstructions] = useState("");
   const [hasSecurityProtection, setHasSecurityProtection] = useState(true);
   const [acceptedTerms, setAcceptedTerms] = useState(true);
+  const [startDate, setStartDate] = useState("2025-07-11");
+  const [endDate, setEndDate] = useState("2025-07-12");
+
+  useEffect(() => {
+    if (selectedDates) {
+      setSelectedDatesState(selectedDates);
+    }
+  }, [selectedDates]);
 
   if (!isOpen) return null;
 
@@ -35,7 +49,7 @@ const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
-        className="bg-white/95 backdrop-blur-md rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-white/20 mx-2"
+        className="bg-white backdrop-blur-md rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-white/20 mx-2"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         <style>{`
@@ -49,10 +63,10 @@ const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
           </h2>
           <button
             onClick={onClose}
-            className="w-10 h-10 bg-gradient-brand text-white rounded-xl flex items-center justify-center hover:shadow-lg transition-all"
+            className="w-10 h-10 bg-gradient-brand text-white rounded-2xl flex items-center justify-center shadow-lg hover:scale-105 transition-all"
           >
             <svg
-              className="w-5 h-5"
+              className="w-6 h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -69,132 +83,124 @@ const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Content */}
         <div className="p-6 space-y-8">
-          {/* Selected Date & Time */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Selected Date & Time
-            </h3>
-            <div className="text-gray-600 mb-4">{selectedDate}</div>
+          {/* Selected Date & Time + Multiple Day */}
+          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-5 py-4 mb-2">
+            <div>
+              <div className="text-xs text-gray-500 font-medium mb-1">Selected Date{selectedDatesState.length > 1 ? 's' : ''} & Time</div>
+              <div className="text-base text-gray-700 font-semibold">
+                {selectedDatesState.length === 0 ? (
+                  'No date selected'
+                ) : selectedDatesState.length === 1 ? (
+                  formatDate(selectedDatesState[0])
+                ) : (() => {
+                  // Sort dates
+                  const sorted = [...selectedDatesState].sort((a, b) => a - b);
+                  // Check if all dates are continuous
+                  let isContinuous = true;
+                  for (let i = 1; i < sorted.length; i++) {
+                    const prev = sorted[i - 1];
+                    const curr = sorted[i];
+                    // Difference in days
+                    const diff = (curr - prev) / (1000 * 60 * 60 * 24);
+                    if (diff !== 1) {
+                      isContinuous = false;
+                      break;
+                    }
+                  }
+                  if (isContinuous) {
+                    // Show as range
+                    return (
+                      <span>
+                        {formatDate(sorted[0])} – {formatDate(sorted[sorted.length - 1])}
+                      </span>
+                    );
+                  } else {
+                    // Show as badges
+                    return (
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {sorted.map((dateObj, idx) => (
+                          <span
+                            key={dateObj.toISOString() + idx}
+                            className="inline-block bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs font-medium shadow-sm border border-pink-200"
+                          >
+                            {formatDate(dateObj)}
+                          </span>
+                        ))}
+                      </div>
+                    );
+                  }
+                })()}
+              </div>
+            </div>
+          </div>
 
-            {/* Multiple Day Toggle */}
-            <label className="flex items-center space-x-3 mb-4">
+
+          {/* Time Selection */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Start Time
+              </label>
               <div className="relative">
                 <input
-                  type="checkbox"
-                  checked={isMultipleDay}
-                  onChange={(e) => setIsMultipleDay(e.target.checked)}
-                  className="sr-only"
+                  type="time"
+                  value={startTime}
+                  onChange={e => setStartTime(e.target.value)}
+                  className="w-full px-3 py-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor"
+                  placeholder="09:00"
                 />
-                <div
-                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    isMultipleDay
-                      ? "bg-gradient-to-r from-pink-500 to-purple-600 border-pink-500"
-                      : "border-gray-300"
-                  }`}
-                >
-                  {isMultipleDay && (
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                  )}
+                <div className="absolute right-3 top-2.5">
+
                 </div>
               </div>
-              <span className="text-gray-700">Multiple Day</span>
-            </label>
-
-            {/* Time Selection */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Start Time
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-                    placeholder="09:00 AM"
-                  />
-                  <div className="absolute right-3 top-2.5">
-                    <svg
-                      className="w-4 h-4 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  End Time
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-                    placeholder="05:00 PM"
-                  />
-                  <div className="absolute right-3 top-2.5">
-                    <svg
-                      className="w-4 h-4 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                End Time
+              </label>
+              <div className="relative">
+                <input
+                  type="time"
+                  value={endTime}
+                  onChange={e => setEndTime(e.target.value)}
+                  className="w-full px-3 py-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor"
+                  placeholder="17:00"
+                />
+                <div className="absolute right-3 top-2.5">
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Add Location */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Add Location <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-                placeholder="Add Location"
-              />
-              <div className="absolute right-3 top-2.5">
-                <svg
-                  className="w-4 h-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+          {/* Add Location & Calculated km */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Add Location <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={location}
+                  onChange={e => setLocation(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-100 text-gray-700  "
+                  placeholder="Add Location"
+                />
+                <div className="absolute right-3 top-2.5">
+
+                </div>
               </div>
             </div>
-            <div className="text-sm text-gray-500 mt-1">Calculated km</div>
-            <div className="text-sm font-medium text-gray-700">10 km</div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Calculated km
+              </label>
+              <input
+                type="text"
+                placeholder="10 km"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-100 text-gray-700"
+              />
+            </div>
           </div>
 
           {/* Add Instructions */}
@@ -205,74 +211,60 @@ const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
             <textarea
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 h-20 resize-none"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-100 text-gray-700 h-20 resize-none"
               placeholder="Any special requirements or setup instructions..."
             />
           </div>
 
           {/* Security Protection */}
-          <div className="flex items-center justify-between">
-            <span className="text-gray-700">
-              Add Security Protection (+$25)
-            </span>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={hasSecurityProtection}
-                onChange={(e) => setHasSecurityProtection(e.target.checked)}
-                className="sr-only"
-              />
-              <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                  hasSecurityProtection
-                    ? "bg-gradient-brand border-pink-500"
-                    : "border-gray-300"
-                }`}
+          <label className="flex items-center space-x-3 select-none">
+            <input
+              type="checkbox"
+              checked={hasSecurityProtection}
+              onChange={(e) => setHasSecurityProtection(e.target.checked)}
+              className="sr-only"
+            />
+            <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${hasSecurityProtection ? 'border-white bg-gradient-brand' : 'border-gray-300'}`}
               >
-                {hasSecurityProtection && (
-                  <svg
-                    className="w-3 h-3 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
-              </div>
-            </label>
-          </div>
+              {hasSecurityProtection && (
+                <svg
+                  className="w-3 h-3 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+            </span>
+            <span className="text-gray-700 font-medium">Add Security Protection (+$25)</span>
+          </label>
 
           {/* Pricing Summary */}
-          <div className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-5 space-y-4 border border-gray-200/30">
-            <h4 className="font-semibold text-gray-900 text-lg">Pricing Summary</h4>
-
+          <div className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-5 space-y-3 border border-gray-200/30">
+            <h4 className="font-semibold text-gray-900 text-base mb-2">Pricing Summary</h4>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Duration: {duration} hours</span>
-              <span className="text-gray-900">${hourlyRate}/hr</span>
+              <span className="text-gray-900 font-medium">${hourlyRate}/hr</span>
             </div>
-
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Subtotal:</span>
-              <span className="text-gray-900">${subtotal.toFixed(2)}</span>
+              <span className="text-gray-900 font-medium">${subtotal.toFixed(2)}</span>
             </div>
-
             {hasSecurityProtection && (
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Security Fee:</span>
-                <span className="text-gray-900">${securityFee.toFixed(2)}</span>
+                <span className="text-gray-900 font-medium">${securityFee.toFixed(2)}</span>
               </div>
             )}
-
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Kilometer: 10 km</span>
-              <span className="text-gray-900">${kilometerFee.toFixed(2)}</span>
+              <span className="text-gray-900 font-medium">${kilometerFee.toFixed(2)}</span>
             </div>
-
-            <div className="border-t border-gray-200/50 pt-4">
+            <div className="border-t border-gray-200/50 pt-3">
               <div className="flex justify-between text-xl font-bold">
                 <span className="text-gray-900">Total:</span>
                 <span className="text-gray-900">${total.toFixed(2)}</span>
@@ -281,56 +273,46 @@ const BookNowModal = ({ isOpen, onClose, onSuccess }) => {
           </div>
 
           {/* Terms & Conditions */}
-          <div className="flex items-center space-x-3">
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={acceptedTerms}
-                onChange={(e) => setAcceptedTerms(e.target.checked)}
-                className="sr-only"
-              />
-              <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                  acceptedTerms
-                    ? "bg-gradient-brand border-pink-500"
-                    : "border-gray-300"
-                }`}
-              >
-                {acceptedTerms && (
-                  <svg
-                    className="w-3 h-3 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
-              </div>
-            </label>
-            <span className="text-gray-700">
-              I accept the company's{" "}
-              <a href="#" className="text-pink-500 hover:text-pink-600">
-                terms & conditions
-              </a>
+          <label className="flex items-center space-x-3 select-none">
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              className="sr-only"
+            />
+            <span className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-colors ${acceptedTerms ? 'border-white bg-gradient-brand' : 'border-gray-300'}`}>
+              {acceptedTerms && (
+                <svg
+                  className="w-3 h-3 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
             </span>
-          </div>
+            <span className="text-gray-700 text-sm">
+              I accept the company's{' '}
+              <a href="#" className="text-pink-500 hover:text-pink-600 underline font-medium">terms & conditions</a>
+            </span>
+          </label>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-1 mt-2">
             <button
               onClick={handleAddToCart}
-              className="flex-1 py-3 px-6 border-2 border-primary text-primary rounded-lg font-medium hover:bg-primary/10 transition-all text-sm sm:text-base backdrop-blur-sm"
+              className="flex-1 py-2 px-3 border-2 border-pink-500 text-pink-500 rounded-2xl font-semibold hover:bg-pink-50 transition-all backdrop-blur-sm text-nowrap text-sm md:text-md"
             >
               Add To Cart
             </button>
             <button
               onClick={handleSendBookingRequest}
-              className="flex-1 py-3 px-6 bg-gradient-brand text-white rounded-lg font-medium hover:shadow-lg transition-all text-sm sm:text-base disabled:opacity-50 backdrop-blur-sm"
-              disabled={!acceptedTerms || !location || !instructions}
+              className="flex-1 py-2 px-3 bg-gradient-brand text-white rounded-2xl font-semibold hover:shadow-lg transition-all  disabled:opacity-50 backdrop-blur-sm text-nowrap text-sm md:text-md"
+              disabled={!acceptedTerms || !location}
             >
               Send Booking Request
             </button>

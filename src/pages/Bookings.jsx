@@ -47,8 +47,8 @@ function Bookings() {
     setIsDropdownOpen(false);
   };
 
-  // Sample booking data that matches the design
-  const bookings = [
+  // Change bookings to useState
+  const [bookings, setBookings] = useState([
     {
       id: 1,
       slNo: 1,
@@ -121,7 +121,53 @@ function Bookings() {
       status: 'Accepted',
       statusColor: 'bg-blue-400'
     }
-  ];
+  ]);
+
+  // Add timer state for accepted bookings
+  const [cancelTimers, setCancelTimers] = useState({});
+
+  // Start timer when a booking is set to 'Accepted'
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCancelTimers((prev) => {
+        const updated = { ...prev };
+        Object.keys(updated).forEach((id) => {
+          if (updated[id] > 0) updated[id] -= 1;
+        });
+        return updated;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setBookings((prev) => prev.map((b) => {
+      if (b.status === 'Accepted' && cancelTimers[b.id] === undefined) {
+        return { ...b, acceptedAt: Date.now() };
+      }
+      return b;
+    }));
+    // Initialize timers for accepted bookings
+    bookings.forEach((b) => {
+      if (b.status === 'Accepted' && cancelTimers[b.id] === undefined) {
+        setCancelTimers((prev) => ({ ...prev, [b.id]: 30 * 60 }));
+      }
+      if (b.status !== 'Accepted' && cancelTimers[b.id] !== undefined) {
+        setCancelTimers((prev) => {
+          const copy = { ...prev };
+          delete copy[b.id];
+          return copy;
+        });
+      }
+    });
+    // eslint-disable-next-line
+  }, [bookings]);
+
+  function formatTimer(seconds) {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
 
   // Filter bookings based on search term and status
   const filteredBookings = bookings.filter(booking => {
@@ -138,12 +184,12 @@ function Bookings() {
 
   const getStatusBadge = (status, statusColor) => {
     const colorMap = {
-      'Accepted': 'bg-yellow-100 text-yellow-700',
-      'Pending': 'bg-pink-100 text-pink-700',
-      'Paid': 'bg-orange-100 text-orange-700',
-      'On the way': 'bg-green-100 text-green-700',
-      'Complete': 'bg-red-100 text-red-700',
-      'Received': 'bg-red-100 text-red-700'
+      'Accepted': 'bg-[#57C9FE]/10 text-[#57C9FE]',
+      'Pending': 'bg-[#FF0092]/10 text-[#FF0092]',
+      'Paid': 'bg-[#A05807]/10 text-[#A05807]',
+      'On the way': 'bg-[#04C373]/10 text-[#04C373]',
+      'Complete': 'bg-[#FF0000]/10 text-[#FF0000]',
+      'Received': 'bg-[#FECA57]/10 text-[#FFB000]'
     };
     
     return colorMap[status] || 'bg-gray-100 text-gray-700';
@@ -151,117 +197,332 @@ function Bookings() {
 
   const getActionButtons = (status, booking) => {
     const buttons = [];
-    
-    if (status === 'Accepted' || status === 'Received'  || status === 'Paid' || status === 'On the way') {
-      buttons.push(
-        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
-          Complain
-        </button>
-      );
-    }
-    
-    if (status === 'Accepted'|| status === 'Received'  || status === 'Paid' || status === 'On the way') {
-      buttons.push(
-        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => {
-          setSelectedTrackOrder({
-            trackingId: booking.trackingId,
-            orderId: booking.orderId || 'ORD-003',
-            clientName: booking.clientName || 'Global Supply Co',
-            phone: booking.phone || '+1-234-567-8903',
-            statusLabel: booking.status || 'On the way',
-            totalPrice: booking.totalPrice || '$2100.00',
-            timeline: [
-              {
-                title: 'Request Sent',
-                description: 'Client sent order request',
-                completed: true,
-                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4l3 3" strokeWidth="2" /></svg>,
-                label: 'Clint',
-                labelColor: 'bg-pink-100 text-pink-600',
-                date: '2025-01-07/07:45'
-              },
-              {
-                title: 'Order Accepted',
-                description: 'Vendor accepted the order',
-                completed: true,
-                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M9 12l2 2 4-4" strokeWidth="2" /></svg>,
-                label: 'Vendor',
-                labelColor: 'bg-yellow-100 text-yellow-600',
-                date: '2025-01-07/09:00'
-              },
-              {
-                title: 'Picked Up',
-                description: 'Order picked up from location',
-                completed: true,
-                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" strokeWidth="2" /></svg>,
-                label: 'Driver',
-                labelColor: 'bg-green-100 text-green-600',
-                date: '2025-01-06/11:15'
-              },
-              {
-                title: 'Delivered',
-                description: 'Order delivered to destination',
-                completed: false,
-                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="7" rx="2" strokeWidth="2" /><path d="M16 11V7a4 4 0 00-8 0v4" strokeWidth="2" /></svg>,
-                label: 'Pending',
-                labelColor: 'bg-gray-100 text-gray-400',
-                date: null
-              },
-              {
-                title: 'Received',
-                description: 'Client confirmed receipt',
-                completed: false,
-                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
-                label: 'Pending',
-                labelColor: 'bg-gray-100 text-gray-400',
-                date: null
-              },
-              {
-                title: 'Completed',
-                description: `Total Price: ${booking.totalPrice || '$2100.00'}`,
-                completed: false,
-                icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
-                label: 'Pending',
-                labelColor: 'bg-gray-100 text-gray-400',
-                date: null
-              }
-            ],
-            progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
-          });
-          setIsTrackOpen(true);
-        }}>
-          Track
-        </button>
-      );
-    }
-    
     if (status === 'Complete') {
       buttons.push(
         <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
           Complain
         </button>
       );
-      buttons.push(
-        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors">
-          Track
-        </button>
-      );
+      return buttons;
     }
-    
     if (status === 'Pending') {
       buttons.push(
         <button key="cancel" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsCancelOpen(true)}>
           Cancel
         </button>
       );
+      const trackOrderData = {
+        trackingId: booking.trackingId,
+        orderId: booking.orderId || 'ORD-003',
+        clientName: booking.clientName || 'Global Supply Co',
+        phone: booking.phone || '+1-234-567-8903',
+        statusLabel: booking.status || 'On the way',
+        totalPrice: booking.totalPrice || '$2100.00',
+        timeline: [
+          {
+            title: 'Request Sent',
+            description: 'Client sent order request', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4l3 3" strokeWidth="2" /></svg>,
+            label: 'Client', labelColor: 'bg-pink-100 text-pink-600', date: '2025-01-07/07:45'
+          },
+          {
+            title: 'Order Accepted', description: 'Vendor accepted the order', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M9 12l2 2 4-4" strokeWidth="2" /></svg>,
+            label: 'Vendor', labelColor: 'bg-yellow-100 text-yellow-600', date: '2025-01-07/09:00'
+          },
+          {
+            title: 'Picked Up', description: 'Order picked up from location', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" strokeWidth="2" /></svg>,
+            label: 'Driver', labelColor: 'bg-green-100 text-green-600', date: '2025-01-06/11:15'
+          },
+          {
+            title: 'Delivered', description: 'Order delivered to destination', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="7" rx="2" strokeWidth="2" /><path d="M16 11V7a4 4 0 00-8 0v4" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Received', description: 'Client confirmed receipt', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Completed', description: `Total Price: ${booking.totalPrice || '$2100.00'}`,
+            completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          }
+        ],
+        progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
+      };
+      buttons.push(
+        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
+          Track
+        </button>
+      );
+      return buttons;
     }
-    
-    buttons.push(
-      <button key="received" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors">
-        Received
-      </button>
-    );
-    
+    if (status === 'Accepted') {
+      // Cancel button only for 30 min
+      if (cancelTimers[booking.id] > 0) {
+        buttons.push(
+          <button
+            key="cancel"
+            className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => setIsCancelOpen(true)}
+            disabled={cancelTimers[booking.id] === 1}
+            title={cancelTimers[booking.id] === 1 ? 'Cancel period expired' : ''}
+          >
+            Cancel <span className="ml-1 text-xs text-gray-500">{formatTimer(cancelTimers[booking.id])}</span>
+          </button>
+        );
+      } else if (cancelTimers[booking.id] === 0) {
+        buttons.push(
+          <button
+            key="cancel-expired"
+            className="px-3 py-1 text-sm border-2 rounded-full text-gray-400 bg-gray-100 cursor-not-allowed mr-2"
+            disabled
+            title="Cancel period expired"
+          >
+            Cancel <span className="ml-1 text-xs text-gray-400">00:00</span>
+          </button>
+        );
+      }
+      const trackOrderData = {
+        trackingId: booking.trackingId,
+        orderId: booking.orderId || 'ORD-003',
+        clientName: booking.clientName || 'Global Supply Co',
+        phone: booking.phone || '+1-234-567-8903',
+        statusLabel: booking.status || 'On the way',
+        totalPrice: booking.totalPrice || '$2100.00',
+        timeline: [
+          {
+            title: 'Request Sent',
+            description: 'Client sent order request', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4l3 3" strokeWidth="2" /></svg>,
+            label: 'Client', labelColor: 'bg-pink-100 text-pink-600', date: '2025-01-07/07:45'
+          },
+          {
+            title: 'Order Accepted', description: 'Vendor accepted the order', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M9 12l2 2 4-4" strokeWidth="2" /></svg>,
+            label: 'Vendor', labelColor: 'bg-yellow-100 text-yellow-600', date: '2025-01-07/09:00'
+          },
+          {
+            title: 'Picked Up', description: 'Order picked up from location', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" strokeWidth="2" /></svg>,
+            label: 'Driver', labelColor: 'bg-green-100 text-green-600', date: '2025-01-06/11:15'
+          },
+          {
+            title: 'Delivered', description: 'Order delivered to destination', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="7" rx="2" strokeWidth="2" /><path d="M16 11V7a4 4 0 00-8 0v4" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Received', description: 'Client confirmed receipt', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Completed', description: `Total Price: ${booking.totalPrice || '$2100.00'}`,
+            completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          }
+        ],
+        progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
+      };
+      buttons.push(
+        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
+          Track
+        </button>
+      );
+      buttons.push(
+        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+          Complain
+        </button>
+      );
+      return buttons;
+    }
+    if (status === 'Paid') {
+      const trackOrderData = {
+        trackingId: booking.trackingId,
+        orderId: booking.orderId || 'ORD-003',
+        clientName: booking.clientName || 'Global Supply Co',
+        phone: booking.phone || '+1-234-567-8903',
+        statusLabel: booking.status || 'On the way',
+        totalPrice: booking.totalPrice || '$2100.00',
+        timeline: [
+          {
+            title: 'Request Sent',
+            description: 'Client sent order request', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4l3 3" strokeWidth="2" /></svg>,
+            label: 'Client', labelColor: 'bg-pink-100 text-pink-600', date: '2025-01-07/07:45'
+          },
+          {
+            title: 'Order Accepted', description: 'Vendor accepted the order', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M9 12l2 2 4-4" strokeWidth="2" /></svg>,
+            label: 'Vendor', labelColor: 'bg-yellow-100 text-yellow-600', date: '2025-01-07/09:00'
+          },
+          {
+            title: 'Picked Up', description: 'Order picked up from location', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" strokeWidth="2" /></svg>,
+            label: 'Driver', labelColor: 'bg-green-100 text-green-600', date: '2025-01-06/11:15'
+          },
+          {
+            title: 'Delivered', description: 'Order delivered to destination', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="7" rx="2" strokeWidth="2" /><path d="M16 11V7a4 4 0 00-8 0v4" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Received', description: 'Client confirmed receipt', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Completed', description: `Total Price: ${booking.totalPrice || '$2100.00'}`,
+            completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          }
+        ],
+        progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
+      };
+      buttons.push(
+        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
+          Track
+        </button>
+      );
+      buttons.push(
+        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+          Complain
+        </button>
+      );
+      return buttons;
+    }
+    if (status === 'On the way') {
+      const trackOrderData = {
+        trackingId: booking.trackingId,
+        orderId: booking.orderId || 'ORD-003',
+        clientName: booking.clientName || 'Global Supply Co',
+        phone: booking.phone || '+1-234-567-8903',
+        statusLabel: booking.status || 'On the way',
+        totalPrice: booking.totalPrice || '$2100.00',
+        timeline: [
+          {
+            title: 'Request Sent',
+            description: 'Client sent order request', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4l3 3" strokeWidth="2" /></svg>,
+            label: 'Client', labelColor: 'bg-pink-100 text-pink-600', date: '2025-01-07/07:45'
+          },
+          {
+            title: 'Order Accepted', description: 'Vendor accepted the order', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M9 12l2 2 4-4" strokeWidth="2" /></svg>,
+            label: 'Vendor', labelColor: 'bg-yellow-100 text-yellow-600', date: '2025-01-07/09:00'
+          },
+          {
+            title: 'Picked Up', description: 'Order picked up from location', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" strokeWidth="2" /></svg>,
+            label: 'Driver', labelColor: 'bg-green-100 text-green-600', date: '2025-01-06/11:15'
+          },
+          {
+            title: 'Delivered', description: 'Order delivered to destination', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="7" rx="2" strokeWidth="2" /><path d="M16 11V7a4 4 0 00-8 0v4" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Received', description: 'Client confirmed receipt', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Completed', description: `Total Price: ${booking.totalPrice || '$2100.00'}`,
+            completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          }
+        ],
+        progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
+      };
+      buttons.push(
+        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
+          Track
+        </button>
+      );
+      buttons.push(
+        <button key="received" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => {
+          setBookings(prev => prev.map(b => b.id === booking.id ? { ...b, status: 'Received', statusColor: 'bg-yellow-400' } : b));
+        }}>
+          Received
+        </button>
+      );
+      buttons.push(
+        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+          Complain
+        </button>
+      );
+      return buttons;
+    }
+    if (status === 'Received') {
+      const trackOrderData = {
+        trackingId: booking.trackingId,
+        orderId: booking.orderId || 'ORD-003',
+        clientName: booking.clientName || 'Global Supply Co',
+        phone: booking.phone || '+1-234-567-8903',
+        statusLabel: booking.status || 'On the way',
+        totalPrice: booking.totalPrice || '$2100.00',
+        timeline: [
+          {
+            title: 'Request Sent',
+            description: 'Client sent order request', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4l3 3" strokeWidth="2" /></svg>,
+            label: 'Client', labelColor: 'bg-pink-100 text-pink-600', date: '2025-01-07/07:45'
+          },
+          {
+            title: 'Order Accepted', description: 'Vendor accepted the order', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M9 12l2 2 4-4" strokeWidth="2" /></svg>,
+            label: 'Vendor', labelColor: 'bg-yellow-100 text-yellow-600', date: '2025-01-07/09:00'
+          },
+          {
+            title: 'Picked Up', description: 'Order picked up from location', completed: true,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" strokeWidth="2" /></svg>,
+            label: 'Driver', labelColor: 'bg-green-100 text-green-600', date: '2025-01-06/11:15'
+          },
+          {
+            title: 'Delivered', description: 'Order delivered to destination', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="7" rx="2" strokeWidth="2" /><path d="M16 11V7a4 4 0 00-8 0v4" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Received', description: 'Client confirmed receipt', completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          },
+          {
+            title: 'Completed', description: `Total Price: ${booking.totalPrice || '$2100.00'}`,
+            completed: false,
+            icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>,
+            label: 'Pending', labelColor: 'bg-gray-100 text-gray-400', date: null
+          }
+        ],
+        progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
+      };
+      buttons.push(
+        <button
+          key="complete"
+          className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors"
+          onClick={() => {
+            setBookings(prev => prev.map(b => b.id === booking.id ? { ...b, status: 'Complete', statusColor: 'bg-red-400' } : b));
+          }}
+        >
+          Complete
+        </button>
+      );
+      buttons.push(
+        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+          Complain
+        </button>
+      );
+      return buttons;
+    }
     return buttons;
   };
 
@@ -501,7 +762,6 @@ function Bookings() {
           </div>
         </div>
       </div>
-      
       <Footer/>
       <ComplaintModal open={isComplaintOpen} onClose={() => setIsComplaintOpen(false)} />
       <CancelModal open={isCancelOpen} onClose={() => setIsCancelOpen(false)} />
@@ -518,4 +778,3 @@ function Bookings() {
 }
 
 export default Bookings
-

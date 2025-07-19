@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const Categories = ({ selectedCategory, setSelectedCategory }) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState('DJ')
   const [showAllVendors, setShowAllVendors] = useState(false)
+  const navigate = useNavigate();
 
   const categories = [
     {
@@ -36,6 +38,28 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
       subcategories: ['Event Staff', 'Security', 'Coordination']
     }
   ]
+
+  const subcategoryIcons = {
+    'DJ': '/assets/subcategory1.svg',
+    'Live Band': '/assets/subcategory2.svg',
+    'Photo Booth': '/assets/subcategory3.svg',
+    'Catering': '/assets/food.svg',
+    'Food Trucks': '/assets/food.svg',
+    'Bartenders': '/assets/food.svg',
+    'Floral Design': '/assets/Table.svg',
+    'Event Styling': '/assets/LED.svg',
+    'Decorations': '/assets/Chandelier.svg',
+    'Venues': '/assets/partytent.svg',
+    'Party Tents': '/assets/partytent.svg',
+    'Outdoor Spaces': '/assets/partytent.svg',
+    'Event Staff': '/assets/staff.svg',
+    'Security': '/assets/staff.svg',
+    'Coordination': '/assets/staff.svg',
+    // Add more as needed
+  };
+  const getSubcategoryIcon = (subcategory) => {
+    return subcategoryIcons[subcategory] || '/assets/subcategory1.svg'; // fallback to a default icon
+  };
 
   const getCurrentSubcategories = () => {
     const category = categories.find(cat => cat.name === selectedCategory)
@@ -176,7 +200,7 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
         {/* Section Title */}
         <div className="text-center mb-responsive">
           <h2 className="text-responsive-h2 text-gray-900">
-            Explore <span className="bg-gradient-to-r from-secondary via-primary-500 to-primary-600 bg-clip-text text-transparent">Categories</span>
+            Explore <span className="bg-gradient-to-b from-secondary via-primary-500 to-primary-600 bg-clip-text text-transparent">Categories</span>
           </h2>
         </div>
 
@@ -199,7 +223,7 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
               <div
                 className={`category-card-mobile sm:category-card-desktop border-4 transition-all duration-300 ${
                   selectedCategory === category.name
-                    ? 'bg-gradient-to-r from-secondary via-primary-500 to-primary-600 border-white shadow-category'
+                    ? 'bg-gradient-to-b from-secondary via-primary-500 to-primary-600 border-white shadow-category'
                     : 'bg-white border-gray-200 hover:border-primary-300 shadow-card'
                 }`}
               >
@@ -236,7 +260,7 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
                 <div
                   className={`category-card-mobile sm:category-card-desktop border-4 transition-all duration-300 ${
                     selectedCategory === category.name
-                      ? 'bg-gradient-to-r from-secondary via-primary-500 to-primary-600 border-white shadow-category'
+                      ? 'bg-gradient-to-b from-secondary via-primary-500 to-primary-600 border-white shadow-category'
                       : 'bg-white border-gray-200 hover:border-primary-300 shadow-card'
                   }`}
                 >
@@ -268,19 +292,15 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
               onClick={() => setSelectedSubcategory(subcategory)}
               className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center space-x-2 ${
                 selectedSubcategory === subcategory
-                  ? 'bg-gradient-to-r from-secondary via-primary-500 to-primary-600 text-white shadow-md'
+                  ? 'bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md'
                   : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-300 hover:text-primary-500'
               }`}
             >
-              {subcategory === 'DJ' && (
-                <img src="/assets/subcategory1.svg" alt="DJ" className="w-4 h-4" />
-              )}
-              {subcategory === 'Live Band' && (
-                <img src="/assets/subcategory2.svg" alt="Live Band" className="w-4 h-4" />
-              )}
-              {subcategory === 'Photo Booth' && (
-                <img src="/assets/subcategory3.svg" alt="Photo Booth" className="w-4 h-4" />
-              )}
+              <img
+                src={getSubcategoryIcon(subcategory)}
+                alt={subcategory}
+                className="w-8 h-8 bg-white rounded-lg"
+              />
               <span>{subcategory}</span>
             </button>
           ))}
@@ -299,86 +319,97 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
           </p>
         </div>
 
-        {/* Vendor Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-responsive">
-          {vendorsToShow.map((vendor, index) => (
-            <div key={vendor.id} className="card-mobile vendor-card-desktop">
-              {/* Vendor Image */}
-              <div className="relative image-container-mobile sm:image-container-desktop bg-gradient-to-br from-gray-200 to-gray-300">
-                <img
-                  src={`/assets/categorycard.svg`}
-                  alt={vendor.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.style.display = 'none'
-                    e.target.nextSibling.style.display = 'flex'
-                  }}
-                />
-                <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 hidden items-center justify-center">
-                  <span className="text-gray-500 text-sm">DJ Image</span>
-                </div>
-              </div>
+        {/* Vendor Cards for Selected Category and Selected Subcategory Only */}
+        {categories.filter(category => category.name === selectedCategory).map(category => {
+          const subVendors = vendors.filter(
+            v => v.category === category.name && v.subcategory === selectedSubcategory
+          );
+          return (
+            <div key={category.id} className="mb-10">
+              {/* Remove category and subcategory headings here */}
+              <div className="mb-6">
+                {subVendors.length === 0 ? (
+                  <div className="text-center text-gray-500 py-8 text-lg">
+                    Not Available😌
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                    {subVendors.map(vendor => (
+                      <div key={vendor.id} className="card-mobile vendor-card-desktop">
+                        {/* Vendor Image */}
+                        <div className="relative image-container-mobile sm:image-container-desktop bg-gradient-to-br from-gray-200 to-gray-300">
+                          <img
+                            src={`/assets/categorycard.svg`}
+                            alt={vendor.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.style.display = 'none'
+                              e.target.nextSibling.style.display = 'flex'
+                            }}
+                          />
+                          <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 hidden items-center justify-center">
+                            <span className="text-gray-500 text-sm">DJ Image</span>
+                          </div>
+                        </div>
 
-              {/* Vendor Details */}
-              <div className="space-mobile-sm sm:p-5">
-                {/* Vendor Avatar and Name */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center">
-                    <img 
-                      src="/assets/Profile.svg" 
-                      alt="Jaydeep" 
-                      className="w-8 h-8 rounded-full mr-3"
-                    />
-                    <span className="text-black-600 text-sm font-medium">Jaydeep</span>
-                  </div>
-                  <span className="text-green-600 text-sm font-medium bg-green-100 rounded-lg px-2">• Available</span>
-                </div>
-                
-                <h4 className="font-bold text-base sm:text-lg text-gray-900 mb-2">{vendor.name}</h4>
-                <p className="text-gray-600 text-xs sm:text-sm mb-4">{vendor.description}</p>
-                
-                {/* Vendor Info */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <span className="font-medium">Location:</span>
-                    <span className="ml-2">{vendor.location}</span>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <span className="font-medium">Experience:</span>
-                    <span className="ml-2">{vendor.experience}</span>
-                  </div>
-                </div>
+                        {/* Vendor Details */}
+                        <div className="space-mobile-sm sm:p-5">
+                          {/* Vendor Avatar and Name */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center">
+                              <img 
+                                src="/assets/Profile.svg" 
+                                alt="Jaydeep" 
+                                className="w-8 h-8 rounded-full mr-3"
+                              />
+                              <span className="text-black-600 text-sm font-medium">Jaydeep</span>
+                            </div>
+                            <span className="text-green-600 text-sm font-medium bg-green-100 rounded-lg px-2">• Available</span>
+                          </div>
+                          
+                          <h4 className="font-bold text-base sm:text-lg text-gray-900 mb-2">{vendor.name}</h4>
+                          <p className="text-gray-600 text-xs sm:text-sm mb-4">{vendor.description}</p>
+                          
+                          {/* Vendor Info */}
+                          <div className="space-y-2 mb-4">
+                            <div className="flex items-center text-sm text-gray-600">
+                              <span className="font-medium">Location:</span>
+                              <span className="ml-2">{vendor.location}</span>
+                            </div>
+                            <div className="flex items-center text-sm text-gray-600">
+                              <span className="font-medium">Experience:</span>
+                              <span className="ml-2">{vendor.experience}</span>
+                            </div>
+                          </div>
 
-                {/* Rating and Price */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                    <span className="text-yellow-400 text-lg">⭐</span>
-                    <span className="ml-1 font-semibold text-gray-900">{vendor.rating}/5</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900">${vendor.price}</div>
-                    <div className="text-xs text-gray-500">Per Event</div>
-                  </div>
-                </div>
+                          {/* Rating and Price */}
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center">
+                              <span className="text-yellow-400 text-lg">⭐</span>
+                              <span className="ml-1 font-semibold text-gray-900">{vendor.rating}/5</span>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-2xl font-bold text-gray-900">${vendor.price}</div>
+                              <div className="text-xs text-gray-500">Per Event</div>
+                            </div>
+                          </div>
 
-                {/* Book Now Button */}
-                <button className="btn-primary-mobile w-full touch-button">
-                  Book Now
-                </button>
+                          {/* Book Now Button */}
+                          <button
+                            className="btn-primary-mobile w-full touch-button"
+                            onClick={() => navigate('/bookingpage')}
+                          >
+                            Book Now
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-          ))}
-          {/* Mobile View All Button after 3 cards */}
-          {!showAllVendors && filteredVendors.length > 3 && (
-            <button
-              className="block md:hidden col-span-1 px-8 py-3 border-2 border-primary-500 text-primary-500 rounded-full font-medium hover:bg-primary-50 transition-colors duration-300 mx-auto"
-              onClick={() => setShowAllVendors(true)}
-              style={{ gridColumn: '1/-1' }}
-            >
-              View All →
-            </button>
-          )}
-        </div>
+          );
+        })}
 
         
         {/* View All Button */}
