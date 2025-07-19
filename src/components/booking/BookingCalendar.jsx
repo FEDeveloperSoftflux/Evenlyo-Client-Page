@@ -15,6 +15,7 @@ const BookingCalendar = () => {
   const [isTrackOrderModalOpen, setIsTrackOrderModalOpen] = useState(false);
   const [trackOrderData, setTrackOrderData] = useState(null);
   const [selectedDates, setSelectedDates] = useState([]);
+  const [hoveredDate, setHoveredDate] = useState(null);
   
   const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const dayShortNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -115,6 +116,16 @@ const BookingCalendar = () => {
     const dayStr = day.toString().padStart(2, '0');
     const dateStr = `${year}-${monthStr}-${dayStr}`;
     return bookedDates.includes(dateStr);
+  };
+
+  // For demo: hardcoded available times
+  const getAvailableTimes = (day) => {
+    // You can customize this logic as needed
+    if (day % 2 === 0) {
+      return ['10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM'];
+    } else {
+      return ['9:00 AM', '1:00 PM', '3:00 PM'];
+    }
   };
 
   const handleDateSelect = (day) => {
@@ -292,12 +303,23 @@ const BookingCalendar = () => {
                         : 'text-gray-300'}
                     `}
                     onClick={() => isAvailableDay && !isBookedDay && handleDateSelect(cell.day)}
-                    style={{ userSelect: 'none' }}
+                    style={{ userSelect: 'none', position: 'relative' }}
+                    onMouseEnter={() => isAvailableDay && setHoveredDate({ day: cell.day, week: weekIndex, dayIdx: dayIndex })}
+                    onMouseLeave={() => setHoveredDate(null)}
                   >
                     {cell.day}
                     {isBookedDay && (
                       <span className="absolute top-1 right-1" title="Booked">
                       </span>
+                    )}
+                    {/* Tooltip for available times */}
+                    {hoveredDate && hoveredDate.day === cell.day && hoveredDate.week === weekIndex && hoveredDate.dayIdx === dayIndex && isAvailableDay && !isBookedDay && (
+                      <div className="absolute z-50 left-1/2 -translate-x-1/2 top-12 bg-white border border-gray-200 shadow-lg rounded-lg px-3 py-2 text-xs text-gray-700 whitespace-nowrap min-w-[120px]">
+                        <div className="font-semibold mb-1 text-pink-600">Available Times</div>
+                        {getAvailableTimes(cell.day).map((time, idx) => (
+                          <div key={time + idx}>{time}</div>
+                        ))}
+                      </div>
                     )}
                   </div>
                 );
