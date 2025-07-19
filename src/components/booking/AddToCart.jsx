@@ -271,7 +271,9 @@ const AddToCart = () => {
             )}
             
             <div className="mt-6 text-center">
-              <p className="text-xs text-orange-600 mb-2 font-medium">Only Bookings with complete details will be sent.</p>
+              {activeTab !== 'accepted' && (
+                <p className="text-xs text-orange-600 mb-2 font-medium">Only Bookings with complete details will be sent.</p>
+              )}
               {activeTab === 'accepted' && (
                 <>
                   <p className="text-sm text-gray-600 mb-2">Accepted payment methods:</p>
@@ -283,9 +285,15 @@ const AddToCart = () => {
                   </div>
                 </>
               )}
-              <button className="w-full py-3 btn-primary-mobile text-white rounded-2xl font-medium hover:shadow-lg transition-all">
-                Send Booking Request
-              </button>
+              {activeTab === 'accepted' ? (
+                <button className="w-full py-3 btn-primary-mobile text-white rounded-2xl font-medium hover:shadow-lg transition-all">
+                  Process to Checkout
+                </button>
+              ) : (
+                <button className="w-full py-3 btn-primary-mobile text-white rounded-2xl font-medium hover:shadow-lg transition-all">
+                  Send Booking Request
+                </button>
+              )}
             </div>
           </div>
         )}
