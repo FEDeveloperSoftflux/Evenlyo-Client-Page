@@ -7,7 +7,7 @@ function ResponsiveHeader() {
   const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState('advance-booking');
   const [isMobileFeaturesOpen, setIsMobileFeaturesOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('isLoggedIn') === 'true');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const profileRef = useRef(null);
 
@@ -41,11 +41,14 @@ function ResponsiveHeader() {
   ];
 
   const navigationItems = [
-    { name: "Home", href: "/", active: true },
+    { name: "Home", href: "/" },
     { name: "Features", href: "/features" },
     { name: "Blog", href: "/blog" },
     { name: "Pricing", href: "/pricing" },
   ];
+
+  // Get current path for active nav
+  const currentPath = window.location.pathname;
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -98,8 +101,9 @@ function ResponsiveHeader() {
 
           {/* Center Navigation - Desktop Only */}
           <nav className="nav-desktop flex items-center space-x-6 relative hidden md:flex">
-            {navigationItems.map((item) =>
-              item.name === "Features" ? (
+            {navigationItems.map((item) => {
+              const isActive = item.href === currentPath;
+              return item.name === "Features" ? (
                 <div
                   key={item.name}
                   className="relative"
@@ -109,14 +113,14 @@ function ResponsiveHeader() {
                     type="button"
                     onClick={() => setIsFeaturesOpen((open) => !open)}
                     className={`relative font-medium text-subtitle-6 transition-colors pb-1 group-hover:text-primary-500 ${
-                      item.active
+                      isActive
                         ? "text-gray-900 hover:text-primary-500"
                         : "text-gray-600 hover:text-primary-500"
                     }`}
                   >
                     {item.name}
                     <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full transition-transform duration-300 ${
-                      item.active
+                      isActive
                         ? "scale-x-100"
                         : "scale-x-0 group-hover:scale-x-100"
                     }`}></div>
@@ -170,20 +174,20 @@ function ResponsiveHeader() {
                   key={item.name}
                   href={item.href}
                   className={`relative font-medium text-subtitle-6 transition-colors pb-1 group ${
-                    item.active
+                    isActive
                       ? "text-gray-900 hover:text-primary-500"
                       : "text-gray-600 hover:text-primary-500"
                   }`}
                 >
                   {item.name}
                   <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full transition-transform duration-300 ${
-                    item.active
+                    isActive
                       ? "scale-x-100"
                       : "scale-x-0 group-hover:scale-x-100"
                   }`}></div>
                 </a>
-              )
-            )}
+              );
+            })}
           </nav>
 
           {/* Right Section - Language, Auth, and Mobile Menu */}

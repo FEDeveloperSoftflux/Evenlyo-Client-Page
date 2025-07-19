@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BookNowModal from './BookNowModal';
 
 const AddToCart = () => {
   const [activeTab, setActiveTab] = useState('requests');
@@ -11,7 +12,9 @@ const AddToCart = () => {
       vendor: "Jaydeep",
       price: 300,
       image: "/assets/DJProfile.png",
-      inStock: true
+      inStock: true,
+      type: 'detailed', // detailed booking from BookNowModal.jsx
+      totalPrice: 500 // Example total price for detailed booking
     },
     {
       id: 2,
@@ -19,7 +22,8 @@ const AddToCart = () => {
       vendor: "Jaydeep",
       price: 300,
       image: "/assets/DJProfile.png",
-      inStock: true
+      inStock: true,
+      type: 'simple' // simple booking from BookingCalendar.jsx
     }
   ]);
 
@@ -41,6 +45,9 @@ const AddToCart = () => {
       inStock: true
     }
   ]);
+
+  const [isBookNowModalOpen, setIsBookNowModalOpen] = useState(false);
+  const [editItem, setEditItem] = useState(null);
 
   const tabs = [
     { id: 'requests', label: 'Request Add To Cart' },
@@ -64,11 +71,23 @@ const AddToCart = () => {
     }
   };
 
+  const handleEditClick = (item) => {
+    setEditItem(item);
+    setIsBookNowModalOpen(true);
+  };
+
+  // Save handler for BookNowModal in edit mode
+  const handleSaveEdit = ({ dates, startTime, endTime }) => {
+    setCartItems(prev => prev.map(ci =>
+      ci.id === editItem.id ? { ...ci, dates, startTime, endTime, edited: true } : ci
+    ));
+    setIsBookNowModalOpen(false);
+    setEditItem(null);
+  };
+
   const renderCartItem = (item) => (
     <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100 mb-4">
       <div className="flex items-center space-x-4">
-        {/* Radio Button */}
-        
         {/* Item Image */}
         <div className="w-20 h-20 rounded-lg overflow-hidden">
           <img 
@@ -80,7 +99,6 @@ const AddToCart = () => {
             }}
           />
         </div>
-        
         {/* Item Details */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
@@ -101,15 +119,42 @@ const AddToCart = () => {
           </div>
         </div>
       </div>
-      
       {/* Price and Actions */}
       <div className="flex items-center space-x-4">
-        <span className="text-xl font-bold text-gray-900">${item.price}</span>
+        {/* Show only total price for detailed bookings */}
+        {item.type === 'detailed' && (
+          <span className="text-xl font-bold text-gray-900">${item.totalPrice}</span>
+        )}
+        {/* Show bill amount for edited simple bookings, styled like detailed */}
+        {item.type === 'simple' && item.edited && (
+          <span className="text-xl font-bold text-gray-900">${item.price * (item.dates?.length || 1)}</span>
+        )}
+        {/* Show selected dates and times for simple bookings only if not edited */}
+        {item.type === 'simple' && !item.edited && item.dates && item.dates.length > 0 && (
+          <div className="flex flex-col text-xs text-gray-700">
+            <span className="font-semibold">Dates:</span>
+            <span>
+              {item.dates.map((d, i) => {
+                const dateObj = typeof d === 'string' ? new Date(d) : d;
+                return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + (i < item.dates.length - 1 ? ', ' : '');
+              })}
+            </span>
+            {item.dates.length === 1 && (
+              <span>
+                <span className="font-semibold">Time: </span>
+                {item.startTime || '--'} - {item.endTime || '--'}
+              </span>
+            )}
+          </div>
+        )}
         <div className="flex items-center space-x-2">
+          {/* Action button based on type */}
           {activeTab === 'requests' && (
-            <button className="px-4 py-2 btn-primary-mobile text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all">
-              Book Now
-            </button>
+            item.type === 'simple' && !item.edited && (
+              <button className="px-4 py-2 border btn-primary-mobile rounded-lg text-sm font-medium hover:bg-pink-50 transition-all" onClick={() => handleEditClick(item)}>
+                Edit
+              </button>
+            )
           )}
           <button 
             onClick={() => removeFromCart(item.id)}
@@ -226,6 +271,7 @@ const AddToCart = () => {
             )}
             
             <div className="mt-6 text-center">
+              <p className="text-xs text-orange-600 mb-2 font-medium">Only Bookings with complete details will be sent.</p>
               {activeTab === 'accepted' && (
                 <>
                   <p className="text-sm text-gray-600 mb-2">Accepted payment methods:</p>
@@ -238,12 +284,23 @@ const AddToCart = () => {
                 </>
               )}
               <button className="w-full py-3 btn-primary-mobile text-white rounded-2xl font-medium hover:shadow-lg transition-all">
-                Proceed to Checkout
+                Send Booking Request
               </button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Modals */}
+      <BookNowModal
+        isOpen={isBookNowModalOpen}
+        onClose={() => { setIsBookNowModalOpen(false); setEditItem(null); }}
+        onSuccess={() => setIsBookNowModalOpen(false)}
+        selectedDates={[]}
+        editMode={!!editItem}
+        item={editItem}
+        onSaveEdit={handleSaveEdit}
+      />
     </div>
   );
 };

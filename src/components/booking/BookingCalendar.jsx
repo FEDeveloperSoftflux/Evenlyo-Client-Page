@@ -16,6 +16,10 @@ const BookingCalendar = () => {
   const [trackOrderData, setTrackOrderData] = useState(null);
   const [selectedDates, setSelectedDates] = useState([]);
   const [hoveredDate, setHoveredDate] = useState(null);
+  const [dragStartDate, setDragStartDate] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragCurrentDate, setDragCurrentDate] = useState(null);
+  const dragMovedRef = React.useRef(false);
   
   const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const dayShortNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -242,6 +246,81 @@ const BookingCalendar = () => {
     console.log('Downloading PDF...');
   };
   
+  // Helper to create a Date object for a given day in the current month
+  const getDateObj = (day) => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    return new Date(year, month, day);
+  };
+
+  // Helper to get all dates between two dates (inclusive, same month)
+  const getDatesInRange = (start, end) => {
+    if (!start || !end) return [];
+    const startDay = start.getDate();
+    const endDay = end.getDate();
+    const [from, to] = startDay <= endDay ? [startDay, endDay] : [endDay, startDay];
+    let range = [];
+    for (let d = from; d <= to; d++) {
+      range.push(getDateObj(d));
+    }
+    return range;
+  };
+
+  // Mouse event handlers for drag selection
+  const handleDateMouseDown = (day, isAvailableDay, isBookedDay) => {
+    if (!isAvailableDay || isBookedDay) return;
+    setDragStartDate(getDateObj(day));
+    setDragCurrentDate(getDateObj(day));
+    setIsDragging(true);
+    dragMovedRef.current = false;
+  };
+
+  const handleDateMouseEnter = (day, isAvailableDay, isBookedDay) => {
+    if (!isDragging || !isAvailableDay || isBookedDay) return;
+    setDragCurrentDate(getDateObj(day));
+    dragMovedRef.current = true;
+  };
+
+  const handleDateMouseUp = () => {
+    if (isDragging && dragStartDate && dragCurrentDate && dragMovedRef.current) {
+      // Dragged: add range
+      const range = getDatesInRange(dragStartDate, dragCurrentDate);
+      setSelectedDates(prev => {
+        const prevTimestamps = prev.map(d => d.getTime());
+        const newDates = range.filter(d => !prevTimestamps.includes(d.getTime()));
+        return [...prev, ...newDates];
+      });
+    }
+    setIsDragging(false);
+    setDragStartDate(null);
+    setDragCurrentDate(null);
+    dragMovedRef.current = false;
+  };
+
+  // Single-date toggle on click
+  const handleDateClick = (day, isAvailableDay, isBookedDay) => {
+    if (!isAvailableDay || isBookedDay) return;
+    const dateObj = getDateObj(day);
+    const isAlreadySelected = selectedDates.some(
+      d => d.getDate() === dateObj.getDate() && d.getMonth() === dateObj.getMonth() && d.getFullYear() === dateObj.getFullYear()
+    );
+    if (isAlreadySelected) {
+      setSelectedDates(selectedDates.filter(
+        d => !(d.getDate() === dateObj.getDate() && d.getMonth() === dateObj.getMonth() && d.getFullYear() === dateObj.getFullYear())
+      ));
+    } else {
+      setSelectedDates([...selectedDates, dateObj]);
+    }
+  };
+
+  // Add event listener to handle mouse up outside calendar
+  React.useEffect(() => {
+    if (!isDragging) return;
+    const handleMouseUpGlobal = () => handleDateMouseUp();
+    window.addEventListener('mouseup', handleMouseUpGlobal);
+    return () => window.removeEventListener('mouseup', handleMouseUpGlobal);
+  }, [isDragging, dragStartDate, dragCurrentDate]);
+  
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -285,11 +364,27 @@ const BookingCalendar = () => {
                 const isCurrentMonthDay = cell.currentMonth;
                 const isAvailableDay = isAvailable(cell.day, cell.currentMonth);
                 const isBookedDay = isBooked(cell.day, cell.currentMonth);
+                const cellDateObj = isCurrentMonthDay ? getDateObj(cell.day) : null;
                 const isSelected =
                   isCurrentMonthDay &&
                   selectedDates.some(
                     d => d.getDate() === cell.day && d.getMonth() === currentMonth.getMonth() && d.getFullYear() === currentMonth.getFullYear()
                   );
+                // Drag selection highlight
+                let isInDragRange = false;
+                if (
+                  isDragging &&
+                  dragStartDate &&
+                  dragCurrentDate &&
+                  isCurrentMonthDay &&
+                  isAvailableDay &&
+                  !isBookedDay
+                ) {
+                  const range = getDatesInRange(dragStartDate, dragCurrentDate);
+                  isInDragRange = range.some(
+                    d => d.getDate() === cell.day && d.getMonth() === currentMonth.getMonth() && d.getFullYear() === currentMonth.getFullYear()
+                  );
+                }
                 return (
                   <div
                     key={`${weekIndex}-${dayIndex}`}
@@ -298,14 +393,17 @@ const BookingCalendar = () => {
                         ? isBookedDay
                           ? 'bg-gray-300 text-gray-400 cursor-not-allowed relative'
                           : isAvailableDay
-                            ? `${isSelected ? 'bg-gradient-brand text-white ' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer'}`
+                            ? `${isSelected || isInDragRange ? 'bg-gradient-brand text-white ' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer'}`
                             : 'text-gray-700 hover:bg-gray-50 cursor-pointer'
                         : 'text-gray-300'}
                     `}
-                    onClick={() => isAvailableDay && !isBookedDay && handleDateSelect(cell.day)}
+                    onClick={e => handleDateClick(cell.day, isAvailableDay, isBookedDay)}
+                    onMouseDown={e => handleDateMouseDown(cell.day, isAvailableDay, isBookedDay)}
+                    onMouseEnter={e => handleDateMouseEnter(cell.day, isAvailableDay, isBookedDay)}
+                    onMouseUp={handleDateMouseUp}
                     style={{ userSelect: 'none', position: 'relative' }}
-                    onMouseEnter={() => isAvailableDay && setHoveredDate({ day: cell.day, week: weekIndex, dayIdx: dayIndex })}
                     onMouseLeave={() => setHoveredDate(null)}
+                    onMouseOver={() => isAvailableDay && setHoveredDate({ day: cell.day, week: weekIndex, dayIdx: dayIndex })}
                   >
                     {cell.day}
                     {isBookedDay && (
