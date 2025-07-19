@@ -5,6 +5,8 @@ import ComplaintModal from '../components/ComplaintModal';
 import CancelModal from '../components/CancelModal';
 import DownloadInvoiceModal from '../components/DownloadInvoiceModal';
 import TrackOrderModal from '../components/TrackOrderModal';
+import Tooltip from '../components/Tooltip';
+import ReviewModal from '../components/ReviewModal';
 
 function Bookings() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,6 +19,8 @@ function Bookings() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedTrackOrder, setSelectedTrackOrder] = useState(null);
   const dropdownRef = useRef(null);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [reviewBooking, setReviewBooking] = useState(null);
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -182,34 +186,50 @@ function Bookings() {
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusBadge = (status, statusColor) => {
+  const getStatusBadge = (status) => {
     const colorMap = {
-      'Accepted': 'bg-[#57C9FE]/10 text-[#57C9FE]',
-      'Pending': 'bg-[#FF0092]/10 text-[#FF0092]',
-      'Paid': 'bg-[#A05807]/10 text-[#A05807]',
-      'On the way': 'bg-[#04C373]/10 text-[#04C373]',
-      'Complete': 'bg-[#FF0000]/10 text-[#FF0000]',
-      'Received': 'bg-[#FECA57]/10 text-[#FFB000]'
+      'Accepted': 'bg-[#D1ECFF] text-[#007BFF]',         // Soft blue background, strong blue text
+      'Pending': 'bg-[#FFE8F1] text-[#E91E63]',           // Light pink background, rose text
+      'Paid': 'bg-[#FFF4E5] text-[#FF9800]',              // Warm cream background, orange text
+      'On the way': 'bg-[#FFE5E5] text-[#D50000]' ,        // Light mint background, success green
+      'Complete': 'bg-[#E3FFF3] text-[#00C853]',          // Very light red, clear danger/done
+      'Received': 'bg-[#FFF8E1] text-[#FFB300]'           // Soft yellow, dark amber text
     };
-    
-    return colorMap[status] || 'bg-gray-100 text-gray-700';
+    return colorMap[status] || 'bg-gray-100 text-gray-500'; // fallback
   };
+  
 
   const getActionButtons = (status, booking) => {
     const buttons = [];
     if (status === 'Complete') {
+      // If review is pending, show badge and review button
+      if (booking.reviewPending && !booking.review) {
+        buttons.push(
+          <button
+            key="review-again"
+            className="px-3 py-1 text-sm border-2 rounded-full text-pink-600 border-pink-400 hover:bg-pink-50 transition-colors"
+            onClick={() => { setReviewBooking(booking); setIsReviewOpen(true); }}
+          >
+            Review
+          </button>
+        );
+      }
       buttons.push(
-        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
-          Complain
-        </button>
+        <Tooltip key="complain" content="Raise a complaint for this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+            Complain
+          </button>
+        </Tooltip>
       );
       return buttons;
     }
     if (status === 'Pending') {
       buttons.push(
-        <button key="cancel" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsCancelOpen(true)}>
-          Cancel
-        </button>
+        <Tooltip key="cancel" content="Cancel this pending booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsCancelOpen(true)}>
+            Cancel
+          </button>
+        </Tooltip>
       );
       const trackOrderData = {
         trackingId: booking.trackingId,
@@ -255,9 +275,11 @@ function Bookings() {
         progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
       };
       buttons.push(
-        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
-          Track
-        </button>
+        <Tooltip key="track" content="Track the status of this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
+            Track
+          </button>
+        </Tooltip>
       );
       return buttons;
     }
@@ -265,26 +287,26 @@ function Bookings() {
       // Cancel button only for 30 min
       if (cancelTimers[booking.id] > 0) {
         buttons.push(
-          <button
-            key="cancel"
-            className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => setIsCancelOpen(true)}
-            disabled={cancelTimers[booking.id] === 1}
-            title={cancelTimers[booking.id] === 1 ? 'Cancel period expired' : ''}
-          >
-            Cancel <span className="ml-1 text-xs text-gray-500">{formatTimer(cancelTimers[booking.id])}</span>
-          </button>
+          <Tooltip key="cancel" content={cancelTimers[booking.id] === 1 ? 'Cancel period expired' : 'Cancel this booking within 30 minutes of acceptance'}>
+            <button
+              className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setIsCancelOpen(true)}
+              disabled={cancelTimers[booking.id] === 1}
+            >
+              Cancel <span className="ml-1 text-xs text-gray-500">{formatTimer(cancelTimers[booking.id])}</span>
+            </button>
+          </Tooltip>
         );
       } else if (cancelTimers[booking.id] === 0) {
         buttons.push(
-          <button
-            key="cancel-expired"
-            className="px-3 py-1 text-sm border-2 rounded-full text-gray-400 bg-gray-100 cursor-not-allowed mr-2"
-            disabled
-            title="Cancel period expired"
-          >
-            Cancel <span className="ml-1 text-xs text-gray-400">00:00</span>
-          </button>
+          <Tooltip key="cancel-expired" content="Cancel period expired">
+            <button
+              className="px-3 py-1 text-sm border-2 rounded-full text-gray-400 bg-gray-100 cursor-not-allowed mr-2"
+              disabled
+            >
+              Cancel <span className="ml-1 text-xs text-gray-400">00:00</span>
+            </button>
+          </Tooltip>
         );
       }
       const trackOrderData = {
@@ -331,14 +353,18 @@ function Bookings() {
         progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
       };
       buttons.push(
-        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
-          Track
-        </button>
+        <Tooltip key="track" content="Track the status of this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
+            Track
+          </button>
+        </Tooltip>
       );
       buttons.push(
-        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
-          Complain
-        </button>
+        <Tooltip key="complain" content="Raise a complaint for this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+            Complain
+          </button>
+        </Tooltip>
       );
       return buttons;
     }
@@ -387,14 +413,18 @@ function Bookings() {
         progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
       };
       buttons.push(
-        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
-          Track
-        </button>
+        <Tooltip key="track" content="Track the status of this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
+            Track
+          </button>
+        </Tooltip>
       );
       buttons.push(
-        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
-          Complain
-        </button>
+        <Tooltip key="complain" content="Raise a complaint for this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+            Complain
+          </button>
+        </Tooltip>
       );
       return buttons;
     }
@@ -443,21 +473,27 @@ function Bookings() {
         progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
       };
       buttons.push(
-        <button key="track" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
-          Track
-        </button>
+        <Tooltip key="track" content="Track the status of this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => { setSelectedTrackOrder(trackOrderData); setIsTrackOpen(true); }}>
+            Track
+          </button>
+        </Tooltip>
       );
       buttons.push(
-        <button key="received" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => {
-          setBookings(prev => prev.map(b => b.id === booking.id ? { ...b, status: 'Received', statusColor: 'bg-yellow-400' } : b));
-        }}>
-          Received
-        </button>
+        <Tooltip key="received" content="Mark as received when you have received your order">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => {
+            setBookings(prev => prev.map(b => b.id === booking.id ? { ...b, status: 'Received', statusColor: 'bg-yellow-400' } : b));
+          }}>
+            Received
+          </button>
+        </Tooltip>
       );
       buttons.push(
-        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
-          Complain
-        </button>
+        <Tooltip key="complain" content="Raise a complaint for this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+            Complain
+          </button>
+        </Tooltip>
       );
       return buttons;
     }
@@ -506,24 +542,54 @@ function Bookings() {
         progressNote: 'Order is in progress. Next phase will be marked as completed once the current step is finished.'
       };
       buttons.push(
-        <button
-          key="complete"
-          className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors"
-          onClick={() => {
-            setBookings(prev => prev.map(b => b.id === booking.id ? { ...b, status: 'Complete', statusColor: 'bg-red-400' } : b));
-          }}
-        >
-          Complete
-        </button>
+        <Tooltip key="complete" content="Mark this booking as complete after your Event is finished">
+          <button
+            className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors"
+            onClick={() => {
+              setReviewBooking(booking);
+              setIsReviewOpen(true);
+            }}
+          >
+            Complete
+          </button>
+        </Tooltip>
       );
       buttons.push(
-        <button key="complain" className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
-          Complain
-        </button>
+        <Tooltip key="complain" content="Raise a complaint for this booking">
+          <button className="px-3 py-1 text-sm border-2 rounded-full text-black hover:text-gray-800 transition-colors" onClick={() => setIsComplaintOpen(true)}>
+            Complain
+          </button>
+        </Tooltip>
       );
       return buttons;
     }
     return buttons;
+  };
+
+  // Handler for review modal submit
+  const handleReviewSubmit = ({ rating, review }) => {
+    if (reviewBooking) {
+      setBookings(prev => prev.map(b =>
+        b.id === reviewBooking.id
+          ? { ...b, status: 'Complete', statusColor: 'bg-red-400', review, rating, reviewPending: false }
+          : b
+      ));
+    }
+    setIsReviewOpen(false);
+    setReviewBooking(null);
+  };
+
+  // Handler for review modal cancel
+  const handleReviewCancel = () => {
+    if (reviewBooking) {
+      setBookings(prev => prev.map(b =>
+        b.id === reviewBooking.id
+          ? { ...b, status: 'Complete', statusColor: 'bg-red-400', reviewPending: true }
+          : b
+      ));
+    }
+    setIsReviewOpen(false);
+    setReviewBooking(null);
   };
 
   return (
@@ -773,6 +839,12 @@ function Bookings() {
         summary={selectedBooking ? selectedBooking.summary || {} : {}}
       />
       <TrackOrderModal open={isTrackOpen} onClose={() => setIsTrackOpen(false)} order={selectedTrackOrder} />
+      <ReviewModal
+        open={isReviewOpen}
+        onClose={handleReviewCancel}
+        onSubmit={handleReviewSubmit}
+        booking={reviewBooking}
+      />
     </div>
   )
 }

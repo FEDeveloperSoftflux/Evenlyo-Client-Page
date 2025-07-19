@@ -3,7 +3,7 @@ import React from 'react';
 const VerificationStep = ({ activeTab, setActiveTab, phone, setPhone, email, setEmail, onBack, onContinue }) => (
   <>
     <h2 className="text-2xl font-bold text-center mb-8">Verification</h2>
-    <div className="relative flex mb-6 bg-gray-100 rounded-full p-1 h-12">
+    <div className="relative flex mb-6 bg-gray-100 rounded-full p-1 h-12 ">
       {/* Sliding pill background */}
       <span
         className="absolute top-1 left-1 h-10 w-1/2 rounded-full btn-primary-mobile shadow transition-all duration-300"
