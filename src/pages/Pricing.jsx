@@ -36,7 +36,8 @@ function Pricing() {
           'Red Flag Risk Score + AI Concern Report',
           'Unlimited AI Prompt Searches/Month'
         ],
-        buttonText: 'Get This Plan',
+        buttonText: 'Coming Soon',
+        disabled: true,
       },
       {
         id: 'pro',
@@ -52,7 +53,8 @@ function Pricing() {
           'Red Flag Risk Score + AI Concern Report',
           'Unlimited AI Prompt Searches/Month'
         ],
-        buttonText: 'Get This Plan',
+        buttonText: 'Coming Soon',
+        disabled: true,
       }
     ]
   };
@@ -120,9 +122,9 @@ function Pricing() {
             {pricingPlans.vendor.map((plan) => (
               <div
                 key={plan.id}
-                className={`bg-white rounded-2xl p-12 shadow-sm border transition-all duration-300 hover:shadow-lg h-full flex flex-col ${
+                className={`bg-white rounded-2xl p-12 shadow-sm border transition-all duration-300 h-full flex flex-col ${
                   plan.popular ? 'border-primary-500 shadow-lg' : 'border-gray-200'
-                }`}
+                } ${plan.disabled ? 'opacity-60' : 'hover:shadow-lg'}`}
               >
                 <div className="flex-grow flex flex-col">
                   <div className="text-left mb-8">
@@ -142,7 +144,14 @@ function Pricing() {
                   </div>
                 </div>
                 <div className="flex justify-center w-full mt-auto">
-                  <button className="btn-primary-mobile w-full max-w-xs py-2 rounded-xl text-lg font-medium hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                  <button
+                    className={`w-full max-w-xs py-2 rounded-xl text-lg font-medium ${
+                      plan.disabled
+                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        : 'btn-primary-mobile hover:shadow-xl transform hover:scale-105 transition-all duration-300'
+                    }`}
+                    disabled={plan.disabled}
+                  >
                     {plan.buttonText}
                   </button>
                 </div>

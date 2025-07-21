@@ -296,31 +296,10 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
           </div>
 
           {/* Security Protection */}
-          <label className="flex items-center space-x-3 select-none">
-            <input
-              type="checkbox"
-              checked={hasSecurityProtection}
-              onChange={(e) => setHasSecurityProtection(e.target.checked)}
-              className="sr-only"
-            />
-            <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${hasSecurityProtection ? 'border-white bg-gradient-brand' : 'border-gray-300'}`}
-              >
-              {hasSecurityProtection && (
-                <svg
-                  className="w-3 h-3 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              )}
-            </span>
-            <span className="text-gray-700 font-medium">Add Security Protection (+$25)</span>
-          </label>
+          <div className="flex flex-col select-none">
+            <span className="text-gray-700 font-medium">Security Protection (+$25)</span>
+            <span className="text-xs text-gray-500 mt-1">Fully refundable to ensure a safe and smooth experience—returned after your event if no issues are reported.</span>
+          </div>
 
           {/* Pricing Summary */}
           <div className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-5 space-y-3 border border-gray-200/30">
@@ -332,6 +311,11 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Subtotal:</span>
               <span className="text-gray-900 font-medium">${subtotal.toFixed(2)}</span>
+            </div>
+            {/* System Fee */}
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">System Fee (2%):</span>
+              <span className="text-gray-900 font-medium">${(subtotal * 0.02).toFixed(2)}</span>
             </div>
             {hasSecurityProtection && (
               <div className="flex justify-between text-sm">
@@ -346,7 +330,7 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
             <div className="border-t border-gray-200/50 pt-3">
               <div className="flex justify-between text-xl font-bold">
                 <span className="text-gray-900">Total:</span>
-                <span className="text-gray-900">${total.toFixed(2)}</span>
+                <span className="text-gray-900">${(subtotal + (subtotal * 0.02) + (hasSecurityProtection ? securityFee : 0) + kilometerFee).toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -381,7 +365,7 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
           </label>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-1 mt-2">
+          <div className="flex flex-row gap-1 mt-2">
             {editMode ? (
               <button
                 onClick={() => onSaveEdit && onSaveEdit({ dates: editSelectedDates, startTime: editStartTime, endTime: editEndTime })}
