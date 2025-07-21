@@ -75,19 +75,19 @@ function Hero() {
             {/* Type of Events */}
             <div className="w-full md:col-span-1">
               <label className="block text-white text-sm font-semibold mb-2">
-                Search
+                Search Event
               </label>
               <div className="relative">
                 <img
                   src="/assets/Search2.svg"
-                  alt="Location"
+                  alt="Event"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 z-10"
                 />
                 <input
                   type="text"
-                  placeholder="Search "
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="Search Event"
+                  value={selectedEvent}
+                  onChange={(e) => setSelectedEvent(e.target.value)}
                   className="input-mobile pl-10 pr-4 py-3 bg-white/80 backdrop-blur-sm shadow-sm w-full"
                 />
               </div>
