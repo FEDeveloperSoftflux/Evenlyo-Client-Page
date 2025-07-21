@@ -107,8 +107,8 @@ function ResponsiveHeader() {
 
   return (
     <>
-<header className="bg-white border-b border-gray-100 py-3 px-responsive sticky top-0 z-40">
-        <div className="flex items-center justify-between container-7xl">
+<header className="bg-white border-b border-gray-100 py-3 sticky top-0 z-40">
+        <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Left Section - Logo and Rating */}
           <div className="flex items-center space-x-3 md:space-x-6">
             <div className="flex items-center">
@@ -120,7 +120,7 @@ function ResponsiveHeader() {
                 />
               </a>
             </div>
-            <div className="hidden md:flex items-center">
+            <div className="hidden lg:flex items-center">
               <img
                 src="/assets/ratings.svg"
                 alt="Ratings"
@@ -130,7 +130,7 @@ function ResponsiveHeader() {
           </div>
 
           {/* Center Navigation - Desktop Only */}
-          <nav className="nav-desktop flex items-center space-x-6 relative hidden md:flex">
+          <nav className="nav-desktop flex items-center space-x-6 relative hidden lg:flex">
             {navigationItems.map((item) => {
               const isActive = item.href === currentPath;
               if (item.name === "Customer Support") {
@@ -235,9 +235,9 @@ function ResponsiveHeader() {
           </nav>
 
           {/* Right Section - Language, Auth, and Mobile Menu */}
-          <div className="flex items-center space-x-2 md:space-x-4">
+          <div className="flex items-center space-x-2 lg:space-x-4">
             {/* Language Selector - Hidden on mobile */}
-            <div className="hidden md:flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors relative">
+            <div className="hidden lg:flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors relative">
               <img src="/assets/globe.svg" alt="Language" className="h-4 w-4" />
               <button
                 onClick={() => setIsLanguageOpen(!isLanguageOpen)}
@@ -310,7 +310,7 @@ function ResponsiveHeader() {
                 <div
                   className="absolute z-50 p-4 animate-fade-in max-w-[calc(100vw-1rem)] mx-1 bg-white rounded-2xl shadow-2xl border border-gray-100 mt-2
                     left-1/2 -translate-x-1/2 w-full max-w-xs
-                    md:right-0 md:left-auto md:translate-x-0 md:w-80"
+                    lg:right-0 lg:left-auto lg:translate-x-0 lg:w-80"
                   style={{ minWidth: '240px' }}
                 >
                   <div className="font-semibold text-lg mb-2 text-gray-900">Notifications</div>
@@ -367,7 +367,7 @@ function ResponsiveHeader() {
                 </button>
                 {/* Profile Dropdown */}
 {profileDropdownOpen && (
-  <div className="absolute right-0 top-full mt-2 w-70 md:w-80 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-100 z-50 p-3 sm:p-6 flex flex-col items-center animate-fade-in max-w-[calc(100vw-1rem)] mx-1 sm:mx-0" style={{minWidth: '240px'}}>
+  <div className="absolute right-0 top-full mt-2 w-70 lg:w-80 bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-100 z-50 p-3 sm:p-6 flex flex-col items-center animate-fade-in max-w-[calc(100vw-1rem)] mx-1 sm:mx-0" style={{minWidth: '240px'}}>
     {/* Profile Card */}
     <img
       src="/assets/Profile.svg"
@@ -416,7 +416,7 @@ function ResponsiveHeader() {
               </div>
             ) : (
               <button
-                className="hidden md:flex btn-primary-mobile text-sm lg:text-base py-2 px-3 lg:py-3 lg:px-4 items-center space-x-2"
+                className="hidden lg:flex btn-primary-mobile text-sm lg:text-base py-2 px-3 lg:py-3 lg:px-4 items-center space-x-2"
                 onClick={() => (window.location.href = '/login')}
               >
                 <svg

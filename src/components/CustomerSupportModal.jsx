@@ -54,7 +54,7 @@ const CustomerSupportModal = ({ isOpen, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-secondary via-primary-500 to-primary-600 px-4 sm:px-6 py-4 relative">
+        <div className="bg-gradient-brand px-4 sm:px-6 py-4 relative">
           <div className="pr-10">
             <h2 className="text-white text-lg sm:text-xl font-semibold text-center leading-tight">
               Please fill out form for any queries
@@ -104,7 +104,7 @@ const CustomerSupportModal = ({ isOpen, onClose }) => {
               <button
                 type="submit"
                 disabled={!message.trim()}
-                className="bg-gradient-to-r from-secondary via-primary-500 to-primary-600 text-white px-4 sm:px-6 py-3 rounded-xl font-medium text-sm sm:text-base flex items-center space-x-2 hover:from-primary-500 hover:via-primary-600 hover:to-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 touch-target"
+                className="bg-gradient-brand text-white px-4 sm:px-6 py-3 rounded-xl font-medium text-sm sm:text-base flex items-center space-x-2 hover:from-primary-500 hover:via-primary-600 hover:to-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 touch-target"
               >
                 <img 
                   src="/assets/send.svg" 

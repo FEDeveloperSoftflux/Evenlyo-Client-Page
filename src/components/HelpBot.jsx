@@ -23,10 +23,25 @@ const faq = [
   }
 ];
 
+const customQuickQuestions = [
+  {
+    question: "How do I search for an event?",
+    answer: "To search for an event, use the search bar at the top of the page. Enter keywords related to the event you're looking for, then click 'Search Now'."
+  },
+  {
+    question: "What if I don't know the event name?",
+    answer: "No problem! You can browse events by category. Scroll down to the 'Categories' section and select a category that interests you."
+  },
+  {
+    question: "Can I filter events by date or location?",
+    answer: "Yes! After searching or selecting a category, use the filters provided to narrow down events by date, location, or other criteria."
+  }
+];
+
 function HelpBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { from: "bot", text: "Hi! I'm your Event Help Bot. How can I assist you today?" }
+    { from: "bot", text: "Hi! I'm your Event Help Bot. I can help you find events. You can ask me things like 'How do I search for an event by name?' or 'How do I browse by category?'" }
   ]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
@@ -58,10 +73,28 @@ function HelpBot() {
     setInput("");
   };
 
+  const handleQuickQuestion = (question) => {
+    const userMessage = { from: "user", text: question };
+    let botResponse = { from: "bot", text: "Sorry, I didn't get that." };
+    // First check custom quick questions
+    const custom = customQuickQuestions.find(q => q.question === question);
+    if (custom) {
+      botResponse = { from: "bot", text: custom.answer };
+    } else {
+      for (const item of faq) {
+        if (question.toLowerCase().includes(item.question.toLowerCase().split(" ")[2])) {
+          botResponse = { from: "bot", text: item.answer };
+          break;
+        }
+      }
+    }
+    setMessages(prev => [...prev, userMessage, botResponse]);
+  };
+
   return (
     <div className="fixed bottom-4 sm:bottom-8 right-2 sm:right-8 z-50 flex justify-end">
       {open ? (
-        <div className="w-[calc(100vw-16px)] sm:w-96 bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col">
+        <div className="w-72 max-w-xs h-[80vh] mx-auto sm:w-96 sm:max-w-full sm:max-h-[80vh] bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col">
           {/* Gradient header bar */}
           
           {/* Header with title and close button */}
@@ -81,30 +114,47 @@ function HelpBot() {
           </div>
 
           {/* Messages container */}
-          <div className="flex-1 max-h-64 min-h-32 overflow-y-auto px-5 py-2 bg-gray-50 flex flex-col gap-2 scrollbar-hide">
+          <div className="flex-1 overflow-y-auto px-5 py-2 bg-gray-50 flex flex-col gap-2 scrollbar-hide">
             {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${msg.from === "bot" ? "justify-start" : "justify-end"}`}
-              >
+              <React.Fragment key={idx}>
                 <div
-                  className={`
-                    max-w-64 sm:max-w-xs px-4 py-2.5 rounded-2xl text-sm font-medium break-words mb-0.5
-                    ${msg.from === "bot"
-                      ? "bg-gray-50 text-gray-600 shadow-sm"
-                      : "bg-gradient-brand text-white shadow-md"
-                    }
-                  `}
+                  className={`flex ${msg.from === "bot" ? "justify-start" : "justify-end"}`}
                 >
-                  {msg.text}
+                  <div
+                    className={`
+                      max-w-64 sm:max-w-xs px-4 py-2.5 rounded-2xl text-sm font-medium break-words mb-0.5
+                      ${msg.from === "bot"
+                        ? "bg-gray-50 text-gray-600 shadow-sm"
+                        : "bg-gradient-brand text-white shadow-md"
+                      }
+                    `}
+                  >
+                    {msg.text}
+                  </div>
                 </div>
-              </div>
+                {/* Show quick questions after every bot reply */}
+                {msg.from === "bot" && (
+                  <div className="px-2 py-1">
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {customQuickQuestions.map((item, qidx) => (
+                        <button
+                          key={qidx}
+                          onClick={() => handleQuickQuestion(item.question)}
+                          className="px-3 py-1.5 text-[11px] sm:text-[12px] font-medium text-primary-600 bg-primary-50 rounded-full hover:bg-primary-100 transition-colors"
+                        >
+                          {item.question}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </React.Fragment>
             ))}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Input area */}
-          <div className="flex items-center gap-2.5 border-t border-gray-100 bg-white px-4 py-3.5 shadow-sm">
+          <div className="flex items-center gap-2.5 border-t border-gray-100 bg-white px-4 py-3.5 shadow-sm mt-0">
             <input
               type="text"
               value={input}

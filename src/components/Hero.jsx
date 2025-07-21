@@ -66,16 +66,16 @@ function Hero({ onSearchNow, onReset }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8 lg:mb-16 w-full max-w-md sm:max-w-none sm:w-auto">
+        <div className="flex flex-row justify-center gap-4 mb-8 lg:mb-16 w-full max-w-md sm:max-w-none sm:w-auto ">
           <button 
             onClick={handleJoinFree}
-            className="btn-primary-mobile touch-button w-full sm:w-auto text-responsive-body font-bold"
+            className="btn-primary-mobile touch-button align-middle sm:w-auto text-responsive-body font-bold"
           >
             Join Free
           </button>
           <button 
             onClick={handleBecomeVendor}
-            className="btn-secondary-mobile touch-button w-full sm:w-auto text-responsive-body font-bold border-white text-white hover:bg-white hover:text-gray-900"
+            className="btn-secondary-mobile touch-button  sm:w-auto text-responsive-body font-bold border-white text-white hover:bg-white hover:text-gray-900"
           >
             Become a Vendor
           </button>
@@ -83,7 +83,7 @@ function Hero({ onSearchNow, onReset }) {
 
         {/* Search Form */}
         <div className="w-full container-7xl bg-[#D8D8D857]/35 backdrop-blur-sm rounded-xl p-4 sm:p-6 ">
-          <div className="flex flex-col md:grid md:grid-cols-2 5xl:grid-cols-5 gap-4 md:items-end">
+          <div className="flex flex-col md:grid sm:grid-cols-2 lg:grid-cols-5 gap-4 md:items-end">
             {/* Type of Events */}
             <div className="w-full md:col-span-1">
               <label className="block text-white text-sm font-semibold mb-2">
@@ -181,10 +181,10 @@ function Hero({ onSearchNow, onReset }) {
             </div>
 
             {/* Search Button */}
-            <div className="w-full md:col-span-2 5xl:col-span-1">
+            <div className="w-full md:col-span-2 lg:col-span-1">
               <button 
                 onClick={handleBookNow}
-                className={`btn-primary-mobile w-full flex items-center justify-center py-2 ${!selectedEvent ? 'cursor-not-allowed' : ''}`}
+                className={`btn-primary-mobile w-full flex items-center justify-center py-2 px-12 ${!selectedEvent ? 'cursor-not-allowed' : ''}`}
                 disabled={!selectedEvent}
               >
                 <img
