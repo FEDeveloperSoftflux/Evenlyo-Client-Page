@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import VendorLogin from "../auth/VendorLogin";
 
-function Hero() {
+function Hero({ onSearchNow, onReset }) {
   const navigate = useNavigate();
   const [selectedEvent, setSelectedEvent] = useState("");
   const [location, setLocation] = useState("");
@@ -23,10 +23,22 @@ function Hero() {
   };
 
   const handleBookNow = () => {
-    const categoriesSection = document.getElementById('categories');
-    if (categoriesSection) {
-      categoriesSection.scrollIntoView({ behavior: 'smooth' });
+    if (onSearchNow) {
+      onSearchNow();
+    } else {
+      const categoriesSection = document.getElementById('categories');
+      if (categoriesSection) {
+        categoriesSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
+  };
+
+  const handleReset = () => {
+    setSelectedEvent("");
+    setLocation("");
+    setDate("");
+    setTime("");
+    if (onReset) onReset();
   };
   return (
     <section
@@ -90,6 +102,18 @@ function Hero() {
                   onChange={(e) => setSelectedEvent(e.target.value)}
                   className="input-mobile pl-10 pr-4 py-3 bg-white/80 backdrop-blur-sm shadow-sm w-full"
                 />
+                {selectedEvent && (
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 flex items-center justify-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                    tabIndex={0}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -160,7 +184,8 @@ function Hero() {
             <div className="w-full md:col-span-2 5xl:col-span-1">
               <button 
                 onClick={handleBookNow}
-                className="btn-primary-mobile w-full flex items-center justify-center py-2 "
+                className={`btn-primary-mobile w-full flex items-center justify-center py-2 ${!selectedEvent ? 'cursor-not-allowed' : ''}`}
+                disabled={!selectedEvent}
               >
                 <img
                   src="/assets/search.svg"

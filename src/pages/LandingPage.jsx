@@ -13,16 +13,33 @@ import Ratings from "../components/Ratings";
 import CustomerShowcase from "../components/CustomerShowcase";
 import SuccessStories from "../components/SuccessStories";
 import Footer from "../components/Footer";
+import HelpBot from "../components/HelpBot";
 
 function LandingPage() {
   const [selectedCategory, setSelectedCategory] = useState("Entertainment & Attractions");
+  const [hideCategoryText, setHideCategoryText] = useState(false);
+
+  // Handler to hide text when Search Now is clicked
+  const handleSearchNow = () => {
+    setHideCategoryText(true);
+    // Optionally scroll to categories section if not already
+    const categoriesSection = document.getElementById('categories');
+    if (categoriesSection) {
+      categoriesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Handler to reset everything
+  const handleReset = () => {
+    setHideCategoryText(false);
+  };
 
   return (
     <div className="min-h-screen">
       <Header />
-      <Hero />
+      <Hero onSearchNow={handleSearchNow} onReset={handleReset} />
       <div id="categories">
-        <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+        <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} hideText={hideCategoryText} />
       </div>
       <VendorList selectedCategory={selectedCategory} />
       <AdvancedBookingSystem />
@@ -35,6 +52,7 @@ function LandingPage() {
       <CustomerShowcase />
       <SuccessStories />
       <Footer />
+      <HelpBot />
     </div>
   );
 }

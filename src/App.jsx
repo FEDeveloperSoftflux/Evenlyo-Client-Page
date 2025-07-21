@@ -13,6 +13,7 @@ import AddToCartPage from "./pages/AddToCartPage";
 import CustomerSupportModal from "./components/CustomerSupportModal";
 import VendorProfile from "./pages/VendorProfile";
 import ChatPage from "./pages/ChatPage";
+import Notification from "./pages/Notification";
 
 // ScrollToTop component
 function ScrollToTop() {
@@ -44,23 +45,10 @@ function App() {
           <Route path="/bookings" element={<Bookings />} />
           <Route path="/vendor/:id" element={<VendorProfile />} />
           <Route path="/chat/:vendorId" element={<ChatPage />} />
+          <Route path="/notifications" element={<Notification />} />
         </Routes>
-        {/* Floating Customer Support Button */}
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110 z-40"
-        >
-          <img
-            src="/assets/customer-icon.svg"
-            alt="Customer Support"
-            className="w-8 h-8 filter brightness-0 invert"
-          />
-        </button>
         {/* Customer Support Modal */}
-        <CustomerSupportModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
+        {/* Removed, now handled in Header */}
       </div>
     </Router>
   );

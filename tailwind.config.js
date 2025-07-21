@@ -83,7 +83,7 @@ module.exports = {
         'btn-2': ['18px', { lineHeight: '1.4', fontWeight: '700' }],
       },
       backgroundImage: {
-        'gradient-brand': 'linear-gradient(90deg, #FF295D 0%, #E31B95 50%, #C817AE 100%)',
+        'gradient-brand': 'linear-gradient(180deg, #FF295D 0%, #E31B95 50%, #C817AE 100%)',
         'gradient-brand-hover': 'linear-gradient(90deg, #E31B95 0%, #C817AE 50%, #A613A0 100%)',
         'hero-gradient': 'linear-gradient(135deg, rgba(255, 126, 95, 0.8) 0%, rgba(254, 180, 123, 0.6) 100%)',
       },

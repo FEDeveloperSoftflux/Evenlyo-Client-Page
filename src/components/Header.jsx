@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import CustomerSupportModal from "./CustomerSupportModal";
 
 function ResponsiveHeader() {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
@@ -10,6 +11,17 @@ function ResponsiveHeader() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('isLoggedIn') === 'true');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const profileRef = useRef(null);
+  // Notification dropdown state
+  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
+  const notificationRef = useRef(null);
+  // Hardcoded notifications
+  const notifications = [
+    { id: 1, text: 'Your booking BR001236 has been confirmed .' },
+    { id: 2, text: 'New message from DJ Mike.' },
+    { id: 3, text: 'Your invoice is ready to download.' },
+    { id: 4, text: 'Event reminder: Wedding on 25th June.' },
+  ];
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
@@ -35,6 +47,23 @@ function ResponsiveHeader() {
     };
   }, [profileDropdownOpen]);
 
+  // Click-away listener for notification dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setNotificationDropdownOpen(false);
+      }
+    }
+    if (notificationDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [notificationDropdownOpen]);
+
   const languages = [
     { code: "en", name: "English" },
     { code: "nl", name: "Dutch" },
@@ -43,6 +72,7 @@ function ResponsiveHeader() {
   const navigationItems = [
     { name: "Home", href: "/" },
     { name: "Features", href: "/features" },
+    { name: "Customer Support", href: "#support" },
     { name: "Blog", href: "/blog" },
     { name: "Pricing", href: "/pricing" },
   ];
@@ -103,6 +133,20 @@ function ResponsiveHeader() {
           <nav className="nav-desktop flex items-center space-x-6 relative hidden md:flex">
             {navigationItems.map((item) => {
               const isActive = item.href === currentPath;
+              if (item.name === "Customer Support") {
+                return (
+                  <button
+                    key={item.name}
+                    type="button"
+                    onClick={() => setIsSupportOpen(true)}
+                    className={`relative font-medium text-subtitle-6 transition-colors pb-1 group text-gray-600 hover:text-primary-500`}
+                    style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
+                  >
+                    {item.name}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                  </button>
+                );
+              }
               return item.name === "Features" ? (
                 <div
                   key={item.name}
@@ -246,6 +290,66 @@ function ResponsiveHeader() {
                 <img src="/assets/Cart.svg" alt="Cart" className="w-4 h-6" />
               </button>
             )}
+            {/* Notification Button - Always visible */}
+            <div className="relative" ref={notificationRef}>
+              <button
+                className="relative flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full shadow-none hover:shadow-md transition-all border-none focus:outline-none"
+                aria-label="Notifications"
+                onClick={() => setNotificationDropdownOpen((open) => !open)}
+              >
+                {/* Bell Icon SVG */}
+                <img src="/assets/Bell.svg" alt="Notifications" className="w-5 h-5 text-gray-600" />
+                {notifications.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+              {/* Notification Dropdown */}
+              {notificationDropdownOpen && (
+                <div
+                  className="absolute z-50 p-4 animate-fade-in max-w-[calc(100vw-1rem)] mx-1 bg-white rounded-2xl shadow-2xl border border-gray-100 mt-2
+                    left-1/2 -translate-x-1/2 w-full max-w-xs
+                    md:right-0 md:left-auto md:translate-x-0 md:w-80"
+                  style={{ minWidth: '240px' }}
+                >
+                  <div className="font-semibold text-lg mb-2 text-gray-900">Notifications</div>
+                  <ul className="divide-y divide-gray-100 mb-3">
+                    {notifications.map((notif) => {
+                      const text = notif.text.toLowerCase();
+                      let onClick = () => {};
+                      if (text.includes('message')) {
+                        onClick = () => { window.location.href = '/chat/1'; };
+                      } else if (text.includes('booking')) {
+                        onClick = () => { window.location.href = '/bookings'; };
+                      } else if (text.includes('invoice')) {
+                        onClick = () => { window.location.href = '/settings'; };
+                      } else if (text.includes('event reminder')) {
+                        onClick = () => { window.location.href = '/bookings'; };
+                      }
+                      return (
+                        <li
+                          key={notif.id}
+                          className="py-2 text-gray-700 text-sm cursor-pointer hover:bg-gray-50 rounded transition"
+                          onClick={onClick}
+                          tabIndex={0}
+                          role="button"
+                          onKeyDown={e => { if (e.key === 'Enter') onClick(); }}
+                        >
+                          {notif.text}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <a
+                    href="/notifications"
+                    className="block w-full text-center py-2 rounded-xl bg-gradient-brand text-white font-semibold hover:bg-primary-600 transition-colors text-sm"
+                  >
+                    See all
+                  </a>
+                </div>
+              )}
+            </div>
 
             {isLoggedIn ? (
               <div className="relative flex items-center" ref={profileRef}>
@@ -389,93 +493,38 @@ function ResponsiveHeader() {
 
               {/* Mobile Navigation */}
               <nav className="flex-1 py-6">
-                {navigationItems.map((item, index) =>
-                  item.name === "Features" ? (
-                    <div key={item.name}>
+                {navigationItems.map((item, index) => {
+                  if (item.name === "Customer Support") {
+                    return (
                       <button
-                        className={`mobile-menu-item block w-full text-left px-6 py-4 text-lg font-medium transition-all duration-300 flex items-center justify-between ${
-                          item.active
-                            ? "text-primary-500 bg-gradient-to-r from-primary-50 to-transparent border-r-4 border-primary-500 font-semibold"
-                            : "text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:border-r-4 hover:border-primary-200"
-                        }`}
-                        onClick={() => setIsMobileFeaturesOpen((open) => !open)}
-                        aria-expanded={isMobileFeaturesOpen}
-                        aria-controls="mobile-features-submenu"
+                        key={item.name}
+                        type="button"
+                        onClick={() => { setIsSupportOpen(true); toggleMobileMenu(); }}
+                        className={`mobile-menu-item block px-6 py-4 text-lg font-medium transition-all duration-300 w-full text-left flex items-center space-x-3 text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:border-r-4 hover:border-primary-200`}
                       >
-                        <span className="flex items-center space-x-3">
-                          <span className="text-primary-500 opacity-60">•</span>
-                          <span>{item.name}</span>
-                        </span>
-                        <svg
-                          className={`w-5 h-5 ml-2 transition-transform ${isMobileFeaturesOpen ? 'rotate-180' : ''}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
+                        <span className="text-primary-500 opacity-60">•</span>
+                        <span>{item.name}</span>
                       </button>
-                      {isMobileFeaturesOpen && (
-                        <ul id="mobile-features-submenu" className="pl-10 pr-4 py-2 space-y-1">
-                          <li>
-                            <a
-                              href="/#advance-booking"
-                              className="block py-2 text-base text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-                              onClick={toggleMobileMenu}
-                            >
-                              Advance Booking System
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              href="/#vendor-feature"
-                              className="block py-2 text-base text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-                              onClick={toggleMobileMenu}
-                            >
-                              Vendor feature
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              href="/#reviews"
-                              className="block py-2 text-base text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-                              onClick={toggleMobileMenu}
-                            >
-                              Reviews
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              href="/#faq"
-                              className="block py-2 text-base text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-                              onClick={toggleMobileMenu}
-                            >
-                              FAQ
-                            </a>
-                          </li>
-                        </ul>
-                      )}
-                    </div>
-                  ) : (
+                    );
+                  }
+                  return (
                     <a
                       key={item.name}
                       href={item.href}
-                      className={`mobile-menu-item block px-6 py-4 text-lg font-medium transition-all duration-300 ${
+                      className={`mobile-menu-item block px-6 py-4 text-lg font-medium transition-all duration-300 w-full text-left flex items-center space-x-3 ${
                         item.active 
                           ? "text-primary-500 bg-gradient-to-r from-primary-50 to-transparent border-r-4 border-primary-500 font-semibold" 
                           : "text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:border-r-4 hover:border-primary-200"
                       }`}
                       onClick={toggleMobileMenu}
                     >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-primary-500 opacity-60">•</span>
-                        <span>{item.name}</span>
-                      </div>
+                      <span className="text-primary-500 opacity-60">•</span>
+                      <span>{item.name}</span>
                     </a>
                   )
-                )}
+                })}
                 {/* Cart Button - Only show if logged in (Mobile) */}
-                {isLoggedIn && (
+                {false && (
                   <button
                     className="mobile-menu-item block w-full text-left px-6 py-4 text-lg font-medium transition-all duration-300 text-gray-700 hover:text-primary-500 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:border-r-4 hover:border-primary-200 flex items-center"
                     onClick={() => { window.location.href = '/add-to-cart'; toggleMobileMenu(); }}
@@ -537,6 +586,7 @@ function ResponsiveHeader() {
         </div>
       )}
 
+      <CustomerSupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
     </>
   );
 }

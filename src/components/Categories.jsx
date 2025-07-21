@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-const Categories = ({ selectedCategory, setSelectedCategory }) => {
+const Categories = ({ selectedCategory, setSelectedCategory, hideText = false }) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState('DJ')
   const [showAllVendors, setShowAllVendors] = useState(false)
   const navigate = useNavigate();
@@ -198,13 +198,16 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-16 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Section Title */}
-        <div className="text-center mb-responsive">
-          <h2 className="text-responsive-h2 text-gray-900">
-            Explore <span className="bg-gradient-to-b from-secondary via-primary-500 to-primary-600 bg-clip-text text-transparent">Categories</span>
-          </h2>
-        </div>
+        {!hideText && (
+          <div className="text-center mb-responsive">
+            <h2 className="text-responsive-h2 text-gray-900">
+              Explore <span className="bg-gradient-to-b from-secondary via-primary-500 to-primary-600 bg-clip-text text-transparent">Categories</span>
+            </h2>
+          </div>
+        )}
 
         {/* Category Icons */}
+        {!hideText && (
         <div
           className="grid grid-cols-3 gap-y-6 gap-x-2 justify-items-center mb-responsive md:flex md:justify-center md:items-start md:gap-y-0 md:gap-x-0 md:space-x-8 md:overflow-visible md:pb-0"
         >
@@ -283,41 +286,46 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
             ))}
           </div>
         </div>
+        )}
 
         {/* Subcategory Pills */}
-        <div className="flex justify-center items-center space-x-2 sm:space-x-3 mb-responsive flex-wrap gap-2">
-          {getCurrentSubcategories().map((subcategory) => (
-            <button
-              key={subcategory}
-              onClick={() => setSelectedSubcategory(subcategory)}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center space-x-2 ${
-                selectedSubcategory === subcategory
-                  ? 'bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md'
-                  : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-300 hover:text-primary-500'
-              }`}
-            >
-              <img
-                src={getSubcategoryIcon(subcategory)}
-                alt={subcategory}
-                className="w-8 h-8 bg-white rounded-lg"
-              />
-              <span>{subcategory}</span>
+        {!hideText && (
+          <div className="flex justify-center items-center space-x-2 sm:space-x-3 mb-responsive flex-wrap gap-2">
+            {getCurrentSubcategories().map((subcategory) => (
+              <button
+                key={subcategory}
+                onClick={() => setSelectedSubcategory(subcategory)}
+                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center space-x-2 ${
+                  selectedSubcategory === subcategory
+                    ? 'bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-300 hover:text-primary-500'
+                }`}
+              >
+                <img
+                  src={getSubcategoryIcon(subcategory)}
+                  alt={subcategory}
+                  className="w-8 h-8 bg-white rounded-lg"
+                />
+                <span>{subcategory}</span>
+              </button>
+            ))}
+            <button className="px-4 py-2.5 bg-white border border-gray-200 rounded-full text-primary-500 hover:bg-primary-50 text-sm font-medium transition-colors">
+              See All
             </button>
-          ))}
-          <button className="px-4 py-2.5 bg-white border border-gray-200 rounded-full text-primary-500 hover:bg-primary-50 text-sm font-medium transition-colors">
-            See All
-          </button>
-        </div>
+          </div>
+        )}
 
         {/* Vendor Section Title */}
-        <div className="text-center mb-responsive">
-          <h3 className="text-responsive-h2 text-gray-900 mb-2">
-            All {selectedSubcategory} <span className="text-gray-400">({filteredVendors.length})</span>
-          </h3>
-          <p className="text-responsive-body text-gray-600">
-            Start to book DJ for your <span className="font-semibold text-primary-500">Event</span> Because everything is on place
-          </p>
-        </div>
+        {!hideText && (
+          <div className="text-center mb-responsive">
+            <h3 className="text-responsive-h2 text-gray-900 mb-2">
+              All {selectedSubcategory} <span className="text-gray-400">({filteredVendors.length})</span>
+            </h3>
+            <p className="text-responsive-body text-gray-600">
+              Start to book DJ for your <span className="font-semibold text-primary-500">Event</span> Because everything is on place
+            </p>
+          </div>
+        )}
 
         {/* Vendor Cards for Selected Category and Selected Subcategory Only */}
         {categories.filter(category => category.name === selectedCategory).map(category => {

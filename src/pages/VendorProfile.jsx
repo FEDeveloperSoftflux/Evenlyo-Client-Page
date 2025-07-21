@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Star, Phone, Mail, Users, MapPin, Eye } from "lucide-react";
@@ -384,49 +386,133 @@ const VendorProfile = () => {
   
         {/* Tabs */}
         <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 mt-20 justify-items-center">
-          <div className="-mx-4 px-4 overflow-x-auto scrollbar-hide">
-            <div className="flex flex-nowrap space-x-1 bg-gray-100 p-1 rounded-2xl  min-w-max">
-              <button
-                onClick={() => setActiveTab("about")}
-                className={`flex items-center space-x-2 px-4 md:px-8 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm md:text-base ${
-                  activeTab === "about"
-                    ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
-                    : "text-gray-700 hover:text-pink-600"
-                }`}
+          {isMobile ? (
+            <div className="w-full overflow-x-auto">
+              <Swiper
+                spaceBetween={10}
+                slidesPerView={'auto'}
+                className="w-full"
               >
-                <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
-                  <img src={activeTab === 'about' ? '/assets/AboutActive.svg' : '/assets/About.svg'} alt="About Icon" className="w-6 h-6 inline-block align-middle" />
-                </div>
-                <span>About</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("reviews")}
-                className={`flex items-center space-x-2 px-4 md:px-8 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm md:text-base ${
-                  activeTab === "reviews"
-                      ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
-                    : "text-gray-700 hover:text-pink-600"
-                }`}
-              >
-                <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
-                  <img src={activeTab === 'reviews' ? '/assets/StarActive.svg' : '/assets/Star.svg'} alt="Star Icon" className="w-6 h-6 inline-block align-middle" />
-                </div>
-                <span>Reviews</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("book")}
-                className={`flex items-center space-x-2 px-4 md:px-8 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm md:text-base ${
-                  activeTab === "book"
-                    ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
-                    : "text-gray-700 hover:text-pink-600"
-                }`}
-              >
-                <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
-                  <img src={activeTab === 'book' ? '/assets/MusicActive.svg' : '/assets/Music.svg'} alt="Music Icon" className="w-6 h-6 inline-block align-middle" />
-                </div>
-                <span>Book Item</span>
-              </button>
+                <SwiperSlide className="!w-auto">
+                  <button
+                    onClick={() => setActiveTab("about")}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm ${
+                      activeTab === "about"
+                        ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
+                        : "text-gray-700 hover:text-pink-600 bg-gray-100"
+                    }`}
+                  >
+                    <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                      <img src={activeTab === 'about' ? '/assets/AboutActive.svg' : '/assets/About.svg'} alt="About Icon" className="w-6 h-6 inline-block align-middle" />
+                    </div>
+                    <span>About</span>
+                  </button>
+                </SwiperSlide>
+                <SwiperSlide className="!w-auto">
+                  <button
+                    onClick={() => setActiveTab("reviews")}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm ${
+                      activeTab === "reviews"
+                        ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
+                        : "text-gray-700 hover:text-pink-600 bg-gray-100"
+                    }`}
+                  >
+                    <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                      <img src={activeTab === 'reviews' ? '/assets/StarActive.svg' : '/assets/Star.svg'} alt="Star Icon" className="w-6 h-6 inline-block align-middle" />
+                    </div>
+                    <span>Reviews</span>
+                  </button>
+                </SwiperSlide>
+                <SwiperSlide className="!w-auto">
+                  <button
+                    onClick={() => setActiveTab("book")}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm ${
+                      activeTab === "book"
+                        ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
+                        : "text-gray-700 hover:text-pink-600 bg-gray-100"
+                    }`}
+                  >
+                    <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                      <img src={activeTab === 'book' ? '/assets/MusicActive.svg' : '/assets/Music.svg'} alt="Music Icon" className="w-6 h-6 inline-block align-middle" />
+                    </div>
+                    <span>Book Item</span>
+                  </button>
+                </SwiperSlide>
+                <SwiperSlide className="!w-auto">
+                  <button
+                    onClick={() => setActiveTab("popular")}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm ${
+                      activeTab === "popular"
+                        ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
+                        : "text-gray-700 hover:text-pink-600 bg-gray-100"
+                    }`}
+                  >
+                    <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                      <img src={activeTab === 'popular' ? '/assets/PopularActive.svg' : '/assets/Popular.svg'} alt="Popular Icon" className="w-6 h-6 inline-block align-middle" />
+                    </div>
+                    <span>Popular Items</span>
+                  </button>
+                </SwiperSlide>
+              </Swiper>
             </div>
-          </div>
+          ) : (
+            <div className="-mx-4 px-4 overflow-x-auto scrollbar-hide">
+              <div className="flex flex-nowrap space-x-1 bg-gray-100 p-1 rounded-2xl min-w-max">
+                <button
+                  onClick={() => setActiveTab("about")}
+                  className={`flex items-center space-x-2 px-4 md:px-8 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm md:text-base ${
+                    activeTab === "about"
+                      ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
+                      : "text-gray-700 hover:text-pink-600"
+                  }`}
+                >
+                  <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                    <img src={activeTab === 'about' ? '/assets/AboutActive.svg' : '/assets/About.svg'} alt="About Icon" className="w-6 h-6 inline-block align-middle" />
+                  </div>
+                  <span>About</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("reviews")}
+                  className={`flex items-center space-x-2 px-4 md:px-8 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm md:text-base ${
+                    activeTab === "reviews"
+                        ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
+                      : "text-gray-700 hover:text-pink-600"
+                  }`}
+                >
+                  <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                    <img src={activeTab === 'reviews' ? '/assets/StarActive.svg' : '/assets/Star.svg'} alt="Star Icon" className="w-6 h-6 inline-block align-middle" />
+                  </div>
+                  <span>Reviews</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("book")}
+                  className={`flex items-center space-x-2 px-4 md:px-8 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm md:text-base ${
+                    activeTab === "book"
+                      ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
+                      : "text-gray-700 hover:text-pink-600"
+                  }`}
+                >
+                  <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                    <img src={activeTab === 'book' ? '/assets/MusicActive.svg' : '/assets/Music.svg'} alt="Music Icon" className="w-6 h-6 inline-block align-middle" />
+                  </div>
+                  <span>Book Item</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("popular")}
+                  className={`flex items-center space-x-2 px-4 md:px-8 py-2 rounded-2xl font-medium transition-all whitespace-nowrap text-sm md:text-base ${
+                    activeTab === "popular"
+                      ? "bg-gradient-to-b from-secondary via-primary-500 to-primary-600 text-white shadow-md"
+                      : "text-gray-700 hover:text-pink-600"
+                  }`}
+                >
+                  <div className="bg-white p-1 rounded-xl mr-2 flex items-center justify-center">
+                    <img src={activeTab === 'popular' ? '/assets/PopularActive.svg' : '/assets/Popular.svg'} alt="Popular Icon" className="w-6 h-6 inline-block align-middle" />
+                  </div>
+                  <span>Popular Items</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
   
         {/* Tab Content */}
@@ -589,6 +675,42 @@ const VendorProfile = () => {
                   </button>
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === "popular" && (
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <h3 className="text-xl md:text-2xl font-bold mb-2">Popular Items</h3>
+              <p className="text-gray-500 text-sm mb-4">Check out our most popular items!</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="bg-white border border-gray-200 rounded-2xl shadow-md flex flex-col">
+                    <img src="/assets/DJ.png" alt="DJ Ray Vibes" className="w-full h-40 object-cover rounded-t-2xl" />
+                    <div className="p-4 flex-1 flex flex-col">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="flex items-center gap-2">
+                          <img src="/assets/Profile.svg" alt="Jaydeep" className="w-6 h-6 rounded-full" />
+                          <span className="text-xs font-medium text-gray-700">Jaydeep</span>
+                        </span>
+                        <span className="bg-green-100 text-green-600 text-xs font-semibold px-2 py-1 rounded-lg">• Available</span>
+                      </div>
+                      <h4 className="font-bold text-base text-gray-900 mb-1">DJ Ray Vibes</h4>
+                      <p className="text-gray-600 text-xs mb-2">Known for electrifying energy and seamless transitions. DJ Ray brings...</p>
+                      <div className="flex items-center text-xs text-gray-500 mb-2">
+                        <span className="font-semibold text-yellow-400 mr-1">4.9</span>
+                        <span>★</span>
+                        <span className="ml-2">$300</span>
+                      </div>
+                      <button
+                        className="mt-auto btn-primary-mobile w-full text-white font-bold py-2 px-4 rounded-lg"
+                        onClick={() => navigate('/bookingpage')}
+                      >
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
