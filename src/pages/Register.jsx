@@ -13,7 +13,8 @@ const Register = () => {
     fullName: '',
     lastName: '',
     email: '',
-    phone: ''
+    phone: '',
+    address: ''
   })
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -176,6 +177,20 @@ const Register = () => {
                       onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
                       placeholder="Enter Your Phone Number"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all duration-300"
+                      placeholder="Enter Your Address"
                       required
                     />
                   </div>

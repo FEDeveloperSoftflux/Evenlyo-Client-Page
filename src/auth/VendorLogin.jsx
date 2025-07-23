@@ -72,7 +72,7 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
 
 
   const getTotalSteps = () => {
-    return formData.accountType === 'personal' ? 5 : 7;
+    return formData.accountType === 'personal' ? 6 : 7;
   };
 
   const handleSubmit = (e) => {
@@ -92,7 +92,8 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
       { num: 1, label: 'Account Type' },
       { num: 2, label: 'Personal Info' },
       { num: 3, label: "Category's" },
-      { num: 4, label: 'Verification' },
+      { num: 4, label: 'Security' },
+      { num: 5, label: 'Verification' },
     ];
 
     const businessSteps = [
@@ -676,7 +677,34 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
     </div>
   );
 
-  // Verification step (Step 5 for personal, Step 7 for business)
+  // Security step for Personal accounts (Step 5)
+  const renderStep5Personal = () => (
+    <div className="space-y-6">
+      <h2 className="text-3xl font-bold text-center mb-6">Security</h2>
+      <div className="mb-6">
+        <label className="block text-base font-medium text-gray-800 mb-2">Set Password</label>
+        <input
+          type="password"
+          className="w-full px-4 py-2 border border-gray-200 rounded-2xl bg-gray-100 focus:ring-1 focus:ring-pink-400 focus:border-pink-400 outline-none transition-all duration-300"
+          placeholder="Enter Your Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
+      </div>
+      <div className="mb-8">
+        <label className="block text-base font-medium text-gray-800 mb-2">Re - Enter Password</label>
+        <input
+          type="password"
+          className="w-full px-4 py-2 border border-gray-200 rounded-2xl bg-gray-100 focus:ring-1 focus:ring-pink-400 focus:border-pink-400 outline-none transition-all duration-300"
+          placeholder="Enter Your Password"
+          value={confirmPassword}
+          onChange={e => setConfirmPassword(e.target.value)}
+        />
+      </div>
+    </div>
+  );
+
+  // Verification step (Step 6 for personal, Step 7 for business)
   const renderVerificationStep = () => (
     <>
       {(!showSuccessModal && !verificationComplete) && (
@@ -785,8 +813,9 @@ const VendorLogin = ({ onClose, onSwitchToClient }) => {
                 {step === 3 && renderStep3()}
                 {step === 4 && renderStep4()}
                 {step === 5 && formData.accountType === 'business' && renderStep5Business()}
-                {step === 5 && formData.accountType === 'personal' && renderVerificationStep()}
+                {step === 5 && formData.accountType === 'personal' && renderStep5Personal()}
                 {step === 6 && formData.accountType === 'business' && renderStep6Business()}
+                {step === 6 && formData.accountType === 'personal' && renderVerificationStep()}
                 {step === 7 && formData.accountType === 'business' && renderVerificationStep()}
                 <form onSubmit={handleSubmit}>
                   {/* Navigation Buttons */}

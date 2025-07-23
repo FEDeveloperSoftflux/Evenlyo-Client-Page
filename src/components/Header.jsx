@@ -290,66 +290,68 @@ function ResponsiveHeader() {
                 <img src="/assets/Cart.svg" alt="Cart" className="w-4 h-6" />
               </button>
             )}
-            {/* Notification Button - Always visible */}
-            <div className="relative" ref={notificationRef}>
-              <button
-                className="relative flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full shadow-none hover:shadow-md transition-all border-none focus:outline-none"
-                aria-label="Notifications"
-                onClick={() => setNotificationDropdownOpen((open) => !open)}
-              >
-                {/* Bell Icon SVG */}
-                <img src="/assets/Bell.svg" alt="Notifications" className="w-5 h-5 text-gray-600" />
-                {notifications.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
-                    {notifications.length}
-                  </span>
-                )}
-              </button>
-              {/* Notification Dropdown */}
-              {notificationDropdownOpen && (
-                <div
-                  className="absolute z-50 p-4 animate-fade-in max-w-[calc(100vw-1rem)] mx-1 bg-white rounded-2xl shadow-2xl border border-gray-100 mt-2
-                    left-1/2 -translate-x-1/2 w-full max-w-xs
-                    lg:right-0 lg:left-auto lg:translate-x-0 lg:w-80"
-                  style={{ minWidth: '240px' }}
+            {/* Notification Button - Only show if logged in */}
+            {isLoggedIn && (
+              <div className="relative" ref={notificationRef}>
+                <button
+                  className="relative flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full shadow-none hover:shadow-md transition-all border-none focus:outline-none"
+                  aria-label="Notifications"
+                  onClick={() => setNotificationDropdownOpen((open) => !open)}
                 >
-                  <div className="font-semibold text-lg mb-2 text-gray-900">Notifications</div>
-                  <ul className="divide-y divide-gray-100 mb-3">
-                    {notifications.map((notif) => {
-                      const text = notif.text.toLowerCase();
-                      let onClick = () => {};
-                      if (text.includes('message')) {
-                        onClick = () => { window.location.href = '/chat/1'; };
-                      } else if (text.includes('booking')) {
-                        onClick = () => { window.location.href = '/bookings'; };
-                      } else if (text.includes('invoice')) {
-                        onClick = () => { window.location.href = '/settings'; };
-                      } else if (text.includes('event reminder')) {
-                        onClick = () => { window.location.href = '/bookings'; };
-                      }
-                      return (
-                        <li
-                          key={notif.id}
-                          className="py-2 text-gray-700 text-sm cursor-pointer hover:bg-gray-50 rounded transition"
-                          onClick={onClick}
-                          tabIndex={0}
-                          role="button"
-                          onKeyDown={e => { if (e.key === 'Enter') onClick(); }}
-                        >
-                          {notif.text}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <a
-                    href="/notifications"
-                    className="block w-full text-center py-2 rounded-xl bg-gradient-brand text-white font-semibold hover:bg-primary-600 transition-colors text-sm"
+                  {/* Bell Icon SVG */}
+                  <img src="/assets/Bell.svg" alt="Notifications" className="w-5 h-5 text-gray-600" />
+                  {notifications.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+                      {notifications.length}
+                    </span>
+                  )}
+                </button>
+                {/* Notification Dropdown */}
+                {notificationDropdownOpen && (
+                  <div
+                    className="absolute z-50 p-4 animate-fade-in max-w-[calc(100vw-1rem)] mx-1 bg-white rounded-2xl shadow-2xl border border-gray-100 mt-2
+                      left-1/2 -translate-x-1/2 w-full max-w-xs
+                      lg:right-0 lg:left-auto lg:translate-x-0 lg:w-80"
+                    style={{ minWidth: '240px' }}
                   >
-                    See all
-                  </a>
-                </div>
-              )}
-            </div>
+                    <div className="font-semibold text-lg mb-2 text-gray-900">Notifications</div>
+                    <ul className="divide-y divide-gray-100 mb-3">
+                      {notifications.map((notif) => {
+                        const text = notif.text.toLowerCase();
+                        let onClick = () => {};
+                        if (text.includes('message')) {
+                          onClick = () => { window.location.href = '/chat/1'; };
+                        } else if (text.includes('booking')) {
+                          onClick = () => { window.location.href = '/bookings'; };
+                        } else if (text.includes('invoice')) {
+                          onClick = () => { window.location.href = '/settings'; };
+                        } else if (text.includes('event reminder')) {
+                          onClick = () => { window.location.href = '/bookings'; };
+                        }
+                        return (
+                          <li
+                            key={notif.id}
+                            className="py-2 text-gray-700 text-sm cursor-pointer hover:bg-gray-50 rounded transition"
+                            onClick={onClick}
+                            tabIndex={0}
+                            role="button"
+                            onKeyDown={e => { if (e.key === 'Enter') onClick(); }}
+                          >
+                            {notif.text}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    <a
+                      href="/notifications"
+                      className="block w-full text-center py-2 rounded-xl bg-gradient-brand text-white font-semibold hover:bg-primary-600 transition-colors text-sm"
+                    >
+                      See all
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
 
             {isLoggedIn ? (
               <div className="relative flex items-center" ref={profileRef}>

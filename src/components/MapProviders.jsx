@@ -238,7 +238,7 @@ const MapProviders = () => {
               <p className="leading-relaxed">
                 Listeo supports{" "}
                 <span className="text-white font-semibold">
-                  OpenStreetMaps and MapBox
+                  OpenStreetMap and MapBox
                 </span>
                 . You are not limited to Google Maps only.
               </p>
