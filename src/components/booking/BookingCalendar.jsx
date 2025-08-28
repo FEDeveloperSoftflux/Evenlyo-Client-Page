@@ -507,7 +507,7 @@ const BookingCalendar = () => {
               onClick={handleAddToCart}
               className="px-6 py-3 border-2 border-primary text-primary rounded-2xl font-medium hover:bg-primary/10 transition-colors"
             >
-              Add To Cart
+              Add To Wishlist
             </button>
             <button 
               onClick={handleBookNow}
