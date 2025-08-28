@@ -52,6 +52,8 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
     }
   };
 
+  const [hasEvenlyoProtect, setHasEvenlyoProtect] = useState(true);
+
   if (!isOpen) return null;
 
   const duration = 8; // hours
@@ -59,8 +61,9 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
   const subtotal = duration * hourlyRate;
   const securityFee = 25;
   const kilometerFee = 25;
+  const evenlyoProtectFee = hasEvenlyoProtect ? 25 : 0;
   const total =
-    subtotal + (hasSecurityProtection ? securityFee : 0) + kilometerFee;
+    subtotal + (hasSecurityProtection ? securityFee : 0) + kilometerFee + evenlyoProtectFee;
 
   // Mock calculation for km
   const calculatedKm = location ? 12 : 0;
@@ -295,11 +298,38 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
             />
           </div>
 
+
           {/* Security Protection */}
-          <div className="flex flex-col select-none">
+          <div className="flex flex-col select-none mb-2">
             <span className="text-gray-700 font-medium">Security Protection (+$25)</span>
             <span className="text-xs text-gray-500 mt-1">Fully refundable to ensure a safe and smooth experience—returned after your event if no issues are reported.</span>
           </div>
+
+          {/* Evenlyo Protect */}
+          <label className="flex items-center  mb-4 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={hasEvenlyoProtect}
+              onChange={() => setHasEvenlyoProtect((v) => !v)}
+              className="sr-only"
+            />
+            <span className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-colors ${hasEvenlyoProtect ? 'border-white bg-gradient-brand' : 'border-gray-300'}`}>
+              {hasEvenlyoProtect && (
+                <svg
+                  className="w-3 h-3 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+            </span>
+            <span className="ml-3  text-gray-700 font-medium">Enable Evenlyo Protect (+$25)</span>
+          </label>
 
           {/* Pricing Summary */}
           <div className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-5 space-y-3 border border-gray-200/30">
@@ -321,6 +351,12 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Security Fee:</span>
                 <span className="text-gray-900 font-medium">${securityFee.toFixed(2)}</span>
+              </div>
+            )}
+            {hasEvenlyoProtect && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Evenlyo Protect:</span>
+                <span className="text-gray-900 font-medium">${evenlyoProtectFee.toFixed(2)}</span>
               </div>
             )}
             <div className="flex justify-between text-sm">
@@ -380,7 +416,7 @@ const BookNowModal = ({ isOpen, onClose, onSuccess, selectedDates, editMode = fa
                   onClick={handleAddToCart}
                   className="flex-1 py-2 px-3 border-2 border-pink-500 text-pink-500 rounded-2xl font-semibold hover:bg-pink-50 transition-all backdrop-blur-sm text-nowrap text-sm md:text-md"
                 >
-                  Add To Cart
+                  Add To Wishlist
                 </button>
                 <button
                   onClick={handleSendBookingRequest}

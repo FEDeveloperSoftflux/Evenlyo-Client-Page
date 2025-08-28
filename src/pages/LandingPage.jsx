@@ -14,6 +14,7 @@ import CustomerShowcase from "../components/CustomerShowcase";
 import SuccessStories from "../components/SuccessStories";
 import Footer from "../components/Footer";
 import HelpBot from "../components/HelpBot";
+import ExploreItemsSection from "../components/ExploreItemsSection"
 
 function LandingPage() {
   const [selectedCategory, setSelectedCategory] = useState("Entertainment & Attractions");
@@ -41,6 +42,7 @@ function LandingPage() {
       <div id="categories">
         <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} hideText={hideCategoryText} />
       </div>
+      <ExploreItemsSection />
       <VendorList selectedCategory={selectedCategory} />
       <AdvancedBookingSystem />
       <RentalTabs />
