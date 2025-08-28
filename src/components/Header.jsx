@@ -69,13 +69,24 @@ function ResponsiveHeader() {
     { code: "nl", name: "Dutch" },
   ];
 
+
+  // Categories and subcategories mock data
+  const categories = [
+    { name: 'Music', subcategories: ['DJ', 'Live Band', 'Solo Artist'] },
+    { name: 'Food', subcategories: ['Catering', 'Cakes', 'Drinks'] },
+    { name: 'Decoration', subcategories: ['Flowers', 'Lighting', 'Furniture'] },
+  ];
+
   const navigationItems = [
     { name: "Home", href: "/" },
     { name: "Features", href: "/features" },
-    { name: "Customer Support", href: "#support" },
+    { name: "Categories", isCategory: true },
     { name: "Blog", href: "/blog" },
     { name: "Pricing", href: "/pricing" },
   ];
+
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   // Get current path for active nav
   const currentPath = window.location.pathname;
@@ -132,88 +143,131 @@ function ResponsiveHeader() {
           {/* Center Navigation - Desktop Only */}
           <nav className="nav-desktop flex items-center space-x-6 relative hidden lg:flex">
             {navigationItems.map((item) => {
-              const isActive = item.href === currentPath;
-              if (item.name === "Customer Support") {
+              if (item.isCategory) {
                 return (
-                  <button
-                    key={item.name}
-                    type="button"
-                    onClick={() => setIsSupportOpen(true)}
-                    className={`relative font-medium text-subtitle-6 transition-colors pb-1 group text-gray-600 hover:text-primary-500`}
-                    style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
-                  >
-                    {item.name}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-                  </button>
+                  <div key="Categories" className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsCategoriesOpen((open) => !open)}
+                      className="relative font-medium text-subtitle-6 transition-colors pb-1 group text-gray-600 hover:text-primary-500"
+                    >
+                      Categories
+                      <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full transition-transform duration-300 ${isCategoriesOpen ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></div>
+                    </button>
+                    {isCategoriesOpen && (
+                      <div className="absolute left-0 mt-3 w-60 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 animate-fade-in">
+                        <ul className="py-2 px-1">
+                          {categories.map((cat) => (
+                            <li key={cat.name} className="relative group">
+                              <button
+                                className={`w-full text-left px-4 py-2 text-sm font-medium rounded-xl transition-colors ${selectedCategory === cat.name ? 'bg-primary-50 text-primary-600' : 'text-gray-700 hover:bg-gray-50'}`}
+                                onClick={() => setSelectedCategory(selectedCategory === cat.name ? null : cat.name)}
+                              >
+                                {cat.name}
+                              </button>
+                              {/* Subcategories dropdown */}
+                              {selectedCategory === cat.name && (
+                                <div className="absolute left-full top-0 ml-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 animate-fade-in">
+                                  <ul className="py-2 px-1">
+                                    {cat.subcategories.map((sub) => (
+                                      <li key={sub}>
+                                        <button
+                                          className="w-full text-left px-4 py-2 text-sm font-medium rounded-xl text-gray-700 hover:bg-gray-50"
+                                          onClick={() => {
+                                            const section = document.getElementById('explore-items-section');
+                                            if (section) {
+                                              section.scrollIntoView({ behavior: 'smooth' });
+                                            }
+                                            setIsCategoriesOpen(false);
+                                            setSelectedCategory(null);
+                                          }}
+                                        >
+                                          {sub}
+                                        </button>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 );
               }
-              return item.name === "Features" ? (
-                <div
-                  key={item.name}
-                  className="relative"
-                  ref={featuresRef}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setIsFeaturesOpen((open) => !open)}
-                    className={`relative font-medium text-subtitle-6 transition-colors pb-1 group-hover:text-primary-500 ${
-                      isActive
-                        ? "text-gray-900 hover:text-primary-500"
-                        : "text-gray-600 hover:text-primary-500"
-                    }`}
+              const isActive = item.href === currentPath;
+              if (item.name === "Features") {
+                return (
+                  <div
+                    key={item.name}
+                    className="relative"
+                    ref={featuresRef}
                   >
-                    {item.name}
-                    <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full transition-transform duration-300 ${
-                      isActive
-                        ? "scale-x-100"
-                        : "scale-x-0 group-hover:scale-x-100"
-                    }`}></div>
-                  </button>
-                  {/* Dropdown */}
-                  {isFeaturesOpen && (
-                    <div className="absolute left-0 mt-3 w-60 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 animate-fade-in">
-                      <ul className="py-2 px-1">
-                        <li>
-                          <a
-                            href="/#advance-booking"
-                            className={`block px-4 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'advance-booking' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
-                            onClick={() => { setSelectedFeature('advance-booking'); setIsFeaturesOpen(false); }}
-                          >
-                            Advance Booking System
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/#vendor-feature"
-                            className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'vendor-feature' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
-                            onClick={() => { setSelectedFeature('vendor-feature'); setIsFeaturesOpen(false); }}
-                          >
-                            Vendor feature
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/#reviews"
-                            className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'reviews' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
-                            onClick={() => { setSelectedFeature('reviews'); setIsFeaturesOpen(false); }}
-                          >
-                            Reviews
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/#faq"
-                            className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'faq' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
-                            onClick={() => { setSelectedFeature('faq'); setIsFeaturesOpen(false); }}
-                          >
-                            FAQ
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ) : (
+                    <button
+                      type="button"
+                      onClick={() => setIsFeaturesOpen((open) => !open)}
+                      className={`relative font-medium text-subtitle-6 transition-colors pb-1 group-hover:text-primary-500 ${
+                        isActive
+                          ? "text-gray-900 hover:text-primary-500"
+                          : "text-gray-600 hover:text-primary-500"
+                      }`}
+                    >
+                      {item.name}
+                      <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary-500 to-primary-600 rounded-full transition-transform duration-300 ${
+                        isActive
+                          ? "scale-x-100"
+                          : "scale-x-0 group-hover:scale-x-100"
+                      }`}></div>
+                    </button>
+                    {/* Dropdown */}
+                    {isFeaturesOpen && (
+                      <div className="absolute left-0 mt-3 w-60 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 animate-fade-in">
+                        <ul className="py-2 px-1">
+                          <li>
+                            <a
+                              href="/#advance-booking"
+                              className={`block px-4 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'advance-booking' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                              onClick={() => { setSelectedFeature('advance-booking'); setIsFeaturesOpen(false); }}
+                            >
+                              Advance Booking System
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="/#vendor-feature"
+                              className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'vendor-feature' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                              onClick={() => { setSelectedFeature('vendor-feature'); setIsFeaturesOpen(false); }}
+                            >
+                              Vendor feature
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="/#reviews"
+                              className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'reviews' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                              onClick={() => { setSelectedFeature('reviews'); setIsFeaturesOpen(false); }}
+                            >
+                              Reviews
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="/#faq"
+                              className={`block px-6 py-2 text-sm font-medium rounded-xl transition-colors ${selectedFeature === 'faq' ? 'btn-primary-mobile text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                              onClick={() => { setSelectedFeature('faq'); setIsFeaturesOpen(false); }}
+                            >
+                              FAQ
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              return (
                 <a
                   key={item.name}
                   href={item.href}
@@ -393,6 +447,15 @@ function ResponsiveHeader() {
         <img src="/assets/Setting.svg" alt="Settings Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
         <span className="truncate">Setting</span>
       </a>
+
+      <button
+        onClick={() => setIsSupportOpen(true)}
+        className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-gray-500 hover:bg-gray-50 transition-all text-sm sm:text-lg w-full text-left"
+      >
+        {/* Customer Support Icon */}
+        <img src="/assets/Setting.svg" alt="Customer Support Icon" className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
+        <span className="truncate">Customer Support</span>
+      </button>
       <button
         onClick={() => {
           localStorage.removeItem('isLoggedIn');

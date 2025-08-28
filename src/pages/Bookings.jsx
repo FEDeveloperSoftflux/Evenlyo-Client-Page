@@ -63,7 +63,8 @@ function Bookings() {
       endTime: '6:00 PM',
       totalPrice: '$1500',
       status: 'Received',
-      statusColor: 'bg-yellow-400'
+      statusColor: 'bg-yellow-400',
+      evenlyoProtected: true
     },
     {
       id: 2,
@@ -75,7 +76,8 @@ function Bookings() {
       endTime: '6:00 PM',
       totalPrice: '$1500',
       status: 'Pending',
-      statusColor: 'bg-pink-400'
+      statusColor: 'bg-pink-400',
+      evenlyoProtected: false
     },
     {
       id: 3,
@@ -87,7 +89,8 @@ function Bookings() {
       endTime: '6:00 PM',
       totalPrice: '$1500',
       status: 'Paid',
-      statusColor: 'bg-orange-400'
+      statusColor: 'bg-orange-400',
+      evenlyoProtected: true
     },
     {
       id: 4,
@@ -99,7 +102,8 @@ function Bookings() {
       endTime: '6:00 PM',
       totalPrice: '$1500',
       status: 'On the way',
-      statusColor: 'bg-green-400'
+      statusColor: 'bg-green-400',
+      evenlyoProtected: false
     },
     {
       id: 5,
@@ -111,7 +115,8 @@ function Bookings() {
       endTime: '6:00 PM',
       totalPrice: '$1500',
       status: 'Complete',
-      statusColor: 'bg-red-400'
+      statusColor: 'bg-red-400',
+      evenlyoProtected: true
     },
     {
       id: 6,
@@ -123,7 +128,8 @@ function Bookings() {
       endTime: '6:00 PM',
       totalPrice: '$1500',
       status: 'Accepted',
-      statusColor: 'bg-blue-400'
+      statusColor: 'bg-blue-400',
+      evenlyoProtected: false
     }
   ]);
 
@@ -768,7 +774,18 @@ function Bookings() {
                           {booking.slNo}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {booking.trackingId}
+                          <span className="flex items-center gap-1">
+                            {booking.trackingId}
+                            {booking.evenlyoProtected && (
+                              <img
+                                src="/assets/shield.svg"
+                                alt="Evenlyo Protected"
+                                title="Evenlyo Protected"
+                                className="w-5 h-5 text-blue-500 inline-block"
+                                style={{ display: 'inline', verticalAlign: 'middle' }}
+                              />
+                            )}
+                          </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           <div className="space-y-1">
